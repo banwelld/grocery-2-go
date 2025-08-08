@@ -74,6 +74,28 @@ class Order(db.Model, SerializerMixin):
         return f"<< ORDER: {self.order_ts()} (${self.order_total / 100}) >>"
 
 
+# orderitem model
+
+class OrderItem(db.Model, SerializerMixin):
+    __tablename__ = "order_items"
+    
+    # TODO: serializer rules
+    
+    id = db.Column(db.Integer, primary_key=True)
+    quantity = db.Column(db.Integer, nullable=False)
+    unit_price_paid = db.Column(db.Integer, nullable=False)
+    order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
+    item_id = db.Column(db.Integer, db.ForeignKey("items.id"), nullable=False)
+    
+    
+    #TODO: add relationships
+    #TODO: add assoc. proxies
+    #TODO: add validation
+    
+    def __repr__(self):
+        return f"<< ORDER_ITEM: {self.quantity} @ ${self.unit_price_paid / 100}) >>"
+
+
 if __name__ == "__main__":
     user = User(id=1, username="someUsername", user_type="customer", f_name="John", l_name="Doe", phone_num="5195551212", password_hash="Thi$isMypa$$w0rd")
     print(f"{user}\n")
@@ -85,4 +107,8 @@ if __name__ == "__main__":
     
     order = Order(id=1, order_ts=datetime.now, address="123 Somerset Dr.", city="Pleasantville", province_cd="ON", postal_cd="M5S3G4", order_total=25946, user_id=1)
     print(f"{order}\n")
-    print(f"{order.id}\n{order.order_ts()}\n{order.address}\n{order.city}\n{order.province_cd}\n{order.postal_cd}\n{order.order_total}\n{order.user_id}")
+    print(f"{order.id}\n{order.order_ts()}\n{order.address}\n{order.city}\n{order.province_cd}\n{order.postal_cd}\n{order.order_total}\n{order.user_id}\n")
+    
+    order_item = OrderItem(id=1, quantity=2, unit_price_paid=319, order_id=1, item_id=1)
+    print(f"{order_item}\n")
+    print(f"{order_item.id}\n{order_item.quantity}\n{order_item.unit_price_paid}\n{order_item.order_id}\n{order_item.item_id}\n")
