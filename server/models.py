@@ -1,5 +1,6 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
+from datetime import datetime
 
 from config import db
 
@@ -24,7 +25,8 @@ class User(db.Model, SerializerMixin):
     
     def __repr__(self):
         return f"<< USER: {self.username} ({self.user_type}) >>"
-    
+
+
 # item model
 
 class Item(db.Model, SerializerMixin):
@@ -45,13 +47,42 @@ class Item(db.Model, SerializerMixin):
     #TODO: add validation
     
     def __repr__(self):
-        return f"<< ITEM: {self.name} (${self.unit_price/100} / {self.unit}) >>"
+        return f"<< ITEM: {self.name} (${self.unit_price / 100} / {self.unit}) >>"
+
+
+# order model
+
+class Order(db.Model, SerializerMixin):
+    __tablename__ = "orders"
+    
+    # TODO: serializer rules
+    
+    id = db.Column(db.Integer, primary_key=True)
+    order_ts = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    address = db.Column(db.String, nullable=False)
+    city = db.Column(db.String, nullable=False)
+    province_cd = db.Column(db.String, nullable=False)
+    postal_cd = db.Column(db.String, nullable=False)
+    order_total = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    
+    #TODO: add relationships
+    #TODO: add assoc. proxies
+    #TODO: add validation
+    
+    def __repr__(self):
+        return f"<< ORDER: {self.order_ts()} (${self.order_total / 100}) >>"
+
 
 if __name__ == "__main__":
-    dave = User(id=1, username="banwelld", user_type="customer", f_name="Dave", l_name="Banwell", phone_num="5195668231", password_hash="Thi$isMypa$$w0rd")
-    print(f"{dave}\n")
-    print(f"{dave.id}\n{dave.user_type}\n{dave.username}\n{dave.f_name}\n{dave.l_name}\n{dave.phone_num}\n{dave.password_hash}\n")
+    user = User(id=1, username="someUsername", user_type="customer", f_name="John", l_name="Doe", phone_num="5195551212", password_hash="Thi$isMypa$$w0rd")
+    print(f"{user}\n")
+    print(f"{user.id}\n{user.user_type}\n{user.username}\n{user.f_name}\n{user.l_name}\n{user.phone_num}\n{user.password_hash}\n")
     
-    pepper = Item(id=1, name="Red Bell Pepper", category="produce", origin="canada", unit_price=359, unit="kg", image_url="http://www.grocery.com/red_bell_pepper.jpg")
-    print(f"{pepper}\n")
-    print(f"{pepper.id}\n{pepper.name}\n{pepper.category}\n{pepper.origin}\n{pepper.unit_price}\n{pepper.unit}\n{pepper.image_url}")
+    item = Item(id=1, name="Red Bell Pepper", category="produce", origin="canada", unit_price=359, unit="kg", image_url="http://www.grocery.com/red_bell_pepper.jpg")
+    print(f"{item}\n")
+    print(f"{item.id}\n{item.name}\n{item.category}\n{item.origin}\n{item.unit_price}\n{item.unit}\n{item.image_url}\n")
+    
+    order = Order(id=1, order_ts=datetime.now, address="123 Somerset Dr.", city="Pleasantville", province_cd="ON", postal_cd="M5S3G4", order_total=25946, user_id=1)
+    print(f"{order}\n")
+    print(f"{order.id}\n{order.order_ts()}\n{order.address}\n{order.city}\n{order.province_cd}\n{order.postal_cd}\n{order.order_total}\n{order.user_id}")
