@@ -11,22 +11,6 @@ from config import app, db, api
 from models import User, Item, Order, OrderItem
 
 
-# app setup
-
-DATABASE = "postgresql://Mosaic@localhost:5432/Mosaic"
-
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.json.compact = False
-
-migrate = Migrate(app, db)
-
-db.init_app(app)
-
-api = Api(app)
-
-
 # views
 
 @app.route('/')
