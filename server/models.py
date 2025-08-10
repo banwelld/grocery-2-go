@@ -12,7 +12,7 @@ class User(db.Model, SerializerMixin):
     # TODO: serializer rules
     
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, unique=True, nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False)
     user_type = db.Column(db.String)
     f_name = db.Column(db.String, nullable=False)
     l_name = db.Column(db.String, nullable=False)
