@@ -38,6 +38,7 @@ class Item(db.Model, SerializerMixin):
     name = db.Column(db.String, unique=True, nullable=False)
     category = db.Column(db.String, nullable=False)
     origin = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=True)
     unit_price = db.Column(db.Integer, nullable=False)
     unit = db.Column(db.String, nullable=False)
     image_url = db.Column(db.String, nullable=False)
