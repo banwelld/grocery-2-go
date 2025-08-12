@@ -13,18 +13,20 @@ class User(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, unique=True, nullable=False)
-    user_type = db.Column(db.String)
+    user_type = db.Column(db.String, default="customer")
     f_name = db.Column(db.String, nullable=False)
     l_name = db.Column(db.String, nullable=False)
     phone_num = db.Column(db.String, nullable=False)
     password_hash = db.Column(db.String, nullable=False)
+    orders = db.relationship("Order", back_populates="user", cascade="all")
+    items = association_proxy('orders', 'items', creator=lambda item: Order(order_items=[OrderItem(item=item)]))
     
     #TODO: add relationships
     #TODO: add assoc. proxies
     #TODO: add validation
     
     def __repr__(self):
-        return f"<< USER: {self.username} ({self.user_type}) >>"
+        return f"<< USER: {self.l_name}, {self.f_name} ({self.user_type}) >>"
 
 
 # item model
@@ -42,9 +44,9 @@ class Item(db.Model, SerializerMixin):
     unit_price = db.Column(db.Integer, nullable=False)
     unit = db.Column(db.String, nullable=False)
     image_url = db.Column(db.String, nullable=False)
-    
-    #TODO: add relationships
-    #TODO: add assoc. proxies
+    order_items = db.relationship("OrderItem", back_populates="item", cascade="all")
+    orders = association_proxy("order_items", "order", creator=lambda o: OrderItem(order=o))
+
     #TODO: add validation
     
     def __repr__(self):
@@ -66,13 +68,14 @@ class Order(db.Model, SerializerMixin):
     postal_cd = db.Column(db.String, nullable=False)
     order_total = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    user = db.relationship("User", back_populates="orders", cascade="all")
+    order_items = db.relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
+    items = association_proxy("order_items", "item", creator=lambda i: OrderItem(item=i))
     
-    #TODO: add relationships
-    #TODO: add assoc. proxies
     #TODO: add validation
     
     def __repr__(self):
-        return f"<< ORDER: {self.order_ts()} (${self.order_total / 100}) >>"
+        return f"<< ORDER: {self.order_ts} (${self.order_total / 100}) >>"
 
 
 # orderitem model
@@ -87,7 +90,8 @@ class OrderItem(db.Model, SerializerMixin):
     unit_price_paid = db.Column(db.Integer, nullable=False)
     order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
     item_id = db.Column(db.Integer, db.ForeignKey("items.id"), nullable=False)
-    
+    item = db.relationship("Item", back_populates="order_items")
+    order = db.relationship("Order", back_populates="order_items")
     
     #TODO: add relationships
     #TODO: add assoc. proxies
@@ -106,9 +110,9 @@ if __name__ == "__main__":
     print(f"{item}\n")
     print(f"{item.id}\n{item.name}\n{item.category}\n{item.origin}\n{item.unit_price}\n{item.unit}\n{item.image_url}\n")
     
-    order = Order(id=1, order_ts=datetime.now, address="123 Somerset Dr.", city="Pleasantville", province_cd="ON", postal_cd="M5S3G4", order_total=25946, user_id=1)
+    order = Order(id=1, order_ts=datetime.now(), address="123 Somerset Dr.", city="Pleasantville", province_cd="ON", postal_cd="M5S3G4", order_total=25946, user_id=1)
     print(f"{order}\n")
-    print(f"{order.id}\n{order.order_ts()}\n{order.address}\n{order.city}\n{order.province_cd}\n{order.postal_cd}\n{order.order_total}\n{order.user_id}\n")
+    print(f"{order.id}\n{order.order_ts}\n{order.address}\n{order.city}\n{order.province_cd}\n{order.postal_cd}\n{order.order_total}\n{order.user_id}\n")
     
     order_item = OrderItem(id=1, quantity=2, unit_price_paid=319, order_id=1, item_id=1)
     print(f"{order_item}\n")
