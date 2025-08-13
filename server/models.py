@@ -21,10 +21,6 @@ class User(db.Model, SerializerMixin):
     orders = db.relationship("Order", back_populates="user", cascade="all")
     items = association_proxy('orders', 'items', creator=lambda item: Order(order_items=[OrderItem(item=item)]))
     
-    #TODO: add relationships
-    #TODO: add assoc. proxies
-    #TODO: add validation
-    
     def __repr__(self):
         return f"<< USER: {self.l_name}, {self.f_name} ({self.user_type}) >>"
 
@@ -46,8 +42,6 @@ class Item(db.Model, SerializerMixin):
     image_url = db.Column(db.String, nullable=False)
     order_items = db.relationship("OrderItem", back_populates="item", cascade="all")
     orders = association_proxy("order_items", "order", creator=lambda o: OrderItem(order=o))
-
-    #TODO: add validation
     
     def __repr__(self):
         return f"<< ITEM: {self.name} (${self.unit_price / 100} / {self.unit}) >>"
@@ -71,9 +65,7 @@ class Order(db.Model, SerializerMixin):
     user = db.relationship("User", back_populates="orders", cascade="all")
     order_items = db.relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
     items = association_proxy("order_items", "item", creator=lambda i: OrderItem(item=i))
-    
-    #TODO: add validation
-    
+        
     def __repr__(self):
         return f"<< ORDER: {self.order_ts} (${self.order_total / 100}) >>"
 
@@ -92,9 +84,7 @@ class OrderItem(db.Model, SerializerMixin):
     item_id = db.Column(db.Integer, db.ForeignKey("items.id"), nullable=False)
     item = db.relationship("Item", back_populates="order_items")
     order = db.relationship("Order", back_populates="order_items")
-    
-    #TODO: add relationships
-    #TODO: add assoc. proxies
+
     #TODO: add validation
     
     def __repr__(self):

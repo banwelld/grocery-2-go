@@ -1,8 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Switch, Route } from "react-router-dom";
+import React, { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 
 function App() {
-  return <h1>Project Client</h1>;
+  const [allItems, setAllItems] = useState([]);
+
+  return (
+    <>
+      <header></header>
+      <main>
+        <h1 color='blue'>IT WORKS!!</h1>
+        {/* <Outlet context={[allItems, setAllItems]} /> */}
+      </main>
+    </>
+  );
 }
 
 export default App;
