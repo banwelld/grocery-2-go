@@ -18,7 +18,7 @@ DB_URL = os.getenv("DB_URL")
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.json.compact = False
+App.jsxon.compact = False
 
 # Define metadata, instantiate db
 
