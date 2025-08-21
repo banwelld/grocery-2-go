@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-# library imports
-
+import messages as msg
 from config import api, app, db
 from flask import make_response, request
 from flask_restful import Resource
@@ -47,6 +46,43 @@ class AllItems(Resource):
 
 api.add_resource(AllItems, "/items")
 
+
+class ItemById(Resource):
+    def get(self, id):
+        item = Item.query.filter(Item.id == id).first()
+
+        if not item:
+            return make_response(msg.ID_NOT_FOUND, 404)
+
+        return make_response(item.to_dict(), 200)
+
+    def patch(self, id):
+        item = Item.query.filter(Item.id == id).first()
+
+        if not item:
+            return make_response(msg.ID_NOT_FOUND, 404)
+
+        for attr, value in request.json.items():
+            setattr(item, attr, value)
+
+        db.session.add(item)
+        db.session.commit()
+
+        return make_response(item.to_dict(), 200)
+
+    def delete(self, id):
+        item = Item.query.filter(Item.id == id).first()
+
+        if not item:
+            return make_response(msg.ID_NOT_FOUND, 404)
+
+        db.session.delete(item)
+        db.session.commit()
+
+        return make_response({}, 204)
+
+
+api.add_resource(ItemById, "/items/<int:id>")
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
