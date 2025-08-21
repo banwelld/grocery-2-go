@@ -1,18 +1,12 @@
-import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import React from "react";
+import Header from "./Header";
+import Main from "./Main";
 
-function App() {
-  const [allItems, setAllItems] = useState([]);
-
+export const App = () => {
   return (
     <>
-      <header></header>
-      <main>
-        <h1 color='blue'>IT WORKS!!</h1>
-        {/* <Outlet context={[allItems, setAllItems]} /> */}
-      </main>
+      <Header />
+      <Main />
     </>
   );
-}
-
-export default App;
+};

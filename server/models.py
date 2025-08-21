@@ -1,16 +1,17 @@
-from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.ext.associationproxy import association_proxy
 from datetime import datetime
 
 from config import db
+from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy_serializer import SerializerMixin
 
 # user model
 
+
 class User(db.Model, SerializerMixin):
     __tablename__ = "users"
-    
+
     # TODO: serializer rules
-    
+
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, unique=True, nullable=False)
     user_type = db.Column(db.String, default="customer")
@@ -19,19 +20,24 @@ class User(db.Model, SerializerMixin):
     phone_num = db.Column(db.String, nullable=False)
     password_hash = db.Column(db.String, nullable=False)
     orders = db.relationship("Order", back_populates="user", cascade="all")
-    items = association_proxy('orders', 'items', creator=lambda item: Order(order_items=[OrderItem(item=item)]))
-    
+    items = association_proxy(
+        "orders",
+        "items",
+        creator=lambda item: Order(order_items=[OrderItem(item=item)]),
+    )
+
     def __repr__(self):
         return f"<< USER: {self.l_name}, {self.f_name} ({self.user_type}) >>"
 
 
 # item model
 
+
 class Item(db.Model, SerializerMixin):
     __tablename__ = "items"
-    
+
     # TODO: serializer rules
-    
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
     category = db.Column(db.String, nullable=False)
@@ -41,19 +47,22 @@ class Item(db.Model, SerializerMixin):
     unit = db.Column(db.String, nullable=False)
     image_url = db.Column(db.String, nullable=False)
     order_items = db.relationship("OrderItem", back_populates="item", cascade="all")
-    orders = association_proxy("order_items", "order", creator=lambda o: OrderItem(order=o))
-    
+    orders = association_proxy(
+        "order_items", "order", creator=lambda o: OrderItem(order=o)
+    )
+
     def __repr__(self):
         return f"<< ITEM: {self.name} (${self.unit_price / 100} / {self.unit}) >>"
 
 
 # order model
 
+
 class Order(db.Model, SerializerMixin):
     __tablename__ = "orders"
-    
+
     # TODO: serializer rules
-    
+
     id = db.Column(db.Integer, primary_key=True)
     order_ts = db.Column(db.DateTime, nullable=False, default=datetime.now)
     address = db.Column(db.String, nullable=False)
@@ -63,20 +72,25 @@ class Order(db.Model, SerializerMixin):
     order_total = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     user = db.relationship("User", back_populates="orders", cascade="all")
-    order_items = db.relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
-    items = association_proxy("order_items", "item", creator=lambda i: OrderItem(item=i))
-        
+    order_items = db.relationship(
+        "OrderItem", back_populates="order", cascade="all, delete-orphan"
+    )
+    items = association_proxy(
+        "order_items", "item", creator=lambda i: OrderItem(item=i)
+    )
+
     def __repr__(self):
         return f"<< ORDER: {self.order_ts} (${self.order_total / 100}) >>"
 
 
 # orderitem model
 
+
 class OrderItem(db.Model, SerializerMixin):
     __tablename__ = "order_items"
-    
+
     # TODO: serializer rules
-    
+
     id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
     unit_price_paid = db.Column(db.Integer, nullable=False)
@@ -85,25 +99,58 @@ class OrderItem(db.Model, SerializerMixin):
     item = db.relationship("Item", back_populates="order_items")
     order = db.relationship("Order", back_populates="order_items")
 
-    #TODO: add validation
-    
+    # TODO: add validation
+
     def __repr__(self):
         return f"<< ORDER_ITEM: {self.quantity} @ ${self.unit_price_paid / 100}) >>"
 
 
 if __name__ == "__main__":
-    user = User(id=1, username="someUsername", user_type="customer", f_name="John", l_name="Doe", phone_num="5195551212", password_hash="Thi$isMypa$$w0rd")
+    user = User(
+        id=1,
+        username="someUsername",
+        user_type="customer",
+        f_name="John",
+        l_name="Doe",
+        phone_num="5195551212",
+        password_hash="Thi$isMypa$$w0rd",
+    )
     print(f"{user}\n")
-    print(f"{user.id}\n{user.user_type}\n{user.username}\n{user.f_name}\n{user.l_name}\n{user.phone_num}\n{user.password_hash}\n")
-    
-    item = Item(id=1, name="Red Bell Pepper", category="produce", origin="canada", unit_price=359, unit="kg", image_url="http://www.grocery.com/red_bell_pepper.jpg")
+    print(
+        f"{user.id}\n{user.user_type}\n{user.username}\n{user.f_name}\n{user.l_name}\n{user.phone_num}\n{user.password_hash}\n"
+    )
+
+    item = Item(
+        id=1,
+        name="Red Bell Pepper",
+        category="produce",
+        origin="canada",
+        unit_price=359,
+        unit="kg",
+        image_url="http://www.grocery.com/red_bell_pepper.jpg",
+    )
     print(f"{item}\n")
-    print(f"{item.id}\n{item.name}\n{item.category}\n{item.origin}\n{item.unit_price}\n{item.unit}\n{item.image_url}\n")
-    
-    order = Order(id=1, order_ts=datetime.now(), address="123 Somerset Dr.", city="Pleasantville", province_cd="ON", postal_cd="M5S3G4", order_total=25946, user_id=1)
+    print(
+        f"{item.id}\n{item.name}\n{item.category}\n{item.origin}\n{item.unit_price}\n{item.unit}\n{item.image_url}\n"
+    )
+
+    order = Order(
+        id=1,
+        order_ts=datetime.now(),
+        address="123 Somerset Dr.",
+        city="Pleasantville",
+        province_cd="ON",
+        postal_cd="M5S3G4",
+        order_total=25946,
+        user_id=1,
+    )
     print(f"{order}\n")
-    print(f"{order.id}\n{order.order_ts}\n{order.address}\n{order.city}\n{order.province_cd}\n{order.postal_cd}\n{order.order_total}\n{order.user_id}\n")
-    
+    print(
+        f"{order.id}\n{order.order_ts}\n{order.address}\n{order.city}\n{order.province_cd}\n{order.postal_cd}\n{order.order_total}\n{order.user_id}\n"
+    )
+
     order_item = OrderItem(id=1, quantity=2, unit_price_paid=319, order_id=1, item_id=1)
     print(f"{order_item}\n")
-    print(f"{order_item.id}\n{order_item.quantity}\n{order_item.unit_price_paid}\n{order_item.order_id}\n{order_item.item_id}\n")
+    print(
+        f"{order_item.id}\n{order_item.quantity}\n{order_item.unit_price_paid}\n{order_item.order_id}\n{order_item.item_id}\n"
+    )

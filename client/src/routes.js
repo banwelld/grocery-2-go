@@ -1,22 +1,29 @@
 // routes.js
 
-import App from './components/App';
-import ErrorPage from './components/ErrorPage';
-import ItemList from './components/ItemList';
-import ItemInfo from './components/ItemInfo';
-import MyCart from './components/MyCart';
-import PreviousOrders from './components/PreviousOrders';
+import App from "./components/App";
+import ErrorPage from "./components/ErrorPage";
+import Main from "./components/Main";
+import ItemList from "./components/ItemList";
+import ItemInfo from "./components/ItemInfo";
+import MyCart from "./components/MyCart";
+import PreviousOrders from "./components/PreviousOrders";
 
 const routes = [
   {
-    path: '/',
+    path: "/",
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <ItemList /> },
-      { path: 'item-info/:id', element: <ItemInfo /> },
-      { path: 'my-cart', element: <MyCart /> },
-      { path: 'previous-orders', element: <PreviousOrders /> },
+      {
+        index: true,
+        element: <Main />,
+        children: [
+          {index: true, element: <ItemList />},
+          {path: "items/:id", element: <ItemInfo />},
+          {path: "my-cart", element: <MyCart />},
+          {path: "previous-orders", element: <PreviousOrders />},
+        ],
+      },
     ],
   },
 ];
