@@ -2,12 +2,12 @@
   /*base colours*/
   --primary: hsl(348, 100%, 28%);
   --secondary: hsl(36, 85%, 55%);
-  --contrast: hsla(348, 50%, 10%);
+  --contrast: hsla(348, 5%, 12%);
 
   /*dark versions*/
-  --primary-dk: color-mix(in hsl, var(--primary) 90%, black);
-  --secondary-dk: color-mix(in hsl, var(--secondary) 90%, black);
-  --contrast-dk: color-mix(in hsl, var(--contrast) 90%, black);
+  --primary-dk: hsl(348, 100%, 20%);
+  --secondary-dk: hsl(36, 85%, 40%);
+  --contrast-dk: hsla(348, 5%, 5%);
 
   /*light versions*/
   --primary-lt: color-mix(in hsl, var(--primary) 65%, white);
@@ -71,6 +71,46 @@ h3 {
 
 .stretch-end > :last-child {
   flex: 0 0 max-content;
+}
+
+#header-upper {
+  background-color: var(--contrast-dk);
+  padding: 15px 15px 8px;
+}
+
+#header-lower {
+  background-color: var(--contrast);
+  padding: 7px 15px 15px;
+}
+
+#site-title > :first-child {
+  column-gap: 10px;
+  text-decoration: none;
+  width: fit-content;
+}
+
+#site-title img {
+  width: 90px;
+  height: auto;
+}
+
+#site-title > hgroup {
+  justify-content: center;
+}
+
+#site-title h1 {
+  font-size: 4.25rem;
+  font-family: var(--font-brand);
+  color: var(--secondary);
+  font-weight: 700;
+  line-height: 0.8;
+}
+
+#site-title p {
+  font-family: var(--font-heading);
+  color: var(--offwhite);
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
 #item-list-grid {

@@ -15,10 +15,10 @@ export default function Header() {
   return (
     <>
       <div id='header-upper' class='flex row stretch-start'>
-        <div class='blue'>
+        <div>
           <TitleBar />
         </div>
-        <div class='blue'>
+        <div>
           <CartBar />
         </div>
       </div>
