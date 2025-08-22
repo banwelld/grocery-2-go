@@ -2,12 +2,12 @@
   /*base colours*/
   --primary: hsl(348, 100%, 28%);
   --secondary: hsl(36, 85%, 55%);
-  --contrast: hsla(348, 5%, 12%);
+  --contrast: hsla(215, 18%, 15%);
 
   /*dark versions*/
   --primary-dk: hsl(348, 100%, 20%);
   --secondary-dk: hsl(36, 85%, 40%);
-  --contrast-dk: hsla(348, 5%, 5%);
+  --contrast-dk: hsla(215, 15%, 8%);
 
   /*light versions*/
   --primary-lt: hsl(348, 100%, 55%);
@@ -75,12 +75,18 @@ h3 {
 
 #header-upper {
   background-color: var(--contrast-dk);
-  padding: 15px 15px 8px;
+  padding: 10px 15px;
 }
 
 #header-lower {
   background-color: var(--contrast);
-  padding: 7px 15px 15px;
+  padding: 10px 15px;
+  font-family: var(--font-heading);
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: 600;
+  height: fit-content;
+  align-items: center;
 }
 
 #title-container > :first-child {
@@ -96,6 +102,7 @@ h3 {
 
 #title-container > hgroup {
   justify-content: center;
+  gap: 0rem;
 }
 
 #title-container h1 {
@@ -103,7 +110,8 @@ h3 {
   font-family: var(--font-brand);
   color: var(--secondary);
   font-weight: 700;
-  line-height: 0.8;
+  line-height: 0.95;
+  margin-bottom: -0.07em;
 }
 
 #title-container p {
@@ -119,7 +127,7 @@ h3 {
 }
 
 .hov {
-  transition: filter 0.3s ease-out, transform 0.3s ease-out;
+  transition: filter 0.2s ease-out, transform 0.2s ease-out;
 }
 
 .brighten:hover {
@@ -132,6 +140,20 @@ h3 {
 
 .scale-up-lg:hover {
   transform: scale(101%);
+}
+
+#nav-container,
+#auth-container {
+  column-gap: 30px;
+  height: inherit;
+  align-items: center;
+}
+
+.nav-bar-link {
+  font-family: inherit;
+  font-weight: inherit;
+  text-decoration: inherit;
+  color: inherit;
 }
 
 #item-list-grid {

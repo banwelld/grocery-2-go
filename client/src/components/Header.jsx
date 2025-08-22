@@ -4,7 +4,6 @@ import React, {useState} from "react";
 import TitleBar from "./TitleBar";
 import CartBar from "./CartBar";
 import NavBar from "./NavBar";
-import AuthBar from "./AuthBar";
 
 export default function Header() {
   const [orderItems, setOrderItems] = useState(null);
@@ -24,7 +23,6 @@ export default function Header() {
       </div>
       <div id='header-lower' className='flex row stretch-start'>
         <NavBar />
-        <AuthBar />
       </div>
     </>
   );

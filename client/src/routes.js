@@ -7,6 +7,7 @@ import ItemList from "./components/ItemList";
 import ItemInfo from "./components/ItemInfo";
 import MyCart from "./components/MyCart";
 import PreviousOrders from "./components/PreviousOrders";
+import UserInfo from "./components/UserInfo";
 
 const routes = [
   {
@@ -20,6 +21,7 @@ const routes = [
         children: [
           {index: true, element: <ItemList />},
           {path: "items/:id", element: <ItemInfo />},
+          {path: "users/:id", element: <UserInfo />},
           {path: "my-cart", element: <MyCart />},
           {path: "previous-orders", element: <PreviousOrders />},
         ],

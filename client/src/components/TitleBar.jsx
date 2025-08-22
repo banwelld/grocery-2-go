@@ -11,7 +11,7 @@ export default function TitleBar() {
         aria-hidden='true'
         alt='perfectly ripe produce'
       ></img>
-      <hgroup className='flex col'>
+      <hgroup className='flex'>
         <h1>Grocery2Go</h1>
         <p>Gourmet foods right to your home!</p>
       </hgroup>

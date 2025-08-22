@@ -1,0 +1,18 @@
+[
+  {
+    "path": "/",
+    "linkText": "Home"
+  },
+  {
+    "path": "/my-cart",
+    "linkText": "My cart"
+  },
+  {
+    "path": "/users/:id",
+    "linkText": "My profile"
+  },
+  {
+    "path": "/previous-orders",
+    "linkText": "My Previous Orders"
+  }
+]

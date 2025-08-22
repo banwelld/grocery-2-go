@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 
 export default function CartBar() {
   return (
-    <Link to={"/my-cart"} class='hov brighten scale-up-sm'>
+    <Link to={"/my-cart"} className='hov brighten scale-up-sm'>
       <img
         src='../../images/shopping-cart-yellow.svg'
         alt='shopping cart icon'
