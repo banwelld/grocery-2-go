@@ -1,6 +1,6 @@
 // routes.js
 
-import App from "./components/App";
+import {App} from "./components/App";
 import ErrorPage from "./components/ErrorPage";
 import Main from "./components/Main";
 import ItemList from "./components/ItemList";
@@ -15,7 +15,7 @@ const routes = [
     errorElement: <ErrorPage />,
     children: [
       {
-        index: true,
+        path: "/",
         element: <Main />,
         children: [
           {index: true, element: <ItemList />},

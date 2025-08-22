@@ -1,7 +1,11 @@
+// Main.jsx
+
 import React, {useState} from "react";
 
-export default function Main() {}
+export default function Main() {
+  const [items, setItems] = useState(null);
 
-const x = 1;
+  items && setItems(0);
 
-console.log(x);
+  return <h1>This is where the Main component goes</h1>;
+}
