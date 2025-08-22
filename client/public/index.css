@@ -10,8 +10,8 @@
   --contrast-dk: hsla(348, 5%, 5%);
 
   /*light versions*/
-  --primary-lt: color-mix(in hsl, var(--primary) 65%, white);
-  --secondary-lt: color-mix(in hsl, var(--secondary) 65%, white);
+  --primary-lt: hsl(348, 100%, 55%);
+  --secondary-lt: hsl(36, 85%, 80%);
 
   /*neutrals*/
   --offwhite: color-mix(in hsl, var(--secondary) 20%, white);
@@ -83,22 +83,22 @@ h3 {
   padding: 7px 15px 15px;
 }
 
-#site-title > :first-child {
+#title-container > :first-child {
   column-gap: 10px;
   text-decoration: none;
   width: fit-content;
 }
 
-#site-title img {
+#title-container img {
   width: 90px;
   height: auto;
 }
 
-#site-title > hgroup {
+#title-container > hgroup {
   justify-content: center;
 }
 
-#site-title h1 {
+#title-container h1 {
   font-size: 4.25rem;
   font-family: var(--font-brand);
   color: var(--secondary);
@@ -106,11 +106,32 @@ h3 {
   line-height: 0.8;
 }
 
-#site-title p {
+#title-container p {
   font-family: var(--font-heading);
   color: var(--offwhite);
   font-size: 0.8rem;
   font-weight: 500;
+}
+
+#cart-container {
+  align-items: center;
+  padding: 0px 10px;
+}
+
+.hov {
+  transition: filter 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.brighten:hover {
+  filter: brightness(130%) saturate(120%);
+}
+
+.scale-up-sm:hover {
+  transform: scale(105%);
+}
+
+.scale-up-lg:hover {
+  transform: scale(101%);
 }
 
 #item-list-grid {

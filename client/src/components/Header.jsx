@@ -14,15 +14,15 @@ export default function Header() {
 
   return (
     <>
-      <div id='header-upper' class='flex row stretch-start'>
-        <div>
+      <div id='header-upper' className='flex row stretch-start'>
+        <div id='title-container'>
           <TitleBar />
         </div>
-        <div>
+        <div id='cart-container' className='flex row'>
           <CartBar />
         </div>
       </div>
-      <div id='header-lower' class='flex row stretch-start'>
+      <div id='header-lower' className='flex row stretch-start'>
         <NavBar />
         <AuthBar />
       </div>
