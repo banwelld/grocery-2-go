@@ -10,5 +10,11 @@ export default function Main({orderItems, setOrderItems}) {
   items && setItems(0);
   orders && setOrders(0);
 
-  return <h1>This is where the Main component goes</h1>;
+  return (
+    <main>
+      <div id='left-side' className='sidebar'></div>
+      <div className='content'>This is here</div>
+      <div id='right-side' className='sidebar'></div>
+    </main>
+  );
 }

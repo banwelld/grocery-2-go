@@ -1,20 +1,21 @@
 :root {
   /*base colours*/
-  --secondary: hsl(348, 100%, 28%);
   --primary: hsl(36, 85%, 55%);
+  --secondary: hsl(348, 100%, 28%);
   --contrast: hsla(215, 18%, 15%);
 
   /*dark versions*/
-  --secondary-dk: hsl(348, 100%, 20%);
   --primary-dk: hsl(36, 85%, 40%);
+  --secondary-dk: hsl(348, 100%, 20%);
   --contrast-dk: hsla(215, 15%, 8%);
 
   /*light versions*/
-  --secondary-lt: hsl(348, 100%, 55%);
   --primary-lt: hsl(36, 85%, 80%);
+  --secondary-lt: hsl(348, 100%, 55%);
 
   /*neutrals*/
-  --offwhite: color-mix(in hsl, var(--primary) 20%, white);
+  --offwhite-lt: hsl(36, 85%, 97%);
+  --offwhite-dk: hsl(36, 85%, 90%);
 
   /*site fonts*/
   --font-brand: "Fugaz One";
@@ -32,7 +33,7 @@
 }
 
 body {
-  background: var(--offwhite);
+  background: var(--offwhite-dk);
   font-family: var(--font-utility);
   font-size: 16px;
   position: relative;
@@ -84,6 +85,12 @@ h3 {
   padding: 0px 15px;
 }
 
+.header-wrapper {
+  position: relative;
+  box-shadow: 0px 4px 10px 0 rgba(0, 0, 0, 0.3);
+  z-index: 10000;
+}
+
 #title-section > :first-child {
   column-gap: 10px;
   text-decoration: none;
@@ -111,7 +118,7 @@ h3 {
 
 #title-section p {
   font-family: var(--font-heading);
-  color: var(--offwhite);
+  color: var(--offwhite-lt);
   font-size: 0.8rem;
   font-weight: 500;
 }
@@ -139,7 +146,7 @@ h3 {
   width: 1.9em;
   font-family: var(--font-utility);
   font-size: 0.8rem;
-  color: var(--offwhite);
+  color: var(--offwhite-lt);
   background-color: var(--secondary);
   border-radius: 50%;
   justify-content: center;
@@ -189,6 +196,25 @@ h3 {
 
 .nav-bar-link:hover {
   text-shadow: var(--secondary-lt) 0px 0px 2px;
+}
+
+main {
+  display: flex;
+  height: 100vh;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 400px;
+  background-color: var(--offwhite-lt);
+}
+
+.sidebar {
+  display: flex;
+  flex: 0 1 200px;
+  background-color: var(--offwhite);
 }
 
 #item-list-grid {

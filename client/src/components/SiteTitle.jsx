@@ -1,9 +1,9 @@
-// TitleBar.jsx
+// SiteTitle.jsx
 
 import React from "react";
 import {Link} from "react-router-dom";
 
-export default function TitleBar() {
+export default function SiteTitle() {
   return (
     <Link to={"/"} className='flex row hov brighten scale-up-lg' title='Go to homepage'>
       <img

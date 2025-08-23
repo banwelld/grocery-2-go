@@ -1,9 +1,9 @@
-// CartBar.jsx
+// Cart.jsx
 
 import React from "react";
 import {Link} from "react-router-dom";
 
-export default function CartBar({itemCount, orderSubtotal}) {
+export default function Cart({itemCount, orderSubtotal}) {
   return (
     <Link to={"/my-cart"}>
       <div id='cart-wrapper' className={"hov brighten scale-up-sm"}>
