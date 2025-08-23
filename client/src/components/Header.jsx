@@ -10,16 +10,14 @@ export default function Header({itemCount, orderSubtotal}) {
   return (
     <>
       <div id='header-upper' className='flex row stretch-start'>
-        <div id='title-container'>
+        <div id='title-section'>
           <TitleBar />
         </div>
-        <div id='cart-container' className='flex row'>
+        <div id='cart-section' className='flex row'>
           <CartBar itemCount={itemCount} orderSubtotal={orderSubtotal} />
         </div>
       </div>
-      <div id='header-lower' className='flex row stretch-start'>
-        <NavBar />
-      </div>
+      <NavBar />
     </>
   );
 }

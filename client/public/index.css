@@ -1,20 +1,20 @@
 :root {
   /*base colours*/
-  --primary: hsl(348, 100%, 28%);
-  --secondary: hsl(36, 85%, 55%);
+  --secondary: hsl(348, 100%, 28%);
+  --primary: hsl(36, 85%, 55%);
   --contrast: hsla(215, 18%, 15%);
 
   /*dark versions*/
-  --primary-dk: hsl(348, 100%, 20%);
-  --secondary-dk: hsl(36, 85%, 40%);
+  --secondary-dk: hsl(348, 100%, 20%);
+  --primary-dk: hsl(36, 85%, 40%);
   --contrast-dk: hsla(215, 15%, 8%);
 
   /*light versions*/
-  --primary-lt: hsl(348, 100%, 55%);
-  --secondary-lt: hsl(36, 85%, 80%);
+  --secondary-lt: hsl(348, 100%, 55%);
+  --primary-lt: hsl(36, 85%, 80%);
 
   /*neutrals*/
-  --offwhite: color-mix(in hsl, var(--secondary) 20%, white);
+  --offwhite: color-mix(in hsl, var(--primary) 20%, white);
 
   /*site fonts*/
   --font-brand: "Fugaz One";
@@ -75,53 +75,48 @@ h3 {
 
 #header-upper {
   background-color: var(--contrast-dk);
-  padding: 10px 15px;
+  padding: 10px 20px;
 }
 
 #header-lower {
   background-color: var(--contrast);
-  padding: 10px 15px;
-  font-family: var(--font-heading);
-  color: var(--secondary);
-  text-decoration: none;
-  font-weight: 600;
   height: fit-content;
-  align-items: center;
+  padding: 0px 15px;
 }
 
-#title-container > :first-child {
+#title-section > :first-child {
   column-gap: 10px;
   text-decoration: none;
   width: fit-content;
 }
 
-#title-container img {
+#title-section img {
   width: 90px;
   height: auto;
 }
 
-#title-container > hgroup {
+#title-section > hgroup {
   justify-content: center;
   gap: 0rem;
 }
 
-#title-container h1 {
+#title-section h1 {
   font-size: 4.25rem;
   font-family: var(--font-brand);
-  color: var(--secondary);
+  color: var(--primary);
   font-weight: 700;
   line-height: 0.95;
   margin-bottom: -0.07em;
 }
 
-#title-container p {
+#title-section p {
   font-family: var(--font-heading);
   color: var(--offwhite);
   font-size: 0.8rem;
   font-weight: 500;
 }
 
-#cart-container {
+#cart-section {
   justify-content: center;
   align-items: center;
   padding: 0px 10px;
@@ -145,7 +140,7 @@ h3 {
   font-family: var(--font-utility);
   font-size: 0.8rem;
   color: var(--offwhite);
-  background-color: var(--primary);
+  background-color: var(--secondary);
   border-radius: 50%;
   justify-content: center;
   align-items: center;
@@ -173,18 +168,27 @@ h3 {
   transform: scale(101%);
 }
 
-#nav-container,
-#auth-container {
-  column-gap: 30px;
-  height: inherit;
-  align-items: center;
+#nav-bar {
+  background-color: var(--contrast);
 }
 
 .nav-bar-link {
-  font-family: inherit;
-  font-weight: inherit;
-  text-decoration: inherit;
-  color: inherit;
+  height: fit-content;
+  width: fit-content;
+  padding: 7px 15px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--primary);
+  background-color: var(--contrast);
+}
+
+.nav-bar-link.active {
+  filter: brightness(130%) saturate(120%);
+}
+
+.nav-bar-link:hover {
+  text-shadow: var(--secondary-lt) 0px 0px 2px;
 }
 
 #item-list-grid {
