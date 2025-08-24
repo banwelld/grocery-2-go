@@ -12,7 +12,7 @@ class User(db.Model, SerializerMixin):
 
     # TODO: serializer rules
 
-    id = db.Column(db.Integer, secondary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, unique=True, nullable=False)
     user_type = db.Column(db.String, default="customer")
     f_name = db.Column(db.String, nullable=False)
@@ -38,7 +38,7 @@ class Item(db.Model, SerializerMixin):
 
     # TODO: serializer rules
 
-    id = db.Column(db.Integer, secondary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
     category = db.Column(db.String, nullable=False)
     origin = db.Column(db.String, nullable=False)
@@ -63,7 +63,7 @@ class Order(db.Model, SerializerMixin):
 
     # TODO: serializer rules
 
-    id = db.Column(db.Integer, secondary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     order_ts = db.Column(db.DateTime, nullable=False, default=datetime.now)
     address = db.Column(db.String, nullable=False)
     city = db.Column(db.String, nullable=False)
@@ -91,7 +91,7 @@ class OrderItem(db.Model, SerializerMixin):
 
     # TODO: serializer rules
 
-    id = db.Column(db.Integer, secondary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
     unit_price_paid = db.Column(db.Integer, nullable=False)
     order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
