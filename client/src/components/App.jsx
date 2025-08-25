@@ -1,8 +1,8 @@
-// app.jsx
+// App.jsx
 
 import React, {useState} from "react";
+import {Outlet} from "react-router-dom";
 import Header from "./Header";
-import Main from "./Main";
 
 export const App = () => {
   const [orderItems, setOrderItems] = useState([{unit_price: 599}]);
@@ -15,7 +15,7 @@ export const App = () => {
   return (
     <>
       <Header itemCount={itemCount} orderSubtotal={orderSubtotal} />
-      <Main orderItems={orderItems} setOrderItems={setOrderItems} />
+      <Outlet context={{orderItems, setOrderItems}} />
     </>
   );
 };

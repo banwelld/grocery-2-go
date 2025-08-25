@@ -36,7 +36,7 @@ class User(db.Model, SerializerMixin):
 class Item(db.Model, SerializerMixin):
     __tablename__ = "items"
 
-    # TODO: serializer rules
+    serialize_rules = ("-order_items", "-orders")
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)

@@ -1,7 +1,7 @@
 // Main.jsx
 
 import React, {useState, useEffect} from "react";
-import ItemList from "./ItemList";
+import {Outlet} from "react-router-dom";
 
 export default function Main({orderItems, setOrderItems}) {
   const [items, setItems] = useState([]);
@@ -12,13 +12,11 @@ export default function Main({orderItems, setOrderItems}) {
     .then((r) => setItems(r));
   }, []);
 
-  console.log(items);
-
   return (
     <main>
       <div id='left-side' className='sidebar'></div>
       <div className='content'>
-        <ItemList items={items} orderItems={orderItems} setOrderItems={setOrderItems} />
+        <Outlet context={{items, orderItems, setOrderItems}} />
       </div>
       <div id='right-side' className='sidebar'></div>
     </main>
