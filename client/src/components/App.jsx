@@ -13,9 +13,9 @@ export const App = () => {
   );
 
   return (
-    <>
+    <div className='site-wrapper'>
       <Header itemCount={itemCount} orderSubtotal={orderSubtotal} />
       <Outlet context={{orderItems, setOrderItems}} />
-    </>
+    </div>
   );
 };
