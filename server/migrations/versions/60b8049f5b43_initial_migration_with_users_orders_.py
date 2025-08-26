@@ -1,16 +1,17 @@
-"""initial migration with all tables - users, orders, items, order_items
+"""initial migration with users, orders, items, order_items tables
 
-Revision ID: 530d2e75ea86
+Revision ID: 60b8049f5b43
 Revises:
-Create Date: 2025-08-10 13:19:55.004086
+Create Date: 2025-08-25 23:24:00.223416
 
 """
 
-import sqlalchemy as sa
 from alembic import op
+import sqlalchemy as sa
+
 
 # revision identifiers, used by Alembic.
-revision = "530d2e75ea86"
+revision = "60b8049f5b43"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,22 +26,23 @@ def upgrade():
         sa.Column("category", sa.String(), nullable=False),
         sa.Column("origin", sa.String(), nullable=False),
         sa.Column("description", sa.String(), nullable=True),
-        sa.Column("unit_price", sa.Integer(), nullable=False),
+        sa.Column("price", sa.Integer(), nullable=False),
         sa.Column("unit", sa.String(), nullable=False),
+        sa.Column("pkg_qty", sa.String(), nullable=True),
         sa.Column("image_url", sa.String(), nullable=False),
-        sa.secondaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("name"),
     )
     op.create_table(
         "users",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("email", sa.String(), nullable=False),
-        sa.Column("user_type", sa.String(), nullable=True),
+        sa.Column("role", sa.String(), nullable=False),
         sa.Column("f_name", sa.String(), nullable=False),
         sa.Column("l_name", sa.String(), nullable=False),
-        sa.Column("phone_num", sa.String(), nullable=False),
-        sa.Column("password_hash", sa.String(), nullable=False),
-        sa.secondaryKeyConstraint("id"),
+        sa.Column("phone", sa.String(), nullable=False),
+        sa.Column("_password_hash", sa.String(), nullable=False),
+        sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("email"),
     )
     op.create_table(
@@ -51,18 +53,18 @@ def upgrade():
         sa.Column("city", sa.String(), nullable=False),
         sa.Column("province_cd", sa.String(), nullable=False),
         sa.Column("postal_cd", sa.String(), nullable=False),
-        sa.Column("order_total", sa.Integer(), nullable=False),
+        sa.Column("total", sa.Integer(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
             ["user_id"], ["users.id"], name=op.f("fk_orders_user_id_users")
         ),
-        sa.secondaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
         "order_items",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("quantity", sa.Integer(), nullable=False),
-        sa.Column("unit_price_paid", sa.Integer(), nullable=False),
+        sa.Column("price", sa.Integer(), nullable=False),
         sa.Column("order_id", sa.Integer(), nullable=False),
         sa.Column("item_id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
@@ -71,7 +73,7 @@ def upgrade():
         sa.ForeignKeyConstraint(
             ["order_id"], ["orders.id"], name=op.f("fk_order_items_order_id_orders")
         ),
-        sa.secondaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###
 

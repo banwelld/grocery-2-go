@@ -17,8 +17,11 @@ export default function ProdCard({item}) {
           </p>
         </hgroup>
         <p className='card-price'>
-          ${(item.unit_price / 100).toFixed(2)}{" "}
-          <span className='card-unit'>/ {item.unit}</span>
+          ${(item.price / 100).toFixed(2)}{" "}
+          <span className='card-unit'>
+            / {item.unit}
+            {item.pkg_qty && ` (${item.pkg_qty})`}
+          </span>
         </p>
       </article>
     </Link>

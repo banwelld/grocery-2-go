@@ -32,8 +32,11 @@ export default function ProdPage() {
         </hgroup>
         <p className='prod-page-description'>{item.description}</p>
         <p className='prod-page-price'>
-          ${(item.unit_price / 100).toFixed(2)}{" "}
-          <span className='prod-page-unit'>/ {item.unit}</span>
+          ${(item.price / 100).toFixed(2)}{" "}
+          <span className='prod-page-unit'>
+            / {item.unit}
+            {item.pkg_qty && ` (${item.pkg_qty})`}
+          </span>
         </p>
       </div>
     </article>
