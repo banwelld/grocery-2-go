@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 
+import json
 from random import randint, sample
 
 from app import app
 from faker import Faker
 from models import Item, Order, OrderItem, User, db
-from seed_items import seed_items
+
+# open up AI-generated item data
+
+with open("seed_items.json", "r") as f:
+    seed_item_data = json.load(f)
 
 fake = Faker("en_CA")
 
@@ -66,7 +71,13 @@ if __name__ == "__main__":
         db.session.flush()
 
         print("Creating items...\n")
-        items = [Item(**item_data) for item_data in seed_items]
+        items = [Item(**item_data) for item_data in seed_item_data]
+
+        for item in items:
+            item.description = (
+                fake.paragraph(nb_sentences=4) + "\n\n" + fake.paragraph(nb_sentences=2)
+            )
+
         db.session.add_all(items)
 
         print("Creating orders...\n")

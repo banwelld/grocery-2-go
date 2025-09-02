@@ -1,19 +1,20 @@
 // NavBar.jsx
 
 import React from "react";
-import {NavLink} from "react-router-dom";
-import navBarLinkConfig from "../navBarLinkConfig.json";
+import { NavLink } from "react-router-dom";
+import navLinks from "../nav-links.json";
 
-export default function NavBar() {
-  const navLinks = navBarLinkConfig.map((link) => (
-    <NavLink key={link.path} to={link.path} className='nav-bar-link hov brighten'>
-      {link.label}
-    </NavLink>
+export default function NavBar({ user }) {
+  const links = navLinks.map((link) => (
+    <li key={link.path}>
+      <NavLink to={link.path}>{link.label}</NavLink>
+    </li>
   ));
 
   return (
-    <div id='nav-bar' className='flex row'>
-      {navLinks}
-    </div>
+    <nav>
+      <ul>{links}</ul>
+      {user && `Welcome ${user.f_name} `}
+    </nav>
   );
 }

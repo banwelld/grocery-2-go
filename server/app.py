@@ -1,41 +1,22 @@
 #!/usr/bin/env python3
 
-import messages as msg
+import json
+
 from config import api, app, bcrypt, db
 from flask import make_response, request, session
 from flask_restful import Resource
+from helpers import find_falsey, find_req_fields
 from models import Item, User
-from sqlalchemy.inspection import inspect
+
+# get error messages from messages.json
+
+with open("messages.json", "r") as m:
+    msg = json.load(m)
 
 # reusable dummy hash to balance timing of authentications where the
 # user email is found with ones where it is not found
 
 DUMMY_HASH = bcrypt.generate_password_hash("dummy123").decode("utf-8")
-
-# identify required fields for model
-
-
-def find_req_fields(model):
-    mapper = inspect(model)
-    required = [
-        column.name
-        for column in mapper.columns
-        if (
-            not column.nullable
-            and not column.primary_key
-            and column.default is None
-            and column.server_default is None
-        )
-    ]
-    return required
-
-
-# identify missing data (falsey key values)
-
-
-def find_empty_keys(request_dict):
-    empty_keys = [k for k, v in request_dict.items() if not v]
-    return (", ").join(empty_keys)
 
 
 # views
@@ -51,19 +32,20 @@ class Login(Resource):
         fields = ["email", "password"]
         data = {k: request.json.get(k) for k in fields}
 
-        if empty_keys := find_empty_keys(data):
+        if falsey_keys := find_falsey(data):
             return make_response(
-                {"error": msg.MISSING_FIELDS.format(fields=", ".join(empty_keys))}, 422
+                {"error": msg["MISSING_FIELDS"].format(fields="".join(falsey_keys))},
+                422,
             )
 
         user = User.query.filter(User.email == data["email"]).first()
 
         if not user:
             bcrypt.check_password_hash(DUMMY_HASH, data["password"])
-            return make_response({"error": msg.INVALID_CREDS}, 401)
+            return make_response({"error": msg["INVALID_CREDS"]}, 401)
 
         if not user.authenticate(data["password"]):
-            return make_response({"error": msg.INVALID_CREDS}, 401)
+            return make_response({"error": msg["INVALID_CREDS"]}, 401)
 
         session["user_id"] = user.id
 
@@ -82,9 +64,10 @@ class AllUsers(Resource):
         fields = find_req_fields(User)
         data = {k: request.json.get(k) for k in fields}
 
-        if empty_keys := find_empty_keys(data):
+        if falsey_keys := find_falsey(data):
             return make_response(
-                {"error": msg.MISSING_FIELDS.format(fields=", ".join(empty_keys))}, 422
+                {"error": msg["MISSING_FIELDS"].format(fields="".join(falsey_keys))},
+                422,
             )
 
         new_user = User(**data)
@@ -106,9 +89,10 @@ class AllItems(Resource):
         fields = find_req_fields(User)
         data = {k: request.json.get(k) for k in fields}
 
-        if empty_keys := find_empty_keys(data):
+        if falsey_keys := find_falsey(data):
             return make_response(
-                {"error": msg.MISSING_FIELDS.format(fields=", ".join(empty_keys))}, 422
+                {"error": msg["MISSING_FIELDS"].format(fields="".join(falsey_keys))},
+                422,
             )
 
         new_item = Item(**data)
@@ -126,7 +110,7 @@ class ItemById(Resource):
         item = Item.query.filter(Item.id == id).first()
 
         if not item:
-            return make_response({"error": msg.ID_NOT_FOUND}, 404)
+            return make_response({"error": msg["ID_NOT_FOUND"]}, 404)
 
         return make_response(item.to_dict(), 200)
 
@@ -134,7 +118,7 @@ class ItemById(Resource):
         item = Item.query.filter(Item.id == id).first()
 
         if not item:
-            return make_response({"error": msg.ID_NOT_FOUND}, 404)
+            return make_response({"error": msg["ID_NOT_FOUND"]}, 404)
 
         for attr, value in request.json.items():
             setattr(item, attr, value)
@@ -148,7 +132,7 @@ class ItemById(Resource):
         item = Item.query.filter(Item.id == id).first()
 
         if not item:
-            return make_response({"error": msg.ID_NOT_FOUND}, 404)
+            return make_response({"error": msg["ID_NOT_FOUND"]}, 404)
 
         db.session.delete(item)
         db.session.commit()

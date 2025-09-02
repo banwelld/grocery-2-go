@@ -1,3 +1,0 @@
-ID_NOT_FOUND = "id does not exist"
-INVALID_CREDS = "invalid email address or password"
-MISSING_FIELDS = "missing required field(s): {fields}"

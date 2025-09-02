@@ -1,8 +1,9 @@
 // routes.js
 
-import {App} from "./components/App";
+import { App } from "./components/App";
 import ErrorPage from "./components/ErrorPage";
-import Main from "./components/Main";
+import Login from "./components/Login";
+import Register from "./components/Register";
 import ItemList from "./components/ItemList";
 import ProdPage from "./components/ProdPage";
 import MyCart from "./components/MyCart";
@@ -15,17 +16,13 @@ const routes = [
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
-      {
-        path: "/",
-        element: <Main />,
-        children: [
-          {index: true, element: <ItemList />},
-          {path: "items/:id", element: <ProdPage />},
-          {path: "users/:id", element: <UserInfo />},
-          {path: "my-cart", element: <MyCart />},
-          {path: "previous-orders", element: <PreviousOrders />},
-        ],
-      },
+      { index: true, element: <ItemList /> },
+      { path: "login", element: <Login /> },
+      { path: "register", element: <Register /> },
+      { path: "users/:id", element: <UserInfo /> },
+      { path: "items/:id", element: <ProdPage /> },
+      { path: "my-cart", element: <MyCart /> },
+      { path: "previous-orders", element: <PreviousOrders /> },
     ],
   },
 ];

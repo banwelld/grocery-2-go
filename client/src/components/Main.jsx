@@ -1,9 +1,9 @@
 // Main.jsx
 
-import React, {useState, useEffect} from "react";
-import {Outlet} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 
-export default function Main({orderItems, setOrderItems}) {
+export default function Main({ orderItems, setOrderItems, user, postUserData }) {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -14,11 +14,14 @@ export default function Main({orderItems, setOrderItems}) {
 
   return (
     <main>
-      <div id='left-side' className='sidebar'></div>
-      <div className='content'>
-        <Outlet context={{items, orderItems, setOrderItems}} />
+      <div className='sidebar left'></div>
+      <div className='site-contents'>
+        <Outlet
+          context={{ items, setItems, orderItems, setOrderItems, user, postUserData }}
+        />
+        <ScrollRestoration />
       </div>
-      <div id='right-side' className='sidebar'></div>
+      <div className='sidebar right'></div>
     </main>
   );
 }

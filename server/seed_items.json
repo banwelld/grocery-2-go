@@ -1,0 +1,920 @@
+[
+  {
+    "name": "Fuji Apples",
+    "origin": "Japan",
+    "price": 699,
+    "unit": "bag",
+    "pkg_qty": "8",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/094/512/6000200094512.jpg"
+  },
+  {
+    "name": "Bananas",
+    "origin": "Ecuador",
+    "price": 389,
+    "unit": "bunch",
+    "pkg_qty": "8",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/580/6_r/875806_R.jpg"
+  },
+  {
+    "name": "Gala Apples",
+    "origin": "New Zealand",
+    "price": 719,
+    "unit": "bag",
+    "pkg_qty": "8",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/094/514/6000200094514.jpg"
+  },
+  {
+    "name": "Red Delicious Apples",
+    "origin": "Canada",
+    "price": 599,
+    "unit": "bag",
+    "pkg_qty": "8",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/062/0_r/6000191270620_R.jpg"
+  },
+  {
+    "name": "Green Bell Peppers",
+    "origin": "Mexico",
+    "price": 399,
+    "unit": "kg",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/351/067/6000209351067.jpg"
+  },
+  {
+    "name": "Red Bell Peppers",
+    "origin": "Netherlands",
+    "price": 699,
+    "unit": "kg",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/_46/886/46886.jpg"
+  },
+  {
+    "name": "Carrots",
+    "origin": "Netherlands",
+    "price": 289,
+    "unit": "kg",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/032/945/6000207032945.jpg"
+  },
+  {
+    "name": "Broccoli",
+    "origin": "Italy",
+    "price": 369,
+    "unit": "kg",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/094/505/6000200094505.jpg"
+  },
+  {
+    "name": "Strawberries",
+    "origin": "Spain",
+    "price": 699,
+    "unit": "pkg",
+    "pkg_qty": "454g",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/009/513/812049009513.jpg"
+  },
+  {
+    "name": "Blueberries",
+    "origin": "Canada",
+    "price": 399,
+    "unit": "pkg",
+    "pkg_qty": "312g",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/653/137/6000204653137.jpg"
+  },
+  {
+    "name": "Cherry Tomatoes",
+    "origin": "Mexico",
+    "price": 449,
+    "unit": "pkg",
+    "pkg_qty": "300g",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/163/730/6000209163730.jpg"
+  },
+  {
+    "name": "Cucumber",
+    "origin": "Turkey",
+    "price": 120,
+    "unit": "each",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/920/596/6000188920596.jpg"
+  },
+  {
+    "name": "Spinach",
+    "origin": "Canada",
+    "price": 229,
+    "unit": "bunch",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/094/416/6000200094416.jpg"
+  },
+  {
+    "name": "Romaine Lettuce",
+    "origin": "Canada",
+    "price": 339,
+    "unit": "head",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/094/536/6000200094536.jpg"
+  },
+  {
+    "name": "Avocados",
+    "origin": "Mexico",
+    "price": 179,
+    "unit": "each",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/401/591/33383401591.jpg"
+  },
+  {
+    "name": "Pineapples",
+    "origin": "Costa Rica",
+    "price": 429,
+    "unit": "each",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/198/506/6000200198506.jpg"
+  },
+  {
+    "name": "Mangoes",
+    "origin": "India",
+    "price": 279,
+    "unit": "each",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/094/552/6000200094552.jpg"
+  },
+  {
+    "name": "Red Grapes",
+    "origin": "Chile",
+    "price": 619,
+    "unit": "kg",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/042/489/6000201042489.jpg"
+  },
+  {
+    "name": "Green Grape",
+    "origin": "Canada",
+    "price": 619,
+    "unit": "kg",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/557/738/6000200557738.jpg"
+  },
+  {
+    "name": "Oranges",
+    "origin": "Brazil",
+    "price": 159,
+    "unit": "each",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/234/6_r/6000191272346_R.jpg"
+  },
+  {
+    "name": "Lemons",
+    "origin": "Spain",
+    "price": 169,
+    "unit": "each",
+    "pkg_qty": "",
+    "category": "fruits and vegetables",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/094/504/6000200094504.jpg"
+  },
+  {
+    "name": "Chicken Breasts",
+    "origin": "Canada",
+    "price": 1599,
+    "unit": "each",
+    "pkg_qty": "~250-275g",
+    "category": "meats",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/028/835/6000200028835.jpg"
+  },
+  {
+    "name": "Chicken legs",
+    "origin": "Canada",
+    "price": 1399,
+    "unit": "each",
+    "pkg_qty": "~275-325g",
+    "category": "meats",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/139/485/6000206139485.jpg"
+  },
+  {
+    "name": "Ground Beef",
+    "origin": "Canada",
+    "price": 1799,
+    "unit": "kg",
+    "pkg_qty": "",
+    "category": "meats",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/267/300/6000202267300.jpg"
+  },
+  {
+    "name": "Tri-Tip Steak",
+    "origin": "Argentina",
+    "price": 1079,
+    "unit": "each",
+    "pkg_qty": "~200-250g",
+    "category": "meats",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/529/044/6000206529044.jpg"
+  },
+  {
+    "name": "Strip Loin Steak",
+    "origin": "Australia",
+    "price": 1669,
+    "unit": "each",
+    "pkg_qty": "~300-350g",
+    "category": "meats",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/029/852/6000200029852.jpg"
+  },
+  {
+    "name": "Pork Chops",
+    "origin": "Canada",
+    "price": 1599,
+    "unit": "pkg",
+    "pkg_qty": "6, ~900-950g",
+    "category": "meats",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Pork-chops-001.jpg/640px-Pork-chops-001.jpg"
+  },
+  {
+    "name": "Pork Tenderloin",
+    "origin": "Canada",
+    "price": 1769,
+    "unit": "pkg",
+    "pkg_qty": "2, ~1-1.1kg",
+    "category": "meats",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/577/451/6000206577451.jpg"
+  },
+  {
+    "name": "Ground Pork",
+    "origin": "China",
+    "price": 1199,
+    "unit": "kg",
+    "pkg_qty": "",
+    "category": "meats",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/577/509/6000206577509.jpg"
+  },
+  {
+    "name": "Lamb Chops",
+    "origin": "New Zealand",
+    "price": 3997,
+    "unit": "pkg",
+    "pkg_qty": "12, ~1.5-1.6kg",
+    "category": "meats",
+    "image_url": "https://digital.loblaws.ca/PCX/20171672_KG/en/2/20171672_en_angle_800.png"
+  },
+  {
+    "name": "Lamb Leg",
+    "origin": "Australia",
+    "price": 2499,
+    "unit": "each",
+    "pkg_qty": "~3.1-3.3kg",
+    "category": "meats",
+    "image_url": "https://digital.loblaws.ca/PCX/20142553_KG/en/2/20142553_en_angle_800.png"
+  },
+  {
+    "name": "Ground Lamb",
+    "origin": "UK",
+    "price": 1899,
+    "unit": "kg",
+    "pkg_qty": "",
+    "category": "meats",
+    "image_url": "https://digital.loblaws.ca/PCX/20010327_EA/en/1/20010327_en_front_800.png"
+  },
+  {
+    "name": "Turkey Breast",
+    "origin": "Canada",
+    "price": 1189,
+    "unit": "each",
+    "pkg_qty": "~800-850g",
+    "category": "meats",
+    "image_url": "https://digital.loblaws.ca/PCX/21124853_KG/en/8/21124853_enfr_beauty_800.png"
+  },
+  {
+    "name": "Turkey Wings",
+    "origin": "Canada",
+    "price": 1489,
+    "unit": "kg",
+    "pkg_qty": "",
+    "category": "meats",
+    "image_url": "https://digital.loblaws.ca/PCX/21124838_KG/en/8/21124838_enfr_beauty_800.png"
+  },
+  {
+    "name": "Duck Breast",
+    "origin": "Canada",
+    "price": 1559,
+    "unit": "each",
+    "pkg_qty": "~350-400g",
+    "category": "meats",
+    "image_url": "https://digital.loblaws.ca/PCX/20825243_KG/en/1/20825243_en_front_800.png"
+  },
+  {
+    "name": "Duck Leg",
+    "origin": "France",
+    "price": 1489,
+    "unit": "each",
+    "pkg_qty": "~350-400g",
+    "category": "meats",
+    "image_url": "https://digital.loblaws.ca/PCX/20825888_KG/en/1/20825888_en_front_800.png"
+  },
+  {
+    "name": "Veal Cutlets",
+    "origin": "Italy",
+    "price": 2499,
+    "unit": "pkg",
+    "pkg_qty": "6, ~650-700g",
+    "category": "meats",
+    "image_url": "https://digital.loblaws.ca/PCX/20078623_KG/en/2/20078623_enfr_angle_v1_800.png"
+  },
+  {
+    "name": "Veal Shank",
+    "origin": "Italy",
+    "price": 2897,
+    "unit": "each",
+    "pkg_qty": "~1.6-1.7kg",
+    "category": "meats",
+    "image_url": "https://digital.loblaws.ca/PCX/20884754_KG/en/2/20884754_enfr_angle_v1_800.png"
+  },
+  {
+    "name": "Ground Turkey",
+    "origin": "Canada",
+    "price": 1329,
+    "unit": "kg",
+    "pkg_qty": "",
+    "category": "meats",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/028/827/6000200028827.jpg"
+  },
+  {
+    "name": "Pork Sausage",
+    "origin": "Germany",
+    "price": 229,
+    "unit": "each",
+    "pkg_qty": "~200g",
+    "category": "meats",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/112/224/6000202112224.jpg"
+  },
+  {
+    "name": "Bacon",
+    "origin": "Canada",
+    "price": 2598,
+    "unit": "pkg",
+    "pkg_qty": "375g",
+    "category": "meats",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/802/932/6000202802932.jpg"
+  },
+  {
+    "name": "Whole Milk",
+    "origin": "Canada",
+    "price": 199,
+    "unit": "carton",
+    "pkg_qty": "1L",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/8eb764cd-f7b5-4c4b-8971-c3b53787af7f.7381bfa500eef3d0f52c89f5be4761dd.png"
+  },
+  {
+    "name": "Skim Milk",
+    "origin": "Canada",
+    "price": 199,
+    "unit": "carton",
+    "pkg_qty": "1L",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/8205866b-d294-45f0-a4df-0a3786d9a6c2.db0dd4ed05f9030ff98011b96f7565e9.png"
+  },
+  {
+    "name": "Semi-Skimmed Milk",
+    "origin": "Canada",
+    "price": 199,
+    "unit": "carton",
+    "pkg_qty": "1L",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/6c022d77-5de4-41c9-a5c0-2c45ddd8cefa.2ea5f092d9c21520121cdc9da756ca1c.png"
+  },
+  {
+    "name": "Heavy Cream",
+    "origin": "France",
+    "price": 429,
+    "unit": "carton",
+    "pkg_qty": "473ml",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/83910fe4-9352-4ba7-9683-728538ccd62e.e52e4aa9d30a53277a77e57fdd9e6c4b.jpeg"
+  },
+  {
+    "name": "Sour Cream",
+    "origin": "Canada",
+    "price": 319,
+    "unit": "container",
+    "pkg_qty": "250ml",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/2f867c79-8bfb-4d49-80ca-bddb72e007fe.aec69edf342f2c1e71140fc3e5e5923b.jpeg"
+  },
+  {
+    "name": "Plain Yogurt",
+    "origin": "Canada",
+    "price": 399,
+    "unit": "container",
+    "pkg_qty": "750ml",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/e1c9ce57-d0a4-417d-8929-9a58cf14ac5f.c28e8a1b40e47012ed6a0764808e6b7f.jpeg"
+  },
+  {
+    "name": "Greek Yogurt",
+    "origin": "Greece",
+    "price": 719,
+    "unit": "container",
+    "pkg_qty": "750ml",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/5c9e2362-a924-46a9-a5d9-87fc3e4a1502.d8e1607f6ebf0677f6f448e6d1e15e3f.png"
+  },
+  {
+    "name": "Salted Butter",
+    "origin": "Canada",
+    "price": 829,
+    "unit": "block",
+    "pkg_qty": "454g",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/c7c51bbf-4a2d-4b49-8d6d-1273d2139be6.079473a42ab5eab70f21890d59399243.jpeg"
+  },
+  {
+    "name": "Unsalted Butter",
+    "origin": "Canada",
+    "price": 829,
+    "unit": "block",
+    "pkg_qty": "454g",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/255763e4-9a7f-4343-9e14-ff4d6afd83e0.0cedd4a8135a762edac842c8221bf5d0.jpeg"
+  },
+  {
+    "name": "Cheddar Cheese",
+    "origin": "Canada",
+    "price": 699,
+    "unit": "block",
+    "pkg_qty": "400g",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/083/160/6000202083160.jpg"
+  },
+  {
+    "name": "Mozzarella Cheese",
+    "origin": "Italy",
+    "price": 899,
+    "unit": "block",
+    "pkg_qty": "400g",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/310/504/6000201310504.jpg"
+  },
+  {
+    "name": "Parmigiano-Reggiano",
+    "origin": "Italy",
+    "price": 2299,
+    "unit": "block",
+    "pkg_qty": "250g",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/586/501/6000204586501.jpg"
+  },
+  {
+    "name": "Cream Cheese",
+    "origin": "Canada",
+    "price": 379,
+    "unit": "container",
+    "pkg_qty": "227g",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/630/994/6000208630994.jpg"
+  },
+  {
+    "name": "Cottage Cheese",
+    "origin": "Canada",
+    "price": 489,
+    "unit": "container",
+    "pkg_qty": "500g",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/35885ac6-4d4d-4529-94a0-9ad9035bf7d8.a705c3b6270969026a7d4a971fa5ad0d.jpeg"
+  },
+  {
+    "name": "Ricotta Cheese",
+    "origin": "Italy",
+    "price": 629,
+    "unit": "container",
+    "pkg_qty": "475g",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/640503dd-10a2-4aa9-b860-36b5cdcbf7a1.f3ac53e87b51f38b2d77d3e577c5f6da.jpeg"
+  },
+  {
+    "name": "Feta Cheese",
+    "origin": "Canada",
+    "price": 319,
+    "unit": "container",
+    "pkg_qty": "200g",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/abdb5ef9-96ad-418b-89cc-955e94b63979.845bfc66d0b597458fd57502ca822f93.jpeg"
+  },
+  {
+    "name": "Emmenthal Cheese",
+    "origin": "Switzerland",
+    "price": 899,
+    "unit": "block",
+    "pkg_qty": "220g",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/364/708/6000200364708.jpg"
+  },
+  {
+    "name": "Goat Cheese",
+    "origin": "France",
+    "price": 839,
+    "unit": "block",
+    "pkg_qty": "200g",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/779/119/6000203779119.jpg"
+  },
+  {
+    "name": "Blue Cheese",
+    "origin": "Italy",
+    "price": 699,
+    "unit": "block",
+    "pkg_qty": "125g",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/111/022/6000201111022.jpg"
+  },
+  {
+    "name": "Evaporated Milk",
+    "origin": "Canada",
+    "price": 289,
+    "unit": "can",
+    "pkg_qty": "354ml",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/e72cc952-6982-4601-847d-ffb54f43420f.24c876ee0f519a8e6876a2512816ea35.jpeg"
+  },
+  {
+    "name": "Condensed Milk",
+    "origin": "Canada",
+    "price": 299,
+    "unit": "can",
+    "pkg_qty": "297ml",
+    "category": "dairy",
+    "image_url": "https://i5.walmartimages.com/asr/202ff992-4a58-42c2-846e-7cb0a8819b46.b30b0ddefd446e90402b8cc40473dfce.jpeg"
+  },
+  {
+    "name": "Artisan Bread",
+    "origin": "Canada",
+    "price": 299,
+    "unit": "loaf",
+    "pkg_qty": "",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/173/288/6000205173288.jpg"
+  },
+  {
+    "name": "Sourdough Bread",
+    "origin": "Canada",
+    "price": 299,
+    "unit": "loaf",
+    "pkg_qty": "",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/783/309/6000201783309.jpg"
+  },
+  {
+    "name": "French Baguette",
+    "origin": "Canada",
+    "price": 179,
+    "unit": "loaf",
+    "pkg_qty": "",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/400/362/6000204400362.jpg"
+  },
+  {
+    "name": "Croissants",
+    "origin": "Canada",
+    "price": 599,
+    "unit": "pkg",
+    "pkg_qty": "6",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/521/581/6000206521581.jpg"
+  },
+  {
+    "name": "Blueberry Muffins",
+    "origin": "Canada",
+    "price": 599,
+    "unit": "pkg",
+    "pkg_qty": "6",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/982/873/6000204982873.jpg"
+  },
+  {
+    "name": "Chocolate Chip Cookies",
+    "origin": "Canada",
+    "price": 599,
+    "unit": "pkg",
+    "pkg_qty": "12",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/824/781/6000204824781.jpg"
+  },
+  {
+    "name": "Cinnamon Rolls",
+    "origin": "Canada",
+    "price": 599,
+    "unit": "pkg",
+    "pkg_qty": "6",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/058/640/6000201058640.jpg"
+  },
+  {
+    "name": "Bagels",
+    "origin": "Canada",
+    "price": 769,
+    "unit": "pkg",
+    "pkg_qty": "6",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.com/asr/c1ed21cc-a984-431c-9a43-423d471ad163.a9d4c846187b233a29de5caa558fb4ad.jpeg"
+  },
+  {
+    "name": "Pretzel Buns",
+    "origin": "Canada",
+    "price": 299,
+    "unit": "pkg",
+    "pkg_qty": "6",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/006/505/6000204006505.jpg"
+  },
+  {
+    "name": "Boston Cream Donuts",
+    "origin": "UK",
+    "price": 399,
+    "unit": "pkg",
+    "pkg_qty": "6",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/450/531/6000208450531.jpg"
+  },
+  {
+    "name": "Danish Pastries",
+    "origin": "Denmark",
+    "price": 599,
+    "unit": "pkg",
+    "pkg_qty": "6",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/143/169/6000205143169.jpg"
+  },
+  {
+    "name": "Oreo Cupcakes",
+    "origin": "Canada",
+    "price": 599,
+    "unit": "pkg",
+    "pkg_qty": "4",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/929/571/6000207929571.jpg"
+  },
+  {
+    "name": "Butter Tarts",
+    "origin": "Canada",
+    "price": 399,
+    "unit": "pkg",
+    "pkg_qty": "6",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/261/175/6000200261175.jpg"
+  },
+  {
+    "name": "Brownies",
+    "origin": "Canada",
+    "price": 399,
+    "unit": "pkg",
+    "pkg_qty": "6",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/970/670/6000208970670.jpg"
+  },
+  {
+    "name": "Pie (Apple)",
+    "origin": "Canada",
+    "price": 1599,
+    "unit": "each",
+    "pkg_qty": "",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/759/658/6000204759658.jpg"
+  },
+  {
+    "name": "Cheesecake",
+    "origin": "Canada",
+    "price": 239,
+    "unit": "slice",
+    "pkg_qty": "",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/907/939/6000206907939.jpg"
+  },
+  {
+    "name": "Macarons",
+    "origin": "Canada",
+    "price": 1699,
+    "unit": "pkg",
+    "pkg_qty": "12",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.com/asr/4d63903d-b4b5-42d3-91be-6c72f8671152.406d0438b452e8cb5a6aadaa5f40367e.jpeg"
+  },
+  {
+    "name": "Cannoli",
+    "origin": "Italy",
+    "price": 899,
+    "unit": "pkg",
+    "pkg_qty": "8",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.com/asr/4f525d1c-eb86-4fec-a435-ec6202f73977.81959f5f8f3adddb596587819d33ad99.jpeg"
+  },
+  {
+    "name": "Strawberry Shortcake",
+    "origin": "Canada",
+    "price": 599,
+    "unit": "each",
+    "pkg_qty": "",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/915/858/6000206915858.jpg"
+  },
+  {
+    "name": "Vanilla Celebration",
+    "origin": "Canada",
+    "price": 589,
+    "unit": "each",
+    "pkg_qty": "",
+    "category": "bakery",
+    "image_url": "https://i5.walmartimages.ca/images/Enlarge/915/840/6000206915840.jpg"
+  },
+  {
+    "name": "Ketchup",
+    "origin": "Canada",
+    "price": 459,
+    "unit": "container",
+    "pkg_qty": "1L",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/2be608a4-3f8d-449c-86b8-04b785424c73.e02330052bdafd6863a13cea64ea04f4.jpeg"
+  },
+  {
+    "name": "Mayonnaise",
+    "origin": "Canada",
+    "price": 479,
+    "unit": "container",
+    "pkg_qty": "445ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/bafac6e2-ff33-472e-a545-9d7384b5d425.ab4d78a8c74f8bc2be86094d1ddea9df.jpeg"
+  },
+  {
+    "name": "Dijon Mustard",
+    "origin": "France",
+    "price": 279,
+    "unit": "container",
+    "pkg_qty": "325ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/135ca3aa-0c1b-4a58-9c2e-15116c960797.e505514036ef66cfd50bcbbdb4a54e8f.jpeg"
+  },
+  {
+    "name": "Soy Sauce",
+    "origin": "China",
+    "price": 399,
+    "unit": "container",
+    "pkg_qty": "500ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/98e92819-da56-4661-b028-2b976ee6097a.06f6bfadc6b53b7d4d4f63cb45bedda3.jpeg"
+  },
+  {
+    "name": "Barbecue Sauce",
+    "origin": "Canada",
+    "price": 399,
+    "unit": "container",
+    "pkg_qty": "425ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/59291258-853b-4318-acb7-9edf9b356356.c84eef38c38256cf8b6550dcb26c3c63.jpeg"
+  },
+  {
+    "name": "Hot Sauce",
+    "origin": "Mexico",
+    "price": 479,
+    "unit": "container",
+    "pkg_qty": "714ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/f5d1c9f9-b6c7-4d26-91ce-aa3839b67215.c91a4102965ecbf40ea504d466cbae03.jpeg"
+  },
+  {
+    "name": "Honey Mustard",
+    "origin": "Canada",
+    "price": 397,
+    "unit": "container",
+    "pkg_qty": "325ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/50813cd7-f62b-4016-8011-df92384db1fd.dc4b59a02c22663f3afb31dea4132cbb.jpeg"
+  },
+  {
+    "name": "Relish",
+    "origin": "Canada",
+    "price": 619,
+    "unit": "container",
+    "pkg_qty": "375ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/dc0d4daa-0ad8-45ea-b53e-f4f1335af4ad.52c0a7b1dab164293315750bcfa765ab.jpeg"
+  },
+  {
+    "name": "Chili Sauce",
+    "origin": "Thailand",
+    "price": 389,
+    "unit": "container",
+    "pkg_qty": "350g",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/51e02889-d4a4-4489-8712-0c44a0ee4bc8.cadcd9a6b00c063126cecfde8dbdee08.jpeg"
+  },
+  {
+    "name": "Tartar Sauce",
+    "origin": "United Kingdom",
+    "price": 229,
+    "unit": "container",
+    "pkg_qty": "354ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/c6816297-665b-40fa-b764-2435cfbe1e4e.4fb4448f4fb13226fdbee49e235b673e.jpeg"
+  },
+  {
+    "name": "Wasabi Paste",
+    "origin": "Japan",
+    "price": 779,
+    "unit": "tube",
+    "pkg_qty": "40g",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/07f160f9-b0b8-44e4-bce7-99b9dc8dee47.48928b7a05c2b298e723d4cb4a22db77.jpeg"
+  },
+  {
+    "name": "Mexican Salsa",
+    "origin": "Canada",
+    "price": 399,
+    "unit": "container",
+    "pkg_qty": "325ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/725681b3-ca8d-4c3c-b28d-9c966a8876b0.4ab3f0efcf9eb45b818c04b85417b5d7.jpeg"
+  },
+  {
+    "name": "Pesto",
+    "origin": "Italy",
+    "price": 699,
+    "unit": "container",
+    "pkg_qty": "185ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/419bcd2b-838f-4c0f-8ca6-6713f19c4e98.550b1daf9bc1f5ea8b171cd8976acc7b.jpeg"
+  },
+  {
+    "name": "Tahini",
+    "origin": "Egypt",
+    "price": 499,
+    "unit": "container",
+    "pkg_qty": "800g",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/33f06e82-bc33-411b-ad2a-3e7e476befe6.871fc5f6699c58200fc39806f65f3581.jpeg"
+  },
+  {
+    "name": "Chimichurri Sauce",
+    "origin": "Canada",
+    "price": 889,
+    "unit": "container",
+    "pkg_qty": "325ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/bfb1b7e4-8275-4eda-be10-f07725122b87.c70df6fc6ae2ba9a97a7bfaae173e286.jpeg"
+  },
+  {
+    "name": "Aioli",
+    "origin": "Spain",
+    "price": 449,
+    "unit": "container",
+    "pkg_qty": "350ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/cc4ba6df-9153-4dd0-9b31-25f1c0f2bd9f_1.b850faa59099886f8f279b251b1832f8.jpeg"
+  },
+  {
+    "name": "Honey Balsalmic Dressing",
+    "origin": "Japan",
+    "price": 419,
+    "unit": "container",
+    "pkg_qty": "350ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/a5bfe7d5-f47b-4581-86d3-a8d3b7c5b3bd.e427bc0c23f1aa012b175242ed327bb9.jpeg"
+  },
+  {
+    "name": "Maple Syrup",
+    "origin": "Canada",
+    "price": 899,
+    "unit": "container",
+    "pkg_qty": "375ml",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/45c6655f-a780-443d-b0a1-551c7b8f1241.3525363bd22fa4009fb465225345743b.jpeg"
+  },
+  {
+    "name": "Horseradish Sauce",
+    "origin": "UK",
+    "price": 399,
+    "unit": "container",
+    "pkg_qty": "165g",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/04c8b0f8-289a-4957-a368-41af177a33ff.c5983067eb81ed3942400f5eef16742c.jpeg"
+  },
+  {
+    "name": "Buffalo Sauce",
+    "origin": "Canada",
+    "price": 3189,
+    "unit": "container",
+    "pkg_qty": "3.785L",
+    "category": "condiments",
+    "image_url": "https://i5.walmartimages.com/asr/61044dec-3c02-4ae9-979b-ebdc087b486c.c9e014a7f5a1a2920488676173b444b8.jpeg"
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "path": "/",
+    "label": "Home",
+    "visible": "all"
+  },
+  {
+    "path": "/users/:id",
+    "label": "View profile",
+    "visible": "auth"
+  },
+  {
+    "path": "/previous-orders",
+    "label": "View previous orders",
+    "visible": "auth"
+  },
+  {
+    "path": "/my-cart",
+    "label": "View cart",
+    "visible": "all"
+  },
+  {
+    "path": "/login",
+    "label": "Login / Registration",
+    "visible": "all"
+  }
+]

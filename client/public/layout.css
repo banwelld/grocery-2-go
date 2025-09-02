@@ -1,0 +1,46 @@
+#root,
+.site-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 100%;
+  min-height: 100vh;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+html,
+body {
+  width: 100%;
+}
+
+.header {
+  position: sticky;
+  top: 0px;
+}
+
+.header > .upper-row {
+  display: flex;
+}
+
+main {
+  display: grid;
+  flex: 1 1 auto;
+  min-height: 0;
+  grid-template-columns: 200px 1fr 200px;
+}
+
+.site-contents {
+  grid-column: 2;
+  display: flex;
+  flex: 0 1 100%;
+  min-height: 100%;
+}
+
+.sidebar {
+  display: flex;
+  flex: 0 0 200px;
+}

@@ -1,23 +1,23 @@
 // Header.jsx
 
 import React from "react";
-import SiteTitle from "./SiteTitle";
-import Cart from "./Cart";
+import Branding from "./Branding";
+import CartTally from "./CartTally";
 import NavBar from "./NavBar";
 
-export default function Header({itemCount, orderSubtotal}) {
-  itemCount = 55;
+export default function Header({ itemCount, user }) {
   return (
-    <div className='header-wrapper'>
-      <div id='header-upper' className='flex row stretch-start'>
-        <div id='title-section'>
-          <SiteTitle />
+    <div className='header'>
+      <div className='upper-row'>
+        <div className='branding'>
+          <Branding />
         </div>
-        <div id='cart-section' className='flex row'>
-          <Cart itemCount={itemCount} orderSubtotal={orderSubtotal} />
+        <div className='cart-tally'>
+          {/* TODO: remove the hard number and put in {itemCount} */}
+          <CartTally itemCount={2} />
         </div>
       </div>
-      <NavBar />
+      <NavBar user={user} />
     </div>
   );
 }
