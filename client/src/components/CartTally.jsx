@@ -6,9 +6,12 @@ import { Link } from "react-router-dom";
 export default function Cart({ itemCount, orderSubtotal }) {
   return (
     <Link to={"/my-cart"}>
-      <div className='wrapper'>
-        <span className={`counter ${itemCount < 1 ? "empty" : ""}`}>{itemCount}</span>
+      <div className='tally wrapper'>
+        <span className={`tally counter ${itemCount < 1 ? "empty" : ""}`}>
+          {itemCount}
+        </span>
         <img
+          className='tally'
           src='../../images/shopping-basket-yellow.svg'
           id='shopping-cart-image'
           title='My shopping cart'

@@ -6,7 +6,7 @@ import { useOutletContext, Link } from "react-router-dom";
 export default function Login() {
   const loginDataTemplate = { email: "", password: "" };
   const [formData, setFormData] = useState({ ...loginDataTemplate });
-  const { postUserData } = useOutletContext();
+  const { loginRegisterUser } = useOutletContext();
   const emailRef = useRef(null);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    postUserData("/login", formData, 1);
+    loginRegisterUser("/login", formData, 1);
     setFormData({ ...loginDataTemplate });
   };
 

@@ -38,6 +38,19 @@ class User(db.Model, SerializerMixin):
     def authenticate(self, password):
         return bcrypt.check_password_hash(self._password_hash, password)
 
+    @property
+    def open_order_id(self):
+        open_order = next((o for o in self.orders if o.status == "open"), None)
+        return open_order.id if open_order else None
+
+    def to_dict_login(self):
+        return {
+            "id": self.id,
+            "role": self.role,
+            "f_name": self.f_name,
+            "open_order_id": self.open_order_id,
+        }
+
 
 # item model
 
@@ -71,11 +84,12 @@ class Order(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     order_ts = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    address = db.Column(db.String, nullable=False)
-    city = db.Column(db.String, nullable=False)
-    province_cd = db.Column(db.String, nullable=False)
-    postal_cd = db.Column(db.String, nullable=False)
+    address = db.Column(db.String)
+    city = db.Column(db.String)
+    province_cd = db.Column(db.String)
+    postal_cd = db.Column(db.String)
     total = db.Column(db.Integer, nullable=False, default=0)
+    status = db.Column(db.String, nullable=False, default="open")
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     user = db.relationship("User", back_populates="orders", cascade="all")
     order_items = db.relationship(
@@ -87,6 +101,19 @@ class Order(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"<< ORDER: {self.order_ts} (${self.total / 100}) >>"
+
+    def to_dict_cart(self):
+        if self.status != "open":
+            return {}
+
+        return self.to_dict(
+            only=(
+                "order_items.id",
+                "order_items.item_id",
+                "order_items.quantity",
+                "order_items.price",
+            )
+        )
 
 
 # orderitem model

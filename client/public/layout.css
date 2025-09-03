@@ -17,13 +17,9 @@ body {
   width: 100%;
 }
 
-.header {
+.header.wrapper {
   position: sticky;
   top: 0px;
-}
-
-.header > .upper-row {
-  display: flex;
 }
 
 main {

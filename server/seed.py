@@ -24,10 +24,10 @@ def new_user():
     user["email"] = (
         f"{user['l_name'].lower()}{user['f_name'][0].lower()}{user_suffix}@{user_domain}"
     )
-    user_area_cd = f"{randint(2, 7)}{str(randint(1, 99)).zfill(3)}"
-    user_prefix = f"{randint(2, 9)}{str(randint(1, 99)).zfill(3)}"
+    user_area_cd = f"{randint(2, 7)}{str(randint(1, 99)).zfill(2)}"
+    user_prefix = f"{randint(2, 9)}{str(randint(1, 99)).zfill(2)}"
     user["phone"] = f"{user_area_cd}{user_prefix}{user_suffix}"
-    user["password_hash"] = f"{user['l_name']}{user['f_name']}01"
+    user["password"] = f"{user['l_name']}{user['f_name']}01"
     return User(**user)
 
 

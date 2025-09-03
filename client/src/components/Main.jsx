@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, ScrollRestoration } from "react-router-dom";
 
-export default function Main({ orderItems, setOrderItems, user, postUserData }) {
+export default function Main({ orderItems, setOrderItems, user, loginRegisterUser }) {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -17,7 +17,14 @@ export default function Main({ orderItems, setOrderItems, user, postUserData }) 
       <div className='sidebar left'></div>
       <div className='site-contents'>
         <Outlet
-          context={{ items, setItems, orderItems, setOrderItems, user, postUserData }}
+          context={{
+            items,
+            setItems,
+            orderItems,
+            setOrderItems,
+            user,
+            loginRegisterUser,
+          }}
         />
         <ScrollRestoration />
       </div>

@@ -5,18 +5,14 @@ import { Link } from "react-router-dom";
 
 export default function Branding() {
   return (
-    <Link to={"/"} title={"Go to homepage"}>
-      <div className='wrapper'>
+    <div className='branding wrapper'>
+      <Link to={"/"} title={"Go to homepage"}>
         <img
-          src='../images/strawberry02.png'
-          aria-hidden='true'
-          alt='perfectly ripe strawberies'
-        ></img>
-        <hgroup>
-          <h1>Grocery2Go</h1>
-          <p>Gourmet foods right to your home!</p>
-        </hgroup>
-      </div>
-    </Link>
+          className='branding'
+          src='../images/grocery2go-logo.webp'
+          alt='Grocery2Go logo'
+        />
+      </Link>
+    </div>
   );
 }

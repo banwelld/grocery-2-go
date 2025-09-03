@@ -13,7 +13,7 @@ export default function Login() {
     password2: "",
   };
   const [formData, setFormData] = useState({ ...registrationDataTemplate });
-  const { postUserData } = useOutletContext();
+  const { loginRegisterUser } = useOutletContext();
   const emailRef = useRef(null);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { password2, ...userData } = formData;
-    postUserData("/users", userData, 2);
+    loginRegisterUser("/register", userData, 2);
     setFormData({ ...registrationDataTemplate });
   };
 

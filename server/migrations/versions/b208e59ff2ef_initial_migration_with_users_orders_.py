@@ -1,17 +1,16 @@
 """initial migration with users, orders, items, order_items tables
 
-Revision ID: 60b8049f5b43
+Revision ID: b208e59ff2ef
 Revises:
-Create Date: 2025-08-25 23:24:00.223416
+Create Date: 2025-09-02 19:53:05.723033
 
 """
 
-from alembic import op
 import sqlalchemy as sa
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "60b8049f5b43"
+revision = "b208e59ff2ef"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -49,11 +48,12 @@ def upgrade():
         "orders",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("order_ts", sa.DateTime(), nullable=False),
-        sa.Column("address", sa.String(), nullable=False),
-        sa.Column("city", sa.String(), nullable=False),
-        sa.Column("province_cd", sa.String(), nullable=False),
-        sa.Column("postal_cd", sa.String(), nullable=False),
+        sa.Column("address", sa.String(), nullable=True),
+        sa.Column("city", sa.String(), nullable=True),
+        sa.Column("province_cd", sa.String(), nullable=True),
+        sa.Column("postal_cd", sa.String(), nullable=True),
         sa.Column("total", sa.Integer(), nullable=False),
+        sa.Column("status", sa.String(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
             ["user_id"], ["users.id"], name=op.f("fk_orders_user_id_users")

@@ -7,21 +7,21 @@
   {
     "path": "/users/:id",
     "label": "View profile",
-    "visible": "auth"
+    "visible": "reg"
   },
   {
     "path": "/previous-orders",
     "label": "View previous orders",
-    "visible": "auth"
+    "visible": "reg"
   },
   {
     "path": "/my-cart",
     "label": "View cart",
-    "visible": "all"
+    "visible": "reg"
   },
   {
     "path": "/login",
     "label": "Login / Registration",
-    "visible": "all"
+    "visible": "guest"
   }
 ]

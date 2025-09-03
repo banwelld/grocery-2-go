@@ -8,5 +8,5 @@ export default function ItemList() {
   const { items } = useOutletContext();
   const cards = items.map((item) => <ProdCard key={item.id} item={item} />);
 
-  return <div className='product grid'>{cards}</div>;
+  return <div className='item-grid'>{cards}</div>;
 }
