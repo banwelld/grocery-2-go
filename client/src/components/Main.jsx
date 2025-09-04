@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, ScrollRestoration } from "react-router-dom";
 
-export default function Main({ orderItems, setOrderItems, user, loginRegisterUser }) {
+export default function Main({ user, loginRegisterUser, cart, setCart }) {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
     fetch("/items")
-    .then((r) => r.json())
-    .then((r) => setItems(r));
+      .then((r) => r.json())
+      .then((r) => setItems(r));
   }, []);
 
   return (
@@ -19,11 +19,10 @@ export default function Main({ orderItems, setOrderItems, user, loginRegisterUse
         <Outlet
           context={{
             items,
-            setItems,
-            orderItems,
-            setOrderItems,
             user,
             loginRegisterUser,
+            cart,
+            setCart,
           }}
         />
         <ScrollRestoration />

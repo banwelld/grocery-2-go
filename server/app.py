@@ -7,6 +7,7 @@ from flask import make_response, request, session
 from flask_restful import Resource
 from helpers import find_falsey, find_req_fields
 from models import Item, Order, User
+from sqlalchemy import and_
 
 # get error messages from messages.json
 
@@ -49,7 +50,7 @@ class Login(Resource):
 
         session["user_id"] = user.id
 
-        return make_response(user.to_dict_login(), 200)
+        return make_response(user.to_dict(only=("role", "f_name")), 200)
 
 
 api.add_resource(Login, "/login")
@@ -70,7 +71,7 @@ class Register(Resource):
         db.session.add(new_user)
         db.session.commit()
 
-        return make_response(new_user.to_dict_login(), 201)
+        return make_response(new_user.to_dict(only=("role", "f_name")), 201)
 
 
 api.add_resource(Register, "/register")
@@ -81,15 +82,12 @@ class CheckSession(Resource):
         user = User.query.filter(User.id == session.get("user_id")).first()
 
         if user:
-            return user.to_dict_login()
+            return user.to_dict(only=("role", "f_name"))
         else:
             return make_response({"message": "User not logged in"}, 401)
 
 
 api.add_resource(CheckSession, "/check_session")
-
-
-# TODO: create the front-end function for logout and add role-based logic to links
 
 
 class Logout(Resource):
@@ -124,16 +122,29 @@ api.add_resource(ItemById, "/items/<int:id>")
 
 
 class GetOpenOrder(Resource):
-    def get(self, id):
-        order = Order.query.filter(Order.id == id).first()
+    def get(self):
+        user_id = session["user_id"]
+        order = Order.query.filter(
+            and_(Order.user_id == user_id, Order.status == "open")
+        ).first()
 
         if not order:
-            return make_response({"error": msg["ID_NOT_FOUND"]}, 404)
+            return make_response({"error": msg["NO_ORDER"]}, 404)
 
-        return make_response(order.to_dict_cart(), 200)
+        return make_response(
+            order.to_dict(
+                only=(
+                    "id",
+                    "order_items.item_id",
+                    "order_items.price",
+                    "order_items.quantity",
+                )
+            ),
+            200,
+        )
 
 
-api.add_resource(GetOpenOrder, "/orders/<int:id>")
+api.add_resource(GetOpenOrder, "/orders")
 
 
 if __name__ == "__main__":

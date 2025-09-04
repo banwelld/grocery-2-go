@@ -38,19 +38,6 @@ class User(db.Model, SerializerMixin):
     def authenticate(self, password):
         return bcrypt.check_password_hash(self._password_hash, password)
 
-    @property
-    def open_order_id(self):
-        open_order = next((o for o in self.orders if o.status == "open"), None)
-        return open_order.id if open_order else None
-
-    def to_dict_login(self):
-        return {
-            "id": self.id,
-            "role": self.role,
-            "f_name": self.f_name,
-            "open_order_id": self.open_order_id,
-        }
-
 
 # item model
 
@@ -101,19 +88,6 @@ class Order(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"<< ORDER: {self.order_ts} (${self.total / 100}) >>"
-
-    def to_dict_cart(self):
-        if self.status != "open":
-            return {}
-
-        return self.to_dict(
-            only=(
-                "order_items.id",
-                "order_items.item_id",
-                "order_items.quantity",
-                "order_items.price",
-            )
-        )
 
 
 # orderitem model

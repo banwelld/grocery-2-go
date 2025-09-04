@@ -5,7 +5,7 @@ import Branding from "./Branding";
 import CartTally from "./CartTally";
 import NavBar from "./NavBar";
 
-export default function Header({ itemCount, user, logout }) {
+export default function Header({ itemCount, user, triggerLogout }) {
   return (
     <div className='header wrapper'>
       <div className='header upper-row'>
@@ -13,11 +13,10 @@ export default function Header({ itemCount, user, logout }) {
           <Branding />
         </div>
         <div className='header tally'>
-          {/* TODO: remove the hard number and put in {itemCount} */}
-          <CartTally itemCount={2} />
+          <CartTally itemCount={itemCount} />
         </div>
       </div>
-      <NavBar className='header' user={user} logout={logout} />
+      <NavBar className='header' user={user} triggerLogout={triggerLogout} />
     </div>
   );
 }

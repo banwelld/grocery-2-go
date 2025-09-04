@@ -100,3 +100,24 @@
   text-shadow: #000 1px 1px 3px;
   filter: brightness(125%) saturate(125%);
 }
+
+.header nav .user-acknowledgment > span {
+  font-size: 1rem;
+  font-family: var(--font-utility);
+  font-weight: 300;
+}
+
+.header nav .user-acknowledgment > span:first-child {
+  color: #fff;
+}
+
+.header nav .user-acknowledgment > span:last-child {
+  color: var(--clr-brand);
+  text-decoration: underline;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.header nav .user-acknowledgment > span:last-child:hover {
+  filter: brightness(125%) saturate(125%);
+}

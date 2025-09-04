@@ -7,11 +7,12 @@ import Main from "./Main";
 import OkCancelModal from "./OkCancelModal";
 
 export const App = () => {
-  const [orderItems, setOrderItems] = useState([]);
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState(null);
   const [modal, setModal] = useState(null);
   const navigate = useNavigate();
+
+  console.log(cart);
 
   const onLogin = (data) => {
     setUser(data);
@@ -31,7 +32,9 @@ export const App = () => {
       });
   }, []);
 
-  const itemCount = orderItems.length;
+  console.log(cart);
+
+  const itemCount = cart.order_items.reduce((sum, item) => sum + item.quantity, 0);
 
   const loginRegisterUser = (path, formData, navSteps = 0) => {
     fetch(path, {
@@ -53,25 +56,8 @@ export const App = () => {
       });
   };
 
-  const logoutUser = () => {
-    fetch("/logout", {
-      method: "DELETE",
-    }).then(() => {
-      onLogout();
-    });
-  };
-
-  const triggerLogoutModal = () => {
-    setModal({
-      isOpen: true,
-      modalMsg: "Are you sure you want to logout?",
-      onOk: logoutUser,
-      closeModal: () => setModal(null),
-    });
-  };
-
   const getCart = (orderId) => {
-    fetch(`/orders/${orderId}`)
+    fetch(`/orders`)
       .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
       .then(({ ok, data }) => {
         if (ok) {
@@ -82,16 +68,39 @@ export const App = () => {
       });
   };
 
-  console.log(cart);
+  const logoutUser = () => {
+    fetch("/logout", {
+      method: "DELETE",
+    }).then(() => {
+      onLogout();
+    });
+  };
+
+  const triggerModal = (modalMsg, onOk, closeModal) => {
+    setModal({
+      isOpen: true,
+      modalMsg: modalMsg,
+      onOk: onOk,
+      closeModal: closeModal,
+    });
+  };
 
   return (
     <div className='site-wrapper'>
-      <Header itemCount={itemCount} user={user} logout={triggerLogoutModal} />
-      <Main
-        loginRegisterUser={loginRegisterUser}
-        orderItems={orderItems}
-        setOrderItems={setOrderItems}
+      <Header
+        itemCount={itemCount}
         user={user}
+        triggerLogout={() =>
+          triggerModal("Are you certain that you'd like to logout?", logoutUser, () =>
+            setModal(null)
+          )
+        }
+      />
+      <Main
+        user={user}
+        loginRegisterUser={loginRegisterUser}
+        cart={cart}
+        setCart={setCart}
       />
       <OkCancelModal {...modal} />
     </div>
