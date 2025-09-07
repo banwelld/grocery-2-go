@@ -129,22 +129,25 @@ class GetOpenOrder(Resource):
         ).first()
 
         if not order:
-            return make_response({"error": msg["NO_ORDER"]}, 404)
+            return make_response({"message": msg["NO_ORDER"]}, 404)
 
         return make_response(
             order.to_dict(
                 only=(
                     "id",
+                    "user_id",
                     "order_items.item_id",
-                    "order_items.price",
                     "order_items.quantity",
+                    "order_items.item.name",
+                    "order_items.item.price",
+                    "order_items.item.image_url",
                 )
             ),
             200,
         )
 
 
-api.add_resource(GetOpenOrder, "/orders")
+api.add_resource(GetOpenOrder, "/open_order")
 
 
 if __name__ == "__main__":

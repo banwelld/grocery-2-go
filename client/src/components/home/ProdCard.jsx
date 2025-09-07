@@ -7,8 +7,8 @@ export default function ProdCard({ item }) {
   return (
     <Link to={`items/${item.id}`}>
       <article className='product-card grow-with-ease'>
-        <div className='image-wrapper'>
-          <img src={item.image_url} alt={item.name} />
+        <div className='img-wrapper-sq'>
+          <img className='img-fit-sq' src={item.image_url} alt={item.name} />
         </div>
         <div className='info'>
           <hgroup>

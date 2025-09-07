@@ -1,10 +1,12 @@
 // NavBar.jsx
 
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import navLinks from "../nav-links.json";
+import navLinks from "../../nav-links.json";
+import { UserContext } from "../../contexts";
 
-export default function NavBar({ user, triggerLogout }) {
+export default function NavBar() {
+  const { user, triggerLogout } = useContext(UserContext);
   const links = navLinks
     .filter((link) => (user ? link.visible !== "guest" : link.visible !== "member"))
     .map((link) => (

@@ -1,28 +1,33 @@
 // App.jsx
 
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import Header from "./Header";
-import Main from "./Main";
+import { Outlet, ScrollRestoration, useNavigate } from "react-router-dom";
+import Header from "./header/Header";
 import OkCancelModal from "./OkCancelModal";
+import { ItemContext, UserContext, OpenOrderContext } from "../contexts";
 
 export const App = () => {
+  const [items, setItems] = useState([]);
   const [user, setUser] = useState(null);
-  const [cart, setCart] = useState(null);
+  const [openOrder, setOpenOrder] = useState(null);
   const [modal, setModal] = useState(null);
   const navigate = useNavigate();
 
-  console.log(cart);
-
   const onLogin = (data) => {
     setUser(data);
-    getCart(data.open_order_id);
+    getOpenOrder(data.open_order_id);
   };
 
   const onLogout = () => {
     setUser(null);
-    setCart(null);
+    setOpenOrder(null);
   };
+
+  useEffect(() => {
+    fetch("/items")
+      .then((r) => r.json())
+      .then((data) => setItems([...data].sort((a, b) => a.name.localeCompare(b.name))));
+  }, []);
 
   useEffect(() => {
     fetch("/check_session")
@@ -32,11 +37,16 @@ export const App = () => {
       });
   }, []);
 
-  console.log(cart);
+  const itemCount = openOrder?.order_items?.reduce(
+    (sum, current) => sum + current.quantity,
+    0
+  );
+  const orderTotal = openOrder?.order_items?.reduce(
+    (sum, current) => sum + current.quantity * current.item.price,
+    0
+  );
 
-  const itemCount = cart.order_items.reduce((sum, item) => sum + item.quantity, 0);
-
-  const loginRegisterUser = (path, formData, navSteps = 0) => {
+  const loginRegisterUser = (path, formData) => {
     fetch(path, {
       method: "POST",
       headers: {
@@ -49,21 +59,21 @@ export const App = () => {
       .then(({ ok, data }) => {
         if (ok) {
           onLogin(data);
-          if (navSteps) navigate(-navSteps);
+          navigate("/");
         } else {
           alert(`Error: ${data.error}`);
         }
       });
   };
 
-  const getCart = (orderId) => {
-    fetch(`/orders`)
+  const getOpenOrder = () => {
+    fetch(`/open_order`)
       .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
       .then(({ ok, data }) => {
         if (ok) {
-          setCart(data);
+          setOpenOrder(data);
         } else {
-          alert(`Error: ${data.error}`);
+          console.log(`Error: ${data.error}`);
         }
       });
   };
@@ -85,24 +95,23 @@ export const App = () => {
     });
   };
 
+  const triggerLogout = () => {
+    const logoutMsg = "Are you sure that you'd like to logout?";
+    return triggerModal(logoutMsg, logoutUser, () => setModal(null));
+  };
+
   return (
-    <div className='site-wrapper'>
-      <Header
-        itemCount={itemCount}
-        user={user}
-        triggerLogout={() =>
-          triggerModal("Are you certain that you'd like to logout?", logoutUser, () =>
-            setModal(null)
-          )
-        }
-      />
-      <Main
-        user={user}
-        loginRegisterUser={loginRegisterUser}
-        cart={cart}
-        setCart={setCart}
-      />
-      <OkCancelModal {...modal} />
-    </div>
+    <ItemContext.Provider value={{ items }}>
+      <UserContext.Provider value={{ user, loginRegisterUser, triggerLogout }}>
+        <OpenOrderContext.Provider value={{ openOrder, itemCount, orderTotal }}>
+          <div className='site-wrapper'>
+            <Header />
+            <Outlet />
+            <ScrollRestoration />
+            <OkCancelModal {...modal} />
+          </div>
+        </OpenOrderContext.Provider>
+      </UserContext.Provider>
+    </ItemContext.Provider>
   );
 };

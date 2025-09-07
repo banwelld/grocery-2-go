@@ -45,13 +45,3 @@ body {
   font-size: 16px;
   overflow-x: clip;
 }
-
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
-button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 2px 3px color-mix(in srgb, var(--clr-pop-lt), transparent 30%);
-  transition: box-shadow 0.2s ease-in-out;
-}

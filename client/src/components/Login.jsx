@@ -1,12 +1,16 @@
 // Login.jsx
 
-import React, { useState, useEffect, useRef } from "react";
-import { useOutletContext, Link } from "react-router-dom";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { Link } from "react-router-dom";
+import { UserContext } from "../contexts";
+import useDocumentTitle from "./useDocumentTitle";
 
 export default function Login() {
+  useDocumentTitle("Login");
+
   const loginDataTemplate = { email: "", password: "" };
   const [formData, setFormData] = useState({ ...loginDataTemplate });
-  const { loginRegisterUser } = useOutletContext();
+  const { loginRegisterUser } = useContext(UserContext);
   const emailRef = useRef(null);
 
   useEffect(() => {
@@ -24,8 +28,8 @@ export default function Login() {
   };
 
   return (
-    <div className='login wrapper'>
-      <hgroup className='login'>
+    <main className='login info-page'>
+      <section className='info'>
         <h2>Welcome!</h2>
         <p>
           In order to provide you with items of the highest quality and at the best
@@ -33,14 +37,14 @@ export default function Login() {
           login to the site to take advantage of <strong>Grocery2Go's</strong> benefits.
         </p>
         <p>
-          Not a member yet? We'd love to have you sign up!{" "}
+          <strong>Not a member yet?</strong> We'd love to have you sign up!{" "}
           <Link className='text-link' to='../register'>
             Click here
           </Link>{" "}
           to create an account.
         </p>
-      </hgroup>
-      <form className='login' onSubmit={handleSubmit}>
+      </section>
+      <form onSubmit={handleSubmit}>
         <input
           ref={emailRef}
           tabIndex={1}
@@ -64,6 +68,6 @@ export default function Login() {
           Login
         </button>
       </form>
-    </div>
+    </main>
   );
 }

@@ -1,9 +1,12 @@
 // Register.jsx
 
-import React, { useState, useEffect, useRef } from "react";
-import { useOutletContext } from "react-router-dom";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { UserContext } from "../contexts";
+import useDocumentTitle from "./useDocumentTitle";
 
 export default function Login() {
+  useDocumentTitle("Register");
+
   const registrationDataTemplate = {
     email: "",
     f_name: "",
@@ -13,7 +16,7 @@ export default function Login() {
     password2: "",
   };
   const [formData, setFormData] = useState({ ...registrationDataTemplate });
-  const { loginRegisterUser } = useOutletContext();
+  const { loginRegisterUser } = useContext(UserContext);
   const emailRef = useRef(null);
 
   useEffect(() => {
@@ -27,21 +30,21 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { password2, ...userData } = formData;
-    loginRegisterUser("/register", userData, 2);
+    loginRegisterUser("/register", userData);
     setFormData({ ...registrationDataTemplate });
   };
 
   return (
-    <div className='reg wrapper'>
-      <hgroup className='reg'>
+    <main className='register info-page'>
+      <section className='info'>
         <h2>Registration</h2>
         <p>
           We're thrilled that you've decided to create an account! Just give us a little
           info about yourself and you'll be all ready to load up a shopping cart.
         </p>
         <p>Be aware that all fields are mandatory so make sure your form is complete.</p>
-      </hgroup>
-      <form className='reg' onSubmit={handleSubmit}>
+      </section>
+      <form onSubmit={handleSubmit}>
         <input
           ref={emailRef}
           tabIndex={1}
@@ -101,6 +104,6 @@ export default function Login() {
           Submit
         </button>
       </form>
-    </div>
+    </main>
   );
 }

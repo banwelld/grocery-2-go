@@ -1,0 +1,82 @@
+h1 {
+  font-size: 2.61902em;
+  font-family: var(--font-heading);
+  line-height: 1.1;
+}
+
+h2,
+.card-price {
+  font-size: 1.61834em;
+  font-family: var(--font-heading);
+  line-height: 1.1;
+}
+
+h3 {
+  font-size: 1.1em;
+  font-family: var(--font-heading);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.std-padding {
+  padding: 2rem;
+}
+
+.text-link {
+  text-decoration: underline;
+  color: var(--clr-pop);
+  font-weight: 500;
+}
+
+.text-link:hover {
+  font-weight: 600;
+}
+
+.img-wrapper-sq {
+  display: flex;
+  aspect-ratio: 1 / 1;
+  overflow: clip;
+  justify-content: center;
+  align-items: center;
+}
+
+.img-fit-sq {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.graceful-hover {
+  cursor: pointer;
+  transition: all 0.2s ease-in;
+}
+
+.graceful-hover:not(.active):hover {
+  color: var(--clr-pop);
+  font-weight: 600;
+}
+
+.grow-with-ease {
+  box-shadow: #00000020 0px 0px 10px, #00000010 0px 0px 0px 1px;
+  transition: box-shadow ease 0.15s, transform ease 0.15s, filter ease 0.15s;
+}
+
+.grow-with-ease:hover {
+  box-shadow: #00000040 3px 3px 10px, #00000020 0px 0px 0px 1px;
+  transform: scale(1.04);
+  filter: brightness(105%) saturate(105%);
+}
+
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 2px 3px color-mix(in srgb, var(--clr-pop-lt), transparent 30%);
+  transition: box-shadow 0.2s ease-in-out;
+}

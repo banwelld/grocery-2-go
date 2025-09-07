@@ -70,12 +70,15 @@ class Order(db.Model, SerializerMixin):
     __tablename__ = "orders"
 
     id = db.Column(db.Integer, primary_key=True)
-    order_ts = db.Column(db.DateTime, nullable=False, default=datetime.now)
     address = db.Column(db.String)
     city = db.Column(db.String)
     province_cd = db.Column(db.String)
     postal_cd = db.Column(db.String)
     total = db.Column(db.Integer, nullable=False, default=0)
+    order_ts = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    status_ts = db.Column(
+        db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now
+    )
     status = db.Column(db.String, nullable=False, default="open")
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     user = db.relationship("User", back_populates="orders", cascade="all")
@@ -96,11 +99,11 @@ class Order(db.Model, SerializerMixin):
 class OrderItem(db.Model, SerializerMixin):
     __tablename__ = "order_items"
 
-    # TODO: serializer rules
+    serialize_rules = ("-item", "-order")
 
     id = db.Column(db.Integer, primary_key=True)
-    quantity = db.Column(db.Integer, nullable=False)
-    price = db.Column(db.Integer, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False, default=0)
+    price = db.Column(db.Integer, nullable=False, default=0)
     order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
     item_id = db.Column(db.Integer, db.ForeignKey("items.id"), nullable=False)
     item = db.relationship("Item", back_populates="order_items")
