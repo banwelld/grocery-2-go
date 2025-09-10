@@ -18,7 +18,7 @@ export default function MyCart() {
   const sidebar = <Heading text='Options' isPgHead={false} />;
 
   const main = (
-    <section className='my-cart info-page'>
+    <section className='my-cart'>
       <Heading text='My Cart' />
       <div className='cart-grid'>
         <div className='cart-row labels'>
@@ -28,7 +28,7 @@ export default function MyCart() {
           <div className='row-total'>Row Total</div>
         </div>
         {sortedItems.map((oi) => (
-          <CartRow orderItem={oi} />
+          <CartRow orderItem={oi} key={oi.item_id} />
         ))}
         <div className='cart-row totals'>
           <div className='product'>Order Total:</div>

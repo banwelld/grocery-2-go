@@ -1,7 +1,7 @@
 .header {
   font-family: var(--font-heading);
-  box-shadow: #000000a0 0px 0px 10px 1px;
-  z-index: 99;
+  box-shadow: var(--shd-pg-overlap);
+  z-index: 20;
 }
 
 .header .upper {
@@ -20,14 +20,16 @@
   display: inline-block;
 }
 
-.header .cart-tally {
+.cart-tally {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 1.5rem;
 }
 
 .cart-tally .wrapper {
   position: relative;
+  z-index: 50;
   transition: all 0.2s ease-out;
 }
 
@@ -40,8 +42,8 @@
   transition: filter 0.2s ease-out;
 }
 
-.cart-tally img:hover {
-  filter: drop-shadow(var(--clr-pop-lt) 0px 0px 3px);
+.cart-tally .wrapper:hover img {
+  filter: drop-shadow(var(--clr-pop-lt) 0px 0px 5px);
 }
 
 .cart-tally .counter {
@@ -49,13 +51,13 @@
   position: absolute;
   font-weight: 700;
   width: 4ch;
-  left: calc(50% - 2ch);
-  top: calc(50% - 0.3ch);
+  left: 15%;
+  top: 43%;
   font-family: var(--font-utility);
   font-size: 1rem;
   text-align: center;
   transition: opacity 0.3s ease-out 0.3s;
-  z-index: 100;
+  z-index: 20;
 }
 
 .cart-tally .counter.empty {

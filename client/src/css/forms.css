@@ -3,24 +3,25 @@ form {
   flex-direction: column;
   width: 100%;
   border-radius: 10px;
-  row-gap: 15px;
+  row-gap: 0.4rem;
+  padding-bottom: 2rem;
 }
 
-form > * {
+form :is(input, button) {
   font-size: 1rem;
   margin: auto;
-  width: 40ch;
+  width: 35ch;
   padding: 10px;
   border-radius: 50px;
 }
 
-form > input {
+form input {
   border: none;
   background-color: var(--clr-base);
   box-shadow: inset #000000a0 1px 1px 2px;
 }
 
-form > input:focus-visible {
+form input:focus-visible {
   box-shadow: inset #000000a0 1px 1px 2px,
     0 0 2px 3px color-mix(in srgb, var(--clr-pop-lt), transparent 30%);
 }

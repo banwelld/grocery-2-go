@@ -12,7 +12,7 @@ export default function CartTally() {
         <span className={`counter ${itemCount < 1 ? "empty" : ""}`}>{itemCount}</span>
         <img
           src='../../images/shopping-basket-yellow.svg'
-          id='shopping-cart-image'
+          className='cart-img'
           title='My shopping cart'
           alt={`shopping cart (${itemCount} item${itemCount !== 1 ? "s" : ""})`}
         />

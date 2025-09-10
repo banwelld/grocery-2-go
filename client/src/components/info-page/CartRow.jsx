@@ -5,11 +5,7 @@ import { Link } from "react-router-dom";
 
 export default function CartRow({ orderItem }) {
   return (
-    <Link
-      to={`../items/${orderItem.item_id}`}
-      className='cart-row items'
-      key={orderItem.item_id}
-    >
+    <Link to={`../items/${orderItem.item_id}`} className='cart-row items'>
       <div className='product'>
         <span className='img-wrapper-sq'>
           <img

@@ -3,6 +3,10 @@
 import React, { useState, useContext } from "react";
 import ProdCard from "./ProdCard";
 import { ItemContext } from "../../contexts";
+import Heading from "../info-page/Heading";
+import PageTemplate from "../info-page/PageTemplate";
+import "../../css/home.css";
+import "../../css/info-page.css";
 
 export default function Home() {
   const { items } = useContext(ItemContext);
@@ -79,25 +83,23 @@ export default function Home() {
 
   const cards = displayItems.map((item) => <ProdCard key={item.id} item={item} />);
 
-  return (
-    <main className='home'>
-      <section className='side-bar std-padding'>
-        <hgroup>
-          <h1>Home</h1>
-          <p>Product Listing</p>
-        </hgroup>
-        <div className='sort-filter'>
-          <div className='department'>
-            <h2>Filter for...</h2>
-            <ul className='filters'>{departments}</ul>
-          </div>
-          <div className='sort-prop'>
-            <h2>Sort by...</h2>
-            <ul className='sorts'>{sorts}</ul>
-          </div>
+  const sidebar = (
+    <>
+      <Heading text='Grocery2Go' isPgHead={true} subText='Home - Product Listing' />
+      <div className='sort-filter'>
+        <div className='department'>
+          <h2>Filter for...</h2>
+          <ul className='filters'>{departments}</ul>
         </div>
-      </section>
-      <section className='item-grid std-padding'>{cards}</section>
-    </main>
+        <div className='sort-prop'>
+          <h2>Sort by...</h2>
+          <ul className='sorts'>{sorts}</ul>
+        </div>
+      </div>
+    </>
   );
+
+  const main = <section className='item-grid'>{cards}</section>;
+
+  return <PageTemplate sidebarContent={sidebar} mainContent={main} />;
 }

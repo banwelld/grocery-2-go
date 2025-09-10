@@ -2,19 +2,13 @@
 .site-wrapper {
   display: flex;
   flex-direction: column;
-  flex: 1 1 100%;
+  flex: 0 1 100%;
   min-height: 100vh;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
 }
 
 html,
 body {
-  width: 100%;
+  height: 100%;
 }
 
 .header {
@@ -23,10 +17,17 @@ body {
 }
 
 main {
-  display: grid;
   flex: 1 1 auto;
-  min-height: 0;
-  grid-template-columns: 15vw 1fr;
+  height: 100%;
+}
+
+main.full-page {
+  display: block;
+}
+
+main.split-page {
+  display: grid;
+  grid-template-columns: 30ch 1fr;
 }
 
 .sidebar {
@@ -34,9 +35,7 @@ main {
   flex: 0 0 200px;
 }
 
-.site-contents {
-  grid-column: 2;
+.main-content {
   display: flex;
   flex: 0 1 100%;
-  min-height: 100%;
 }

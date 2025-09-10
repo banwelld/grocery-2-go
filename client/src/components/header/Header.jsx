@@ -4,6 +4,7 @@ import React from "react";
 import Branding from "./Branding";
 import CartTally from "./CartTally";
 import NavBar from "./NavBar";
+import "../../css/header.css";
 
 export default function Header() {
   return (

@@ -18,6 +18,7 @@
   --wd-card: 180px;
   --pd-card-ext: 10px;
   --wd-card-img: calc(var(--wd-card) - (2 * var(--pd-card-ext)));
+  --shd-pg-overlap: #333 0px 0px 5px 1px;
 }
 
 /* TODO: Delete outline colours before finalizing */
@@ -43,5 +44,4 @@ body {
   font-family: var(--font-utility);
   color: var(--clr-util-dk);
   font-size: 16px;
-  overflow-x: clip;
 }

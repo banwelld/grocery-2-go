@@ -5,6 +5,9 @@ import { Outlet, ScrollRestoration, useNavigate } from "react-router-dom";
 import Header from "./header/Header";
 import OkCancelModal from "./OkCancelModal";
 import { ItemContext, UserContext, OpenOrderContext } from "../contexts";
+import "../css/base.css";
+import "../css/utility.css";
+import "../css/layout.css";
 
 export const App = () => {
   const [items, setItems] = useState([]);
@@ -21,6 +24,7 @@ export const App = () => {
   const onLogout = () => {
     setUser(null);
     setOpenOrder(null);
+    navigate("/");
   };
 
   useEffect(() => {
