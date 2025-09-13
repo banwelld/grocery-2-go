@@ -1,20 +1,24 @@
-// openOrder.jsx
+// Cart.jsx
 
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { OpenOrderContext } from "../../contexts";
+import { OrderContext } from "../../contexts";
+import { countOrderItems } from "../../helpers";
 
 export default function CartTally() {
-  const { itemCount } = useContext(OpenOrderContext);
+  const { openOrder } = useContext(OrderContext);
+
+  const itemCount = countOrderItems(openOrder.order_items);
+
   return (
-    <Link to={"/my-cart"}>
-      <div className='wrapper'>
-        <span className={`counter ${itemCount < 1 ? "empty" : ""}`}>{itemCount}</span>
+    <Link to={"/my-cart"} className={itemCount === 0 ? "empty" : ""}>
+      <div className='wrapper' data-count={itemCount}>
         <img
           src='../../images/shopping-basket-yellow.svg'
           className='cart-img'
-          title='My shopping cart'
-          alt={`shopping cart (${itemCount} item${itemCount !== 1 ? "s" : ""})`}
+          alt={`shopping cart (${itemCount} item${itemCount !== 1 ? "s" : ""} item${
+            itemCount > 0 && "s"
+          })`}
         />
       </div>
     </Link>

@@ -6,6 +6,7 @@ import "../css/modal.css";
 export default function Modal({
   isOpen = false,
   modalMsg = "",
+  hasCancel = true,
   onOk = () => {},
   closeModal = () => {},
 }) {
@@ -30,7 +31,7 @@ export default function Modal({
         >
           OK
         </button>
-        <button onClick={closeModal}>Cancel</button>
+        {hasCancel && <button onClick={closeModal}>Cancel</button>}
       </div>
     </div>
   );

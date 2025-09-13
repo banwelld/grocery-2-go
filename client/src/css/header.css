@@ -11,12 +11,12 @@
   padding: 10px 20px;
 }
 
-.header .branding {
+.branding {
   display: flex;
   flex: 1 1 auto;
 }
 
-.header img.branding {
+img.branding {
   display: inline-block;
 }
 
@@ -27,41 +27,43 @@
   margin-right: 1.5rem;
 }
 
+.cart-tally .empty {
+  display: none;
+}
+
 .cart-tally .wrapper {
   position: relative;
+  display: block;
+  width: 100%;
   z-index: 50;
   transition: all 0.2s ease-out;
+
+  &:hover {
+    filter: brightness(125%) saturate(125%);
+    transform: scale(105%);
+  }
+
+  &::after {
+    display: flex;
+    justify-content: center;
+    content: attr(data-count);
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -25%);
+    color: #000;
+    font-size: 1rem;
+    font-weight: 700;
+    pointer-events: none;
+  }
 }
 
-.cart-tally .wrapper:hover {
-  filter: brightness(125%) saturate(125%);
-  transform: scale(105%);
-}
-
-.cart-tally img {
+.cart-img {
   transition: filter 0.2s ease-out;
-}
 
-.cart-tally .wrapper:hover img {
-  filter: drop-shadow(var(--clr-pop-lt) 0px 0px 5px);
-}
-
-.cart-tally .counter {
-  display: block;
-  position: absolute;
-  font-weight: 700;
-  width: 4ch;
-  left: 15%;
-  top: 43%;
-  font-family: var(--font-utility);
-  font-size: 1rem;
-  text-align: center;
-  transition: opacity 0.3s ease-out 0.3s;
-  z-index: 20;
-}
-
-.cart-tally .counter.empty {
-  opacity: 0;
+  .wrapper:hover & {
+    filter: drop-shadow(var(--clr-pop-lt) 0px 0px 5px);
+  }
 }
 
 .header nav {
@@ -90,36 +92,36 @@
   padding: 7px 15px;
   text-align: center;
   transition: all 0.2s ease-out;
+
+  &:hover,
+  &.active {
+    background-color: #ffffff20;
+    text-shadow: #000 1px 1px 3px;
+    filter: brightness(125%) saturate(125%);
+  }
 }
 
 .header nav > ul > li:first-child > * {
   padding-left: 20px;
 }
 
-.header nav li > *:hover,
-.header nav li > *.active {
-  background-color: #ffffff20;
-  text-shadow: #000 1px 1px 3px;
-  filter: brightness(125%) saturate(125%);
-}
-
-.header nav .user-acknowledgment > span {
+.user-acknowledgment > span {
   font-size: 1rem;
   font-family: var(--font-utility);
   font-weight: 300;
 }
 
-.header nav .user-acknowledgment > span:first-child {
+.user-acknowledgment > span:first-child {
   color: #fff;
 }
 
-.header nav .user-acknowledgment > span:last-child {
+.user-acknowledgment > span:last-child {
   color: var(--clr-brand);
   text-decoration: underline;
   cursor: pointer;
   transition: all 0.2s ease-out;
-}
 
-.header nav .user-acknowledgment > span:last-child:hover {
-  filter: brightness(125%) saturate(125%);
+  &:hover {
+    filter: brightness(125%) saturate(125%);
+  }
 }

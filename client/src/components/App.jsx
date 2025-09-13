@@ -4,51 +4,56 @@ import React, { useState, useEffect } from "react";
 import { Outlet, ScrollRestoration, useNavigate } from "react-router-dom";
 import Header from "./header/Header";
 import OkCancelModal from "./OkCancelModal";
-import { ItemContext, UserContext, OpenOrderContext } from "../contexts";
-import "../css/base.css";
-import "../css/utility.css";
-import "../css/layout.css";
+import { ItemContext, UserContext, OrderContext } from "../contexts";
+import { countOrderItems } from "../helpers";
 
 export const App = () => {
   const [items, setItems] = useState([]);
   const [user, setUser] = useState(null);
-  const [openOrder, setOpenOrder] = useState(null);
+  const [openOrder, setOpenOrder] = useState({});
+  const [cartItems, setCartItems] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [modal, setModal] = useState(null);
   const navigate = useNavigate();
 
   const onLogin = (data) => {
     setUser(data);
-    getOpenOrder(data.open_order_id);
+    getOrders(true);
+    navigate("/");
   };
 
   const onLogout = () => {
     setUser(null);
-    setOpenOrder(null);
+    setOpenOrder({});
+    setCartItems([]);
     navigate("/");
   };
 
-  useEffect(() => {
-    fetch("/items")
-      .then((r) => r.json())
-      .then((data) => setItems([...data].sort((a, b) => a.name.localeCompare(b.name))));
-  }, []);
+  const itemCount = countOrderItems(openOrder.order_items);
 
   useEffect(() => {
-    fetch("/check_session")
+    fetch("/items")
       .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
       .then(({ ok, data }) => {
-        if (ok) onLogin(data);
+        if (ok) {
+          setItems([...data].sort((a, b) => a.name.localeCompare(b.name)));
+        } else {
+          alert(`Error: ${data.error}`);
+        }
       });
   }, []);
 
-  const itemCount = openOrder?.order_items?.reduce(
-    (sum, current) => sum + current.quantity,
-    0
-  );
-  const orderTotal = openOrder?.order_items?.reduce(
-    (sum, current) => sum + current.quantity * current.item.price,
-    0
-  );
+  useEffect(() => {
+    fetch("/session")
+      .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
+      .then(({ ok, data }) => {
+        if (ok) {
+          onLogin(data);
+        } else {
+          alert(`Error: ${data.error}`);
+        }
+      });
+  }, []);
 
   const loginRegisterUser = (path, formData) => {
     fetch(path, {
@@ -63,36 +68,60 @@ export const App = () => {
       .then(({ ok, data }) => {
         if (ok) {
           onLogin(data);
-          navigate("/");
         } else {
           alert(`Error: ${data.error}`);
         }
       });
   };
 
-  const getOpenOrder = () => {
-    fetch(`/open_order`)
+  const getOrders = (isCart = false) => {
+    let path = "/orders";
+    if (isCart) path = "/orders?status=open";
+
+    fetch(path)
+      .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
+      .then(({ ok, data }) => {
+        if (ok && isCart) {
+          setOpenOrder(data.find((o) => o));
+        } else if (ok && !isCart) {
+          setOrders(data);
+        } else {
+          alert(`Error: ${data.error}`);
+        }
+      });
+  };
+
+  const getCartItems = (orderId) => {
+    if (!orderId) return alert("Error: Order ID argument missing");
+    fetch(`/order_items?order_id=${orderId}`)
       .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
       .then(({ ok, data }) => {
         if (ok) {
-          setOpenOrder(data);
+          setCartItems(data);
         } else {
-          console.log(`Error: ${data.error}`);
+          alert(`Error: ${data.error}`);
         }
       });
   };
 
   const logoutUser = () => {
-    fetch("/logout", {
+    fetch("/session", {
       method: "DELETE",
-    }).then(() => {
-      onLogout();
-    });
+    })
+      .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
+      .then(({ ok, data }) => {
+        if (ok) {
+          onLogout();
+        } else {
+          alert(`Error: ${data.error}`);
+        }
+      });
   };
 
-  const triggerModal = (modalMsg, onOk, closeModal) => {
+  const triggerModal = (modalMsg, hasCancel, onOk, closeModal) => {
     setModal({
       isOpen: true,
+      hasCancel: hasCancel,
       modalMsg: modalMsg,
       onOk: onOk,
       closeModal: closeModal,
@@ -101,20 +130,22 @@ export const App = () => {
 
   const triggerLogout = () => {
     const logoutMsg = "Are you sure that you'd like to logout?";
-    return triggerModal(logoutMsg, logoutUser, () => setModal(null));
+    return triggerModal(logoutMsg, true, logoutUser, () => setModal(null));
   };
 
   return (
     <ItemContext.Provider value={{ items }}>
       <UserContext.Provider value={{ user, loginRegisterUser, triggerLogout }}>
-        <OpenOrderContext.Provider value={{ openOrder, itemCount, orderTotal }}>
+        <OrderContext.Provider
+          value={{ orders, openOrder, setOpenOrder, cartItems, getCartItems }}
+        >
           <div className='site-wrapper'>
             <Header />
             <Outlet />
             <ScrollRestoration />
             <OkCancelModal {...modal} />
           </div>
-        </OpenOrderContext.Provider>
+        </OrderContext.Provider>
       </UserContext.Provider>
     </ItemContext.Provider>
   );

@@ -7,6 +7,7 @@ import { UserContext } from "../../contexts";
 
 export default function NavBar() {
   const { user, triggerLogout } = useContext(UserContext);
+
   const links = navLinks
     .filter((link) => (user ? link.visible !== "guest" : link.visible !== "member"))
     .map((link) => (

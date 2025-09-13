@@ -44,7 +44,7 @@ export default function Login() {
             password: "",
           }}
           validationSchema={loginSchema}
-          onSubmit={(data) => loginRegisterUser("/login", data)}
+          onSubmit={(data) => loginRegisterUser("/session", data)}
         >
           <Form>
             <CustomInput

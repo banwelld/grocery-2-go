@@ -45,6 +45,8 @@ class User(db.Model, SerializerMixin):
 class Item(db.Model, SerializerMixin):
     __tablename__ = "items"
 
+    serialize_rules = ("-orders", "-order_items")
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
     category = db.Column(db.String, nullable=False)
@@ -69,12 +71,14 @@ class Item(db.Model, SerializerMixin):
 class Order(db.Model, SerializerMixin):
     __tablename__ = "orders"
 
+    serialize_rules = "-items"
+
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String)
     city = db.Column(db.String)
     province_cd = db.Column(db.String)
     postal_cd = db.Column(db.String)
-    total = db.Column(db.Integer, nullable=False, default=0)
+    total = db.Column(db.Integer)
     order_ts = db.Column(db.DateTime, nullable=False, default=datetime.now)
     status_ts = db.Column(
         db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now
@@ -99,11 +103,11 @@ class Order(db.Model, SerializerMixin):
 class OrderItem(db.Model, SerializerMixin):
     __tablename__ = "order_items"
 
-    serialize_rules = ("-item", "-order")
+    serialize_rules = ("-order", "-item", "item.name", "item.price", "item.image_url")
 
     id = db.Column(db.Integer, primary_key=True)
-    quantity = db.Column(db.Integer, nullable=False, default=0)
-    price = db.Column(db.Integer, nullable=False, default=0)
+    quantity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Integer)
     order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
     item_id = db.Column(db.Integer, db.ForeignKey("items.id"), nullable=False)
     item = db.relationship("Item", back_populates="order_items")

@@ -19,11 +19,11 @@ form input {
   border: none;
   background-color: var(--clr-base);
   box-shadow: inset #000000a0 1px 1px 2px;
-}
 
-form input:focus-visible {
-  box-shadow: inset #000000a0 1px 1px 2px,
-    0 0 2px 3px color-mix(in srgb, var(--clr-pop-lt), transparent 30%);
+  &:focus-visible {
+    box-shadow: inset #000000a0 1px 1px 2px,
+      0 0 2px 3px color-mix(in srgb, var(--clr-pop-lt), transparent 30%);
+  }
 }
 
 form > button {
@@ -33,14 +33,14 @@ form > button {
   box-shadow: 0 3px #c28c00, 0 2px #ffd966 inset;
   cursor: pointer;
   transition: all 0.2s ease;
-}
 
-form > button:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px #c28c00;
-}
+  &:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px #c28c00;
+  }
 
-form > button:focus-visible {
-  box-shadow: 0 3px #c28c00, 0 2px #ffd966 inset,
-    0 0 2px 3px color-mix(in srgb, var(--clr-pop-lt), transparent 30%);
+  &:focus-visible {
+    box-shadow: 0 3px #c28c00, 0 2px #ffd966 inset,
+      0 0 2px 3px color-mix(in srgb, var(--clr-pop-lt), transparent 30%);
+  }
 }

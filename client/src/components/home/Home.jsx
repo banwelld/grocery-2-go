@@ -1,10 +1,10 @@
-// ItemList.jsx
+// Home.jsx
 
 import React, { useState, useContext } from "react";
 import ProdCard from "./ProdCard";
 import { ItemContext } from "../../contexts";
-import Heading from "../info-page/Heading";
-import PageTemplate from "../info-page/PageTemplate";
+import SplitPage from "../templates/SplitPage";
+import SortFilter from "./SortFilter";
 import "../../css/home.css";
 import "../../css/info-page.css";
 
@@ -19,20 +19,6 @@ export default function Home() {
     ...[...new Set(items.map((i) => i.category))].sort((a, b) => a.localeCompare(b)),
   ];
 
-  const onFilterClick = (e) => {
-    setFilterCategory(e.target.textContent);
-  };
-
-  const departments = categories.map((category) => (
-    <li
-      key={category}
-      className={`graceful-hover ${category === filterCategory ? "active" : ""}`}
-      onClick={onFilterClick}
-    >
-      {category}
-    </li>
-  ));
-
   const filterItems = (items) => {
     return items.filter((item) => {
       return filterCategory === "all" || item.category === filterCategory;
@@ -40,20 +26,6 @@ export default function Home() {
   };
 
   const sortOptions = ["department", "name ↥", "name ↧", "price ↥", "price ↧"];
-
-  const onSortClick = (e) => {
-    setItemSort(e.target.textContent);
-  };
-
-  const sorts = sortOptions.map((sort) => (
-    <li
-      key={sort}
-      className={`graceful-hover ${sort === itemSort ? "active" : ""}`}
-      onClick={onSortClick}
-    >
-      {sort}
-    </li>
-  ));
 
   const sortItems = (items) => {
     return [...items].sort((a, b) => {
@@ -84,22 +56,18 @@ export default function Home() {
   const cards = displayItems.map((item) => <ProdCard key={item.id} item={item} />);
 
   const sidebar = (
-    <>
-      <Heading text='Grocery2Go' isPgHead={true} subText='Home - Product Listing' />
-      <div className='sort-filter'>
-        <div className='department'>
-          <h2>Filter for...</h2>
-          <ul className='filters'>{departments}</ul>
-        </div>
-        <div className='sort-prop'>
-          <h2>Sort by...</h2>
-          <ul className='sorts'>{sorts}</ul>
-        </div>
-      </div>
-    </>
+    <SortFilter
+      categories={categories}
+      filterCategory={filterCategory}
+      setFilterCategory={setFilterCategory}
+      itemSort={itemSort}
+      setItemSort={setItemSort}
+    />
   );
 
-  const main = <section className='item-grid'>{cards}</section>;
-
-  return <PageTemplate sidebarContent={sidebar} mainContent={main} />;
+  return (
+    <SplitPage sidebar={sidebar}>
+      <div className='item-grid'>{cards}</div>;
+    </SplitPage>
+  );
 }

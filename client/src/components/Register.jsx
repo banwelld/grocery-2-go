@@ -104,7 +104,7 @@ export default function Login() {
             confirmPassword: "",
           }}
           validationSchema={RegisterSchema}
-          onSubmit={(data) => loginRegisterUser("/register", data)}
+          onSubmit={(data) => loginRegisterUser("/users", data)}
         >
           <Form>
             <CustomInput

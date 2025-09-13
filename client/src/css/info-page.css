@@ -67,7 +67,7 @@ main.split-page > * {
 
 .cart-grid {
   display: grid;
-  grid-template-columns: 1fr 12ch 15ch 15ch;
+  grid-template-columns: 1fr 15ch 15ch 15ch;
   align-items: center;
 }
 
@@ -104,17 +104,12 @@ main.split-page > * {
 }
 
 .cart-row.labels {
-  border-bottom: solid 3px var(--clr-pop);
+  border-bottom: solid 5px var(--clr-pop);
 }
 
 .cart-row.totals {
-  border-width: 3px 0px;
-  border-style: solid;
-  border-color: var(--clr-pop);
-}
-
-.cart-row.items .product > span {
-  display: inline block;
+  color: #fff;
+  background-color: var(--clr-pop);
 }
 
 .cart-row.items .img-wrapper-sq {
