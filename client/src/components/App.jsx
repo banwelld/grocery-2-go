@@ -4,124 +4,82 @@ import React, { useState, useEffect } from "react";
 import { Outlet, ScrollRestoration, useNavigate } from "react-router-dom";
 import Header from "./header/Header";
 import OkCancelModal from "./OkCancelModal";
-import { ItemContext, UserContext, OrderContext } from "../contexts";
-import { countOrderItems } from "../helpers";
+import { UserContext, OrderContext } from "../contexts";
+import { getData, sortBy, validateOrders } from "../helpers";
 
 export const App = () => {
   const [items, setItems] = useState([]);
   const [user, setUser] = useState(null);
-  const [openOrder, setOpenOrder] = useState({});
+  const [cartOrder, setCartOrder] = useState({});
   const [cartItems, setCartItems] = useState([]);
   const [orders, setOrders] = useState([]);
   const [modal, setModal] = useState(null);
   const navigate = useNavigate();
 
-  const onLogin = (data) => {
+  // fetch all items
+
+  useEffect(() => {
+    getData("/items", onGetItems);
+  }, []);
+
+  // authenticate previous user
+
+  useEffect(() => {
+    getData("/session", onLogin, false);
+  }, []);
+
+  // ensure items have quantities
+
+  useEffect(() => {
+    setItems((prevItems) => mergeCartQuantities(prevItems, cartItems));
+  }, [cartItems]);
+
+  // followups to fetch actions
+
+  const onGetItems = (items) => setItems(sortBy(items, "name"));
+
+  const onLogin = (data, goToHome = true) => {
     setUser(data);
-    getOrders(true);
-    navigate("/");
+    getData("/orders?status=open", onGetOrders);
+    if (goToHome) navigate("/");
+  };
+
+  const onGetOrders = (orders, isCart = true) => {
+    const validated = validateOrders(orders, isCart);
+    if (!isCart) return setOrders(validated);
+    if (!validated) return;
+    setCartOrder(validated);
+    getData(`/order_items?order_id=${validated.id}`, onGetCartItems);
+  };
+
+  const onGetCartItems = (cartItems) => {
+    setCartItems(cartItems);
   };
 
   const onLogout = () => {
     setUser(null);
-    setOpenOrder({});
+    setCartOrder({});
     setCartItems([]);
+    setOrders([]);
     navigate("/");
   };
 
-  const itemCount = countOrderItems(openOrder.order_items);
+  // append cart-item quantities to items
 
-  useEffect(() => {
-    fetch("/items")
-      .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
-      .then(({ ok, data }) => {
-        if (ok) {
-          setItems([...data].sort((a, b) => a.name.localeCompare(b.name)));
-        } else {
-          alert(`Error: ${data.error}`);
-        }
-      });
-  }, []);
+  const mergeCartQuantities = (items, cartItems) => {
+    const cartMap = new Map(cartItems.map((ci) => [ci.itemId, ci.quantity]));
 
-  useEffect(() => {
-    fetch("/session")
-      .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
-      .then(({ ok, data }) => {
-        if (ok) {
-          onLogin(data);
-        } else {
-          alert(`Error: ${data.error}`);
-        }
-      });
-  }, []);
-
-  const loginRegisterUser = (path, formData) => {
-    fetch(path, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
-      .then(({ ok, data }) => {
-        if (ok) {
-          onLogin(data);
-        } else {
-          alert(`Error: ${data.error}`);
-        }
-      });
+    return items.map((item) => ({
+      ...item,
+      quantity: cartMap.get(item.id) || 0,
+    }));
   };
 
-  const getOrders = (isCart = false) => {
-    let path = "/orders";
-    if (isCart) path = "/orders?status=open";
+  // logout modal
 
-    fetch(path)
-      .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
-      .then(({ ok, data }) => {
-        if (ok && isCart) {
-          setOpenOrder(data.find((o) => o));
-        } else if (ok && !isCart) {
-          setOrders(data);
-        } else {
-          alert(`Error: ${data.error}`);
-        }
-      });
-  };
-
-  const getCartItems = (orderId) => {
-    if (!orderId) return alert("Error: Order ID argument missing");
-    fetch(`/order_items?order_id=${orderId}`)
-      .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
-      .then(({ ok, data }) => {
-        if (ok) {
-          setCartItems(data);
-        } else {
-          alert(`Error: ${data.error}`);
-        }
-      });
-  };
-
-  const logoutUser = () => {
-    fetch("/session", {
-      method: "DELETE",
-    })
-      .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
-      .then(({ ok, data }) => {
-        if (ok) {
-          onLogout();
-        } else {
-          alert(`Error: ${data.error}`);
-        }
-      });
-  };
-
-  const triggerModal = (modalMsg, hasCancel, onOk, closeModal) => {
+  const triggerModal = (modalMsg, onOk, closeModal) => {
     setModal({
       isOpen: true,
-      hasCancel: hasCancel,
       modalMsg: modalMsg,
       onOk: onOk,
       closeModal: closeModal,
@@ -129,24 +87,48 @@ export const App = () => {
   };
 
   const triggerLogout = () => {
+    const logoutUser = () => {
+      fetch("/session", {
+        method: "DELETE",
+      })
+        .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
+        .then(({ ok, data }) => {
+          if (ok) {
+            console.log("typeof onLogout in triggerLogout:", typeof onLogout);
+            onLogout();
+          } else {
+            alert(`Error (logout): ${data.error}`);
+          }
+        });
+    };
+
     const logoutMsg = "Are you sure that you'd like to logout?";
-    return triggerModal(logoutMsg, true, logoutUser, () => setModal(null));
+
+    return triggerModal(
+      logoutMsg,
+      () => logoutUser(),
+      () => setModal(null)
+    );
   };
 
   return (
-    <ItemContext.Provider value={{ items }}>
-      <UserContext.Provider value={{ user, loginRegisterUser, triggerLogout }}>
-        <OrderContext.Provider
-          value={{ orders, openOrder, setOpenOrder, cartItems, getCartItems }}
-        >
-          <div className='site-wrapper'>
-            <Header />
-            <Outlet />
-            <ScrollRestoration />
-            <OkCancelModal {...modal} />
-          </div>
-        </OrderContext.Provider>
-      </UserContext.Provider>
-    </ItemContext.Provider>
+    <UserContext.Provider value={{ user, onLogin, triggerLogout }}>
+      <OrderContext.Provider
+        value={{
+          orders,
+          cartOrder,
+          setCartOrder,
+          cartItems,
+          setCartItems,
+        }}
+      >
+        <div className='site-wrapper'>
+          <Header />
+          <Outlet context={{ items, setItems }} />
+          <ScrollRestoration />
+          <OkCancelModal {...modal} />
+        </div>
+      </OrderContext.Provider>
+    </UserContext.Provider>
   );
 };

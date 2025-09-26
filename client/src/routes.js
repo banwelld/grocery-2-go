@@ -6,7 +6,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/home/Home";
 import ProductPg from "./components/ProductPg";
-import MyCart from "./components/MyCart";
+import MyCart from "./components/my-cart/MyCart";
 import PreviousOrders from "./components/PreviousOrders";
 import UserInfo from "./components/UserInfo";
 

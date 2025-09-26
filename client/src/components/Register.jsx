@@ -3,78 +3,14 @@
 import React, { useContext } from "react";
 import { UserContext } from "../contexts";
 import { Formik, Form } from "formik";
-import * as yup from "yup";
 import CustomInput from "./CustomInput";
+import { RegisterSchema } from "../form-schemas";
+import { postData } from "../helpers";
 import "../css/login-reg.css";
 import "../css/forms.css";
 
-export default function Login() {
-  const { loginRegisterUser } = useContext(UserContext);
-
-  const RegisterSchema = yup.object().shape({
-    email: yup.string().email("Invalid email.").required("** Required **"),
-    f_name: yup
-      .string()
-      .min(2, "2 characters min.")
-      .max(20, "20 characters max.")
-      .test(
-        "no-leading-trailing-spaces",
-        "No leading or trailing spaces allowed",
-        (value) => value === value?.trim()
-      )
-      .required("** Required **"),
-    l_name: yup
-      .string()
-      .min(2, "2 characters min.")
-      .max(30, "30 characters max.")
-      .test(
-        "no-leading-trailing-spaces",
-        "No leading or trailing spaces allowed",
-        (value) => value === value?.trim()
-      )
-      .required("** Required **"),
-    phone: yup
-      .string()
-      .required("** Required **")
-      .test("length", "Must be exactly 10 digits", (value) =>
-        /^\d{10}$/.test(value || "")
-      )
-      .test("nanp-validation", "Not a valid phone number.", (value) => {
-        if (!value) return false;
-        return (
-          value[0] !== "0" &&
-          value[0] !== "1" &&
-          value[3] !== "0" &&
-          value[3] !== "1" &&
-          value[1] !== value[2]
-        );
-      }),
-    password: yup
-      .string()
-      .required("** Required **")
-      .min(10, "Password must be at least 10 characters long")
-      .test(
-        "lowercase",
-        "At least 1 lowercase letters",
-        (value) => (value?.match(/[a-z]/g) || []).length >= 1
-      )
-      .test(
-        "uppercase",
-        "At least 1 uppercase letter",
-        (value) => (value?.match(/[A-Z]/g) || []).length >= 1
-      )
-      .test("digit", "1 digit", (value) => (value?.match(/\d/g) || []).length >= 1)
-      .test(
-        "special",
-        "At least 1 special characters",
-        (value) => (value?.match(/[^A-Za-z0-9]/g) || []).length >= 1
-      )
-      .matches(/^\S*$/, "No spaces allowed"),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref("password"), null], "Passwords must match one another.")
-      .required("** Required **"),
-  });
+export default function Register() {
+  const { onLogin } = useContext(UserContext);
 
   return (
     <main className='registration full-page'>
@@ -104,7 +40,7 @@ export default function Login() {
             confirmPassword: "",
           }}
           validationSchema={RegisterSchema}
-          onSubmit={(data) => loginRegisterUser("/users", data)}
+          onSubmit={(data) => postData("/users", data, onLogin)}
         >
           <Form>
             <CustomInput

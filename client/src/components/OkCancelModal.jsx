@@ -6,7 +6,6 @@ import "../css/modal.css";
 export default function Modal({
   isOpen = false,
   modalMsg = "",
-  hasCancel = true,
   onOk = () => {},
   closeModal = () => {},
 }) {
@@ -22,16 +21,20 @@ export default function Modal({
       }}
     >
       <div className='modal'>
-        <p>{modalMsg}</p>
-        <button
-          onClick={() => {
-            onOk();
-            closeModal();
-          }}
-        >
-          OK
-        </button>
-        {hasCancel && <button onClick={closeModal}>Cancel</button>}
+        <div className='text-container'>
+          <p>{modalMsg}</p>
+        </div>
+        <div className='button-container'>
+          <button
+            onClick={() => {
+              onOk();
+              closeModal();
+            }}
+          >
+            OK
+          </button>
+          <button onClick={closeModal}>Cancel</button>
+        </div>
       </div>
     </div>
   );

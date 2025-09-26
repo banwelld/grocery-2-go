@@ -6,11 +6,31 @@ import { Formik, Form } from "formik";
 import * as yup from "yup";
 import CustomInput from "./CustomInput";
 import { Link } from "react-router-dom";
+import { toCamelCase } from "../helpers";
 import "../css/login-reg.css";
 import "../css/forms.css";
 
 export default function Login() {
-  const { loginRegisterUser } = useContext(UserContext);
+  const { onLogin } = useContext(UserContext);
+
+  const loginUser = (formData, onLogin, camelCaseFunc) => {
+    fetch("/session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
+      .then(({ ok, data }) => {
+        if (ok) {
+          onLogin(camelCaseFunc(data));
+        } else {
+          alert(`Error (login/register): ${data.error}`);
+        }
+      });
+  };
 
   const loginSchema = yup.object().shape({
     email: yup.string().email("Invalid email.").required("** Required **"),
@@ -44,7 +64,7 @@ export default function Login() {
             password: "",
           }}
           validationSchema={loginSchema}
-          onSubmit={(data) => loginRegisterUser("/session", data)}
+          onSubmit={(data) => loginUser(data, onLogin, toCamelCase)}
         >
           <Form>
             <CustomInput
@@ -60,7 +80,7 @@ export default function Login() {
               type='password'
               name='password'
             />
-            <button tabIndex={7} type='submit'>
+            <button tabIndex={7} type='submit' className='shadow'>
               Login
             </button>
           </Form>

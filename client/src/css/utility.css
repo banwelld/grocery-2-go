@@ -22,6 +22,33 @@ a {
   color: inherit;
 }
 
+button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: unset;
+  border: unset;
+  cursor: pointer;
+  font-weight: 500;
+  transition: font-weight 0.2s ease-out;
+
+  &:hover {
+    transform: scale(1.01);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &.shadow {
+    box-shadow: 1px 1px 3px 1px #888;
+
+    &:active {
+      box-shadow: 0px 0px 1px 1px #888;
+    }
+  }
+}
+
 .std-padding {
   padding: 2rem;
 }
@@ -59,17 +86,6 @@ a {
 .graceful-hover:not(.active):hover {
   color: var(--clr-pop);
   font-weight: 600;
-}
-
-.grow-with-ease {
-  box-shadow: #00000020 0px 0px 10px, #00000010 0px 0px 0px 1px;
-  transition: box-shadow ease 0.15s, transform ease 0.15s, filter ease 0.15s;
-}
-
-.grow-with-ease:hover {
-  box-shadow: #00000040 3px 3px 10px, #00000020 0px 0px 0px 1px;
-  transform: scale(1.04);
-  filter: brightness(105%) saturate(105%);
 }
 
 a:focus-visible,

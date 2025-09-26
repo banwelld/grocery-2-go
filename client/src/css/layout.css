@@ -4,11 +4,15 @@
   flex-direction: column;
   flex: 0 1 100%;
   min-height: 100vh;
+  width: 100vw;
 }
 
 html,
 body {
   height: 100%;
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 .header {

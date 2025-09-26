@@ -71,7 +71,7 @@ class Item(db.Model, SerializerMixin):
 class Order(db.Model, SerializerMixin):
     __tablename__ = "orders"
 
-    serialize_rules = "-items"
+    serialize_rules = ("-items", "-order_items")
 
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String)
@@ -94,7 +94,9 @@ class Order(db.Model, SerializerMixin):
     )
 
     def __repr__(self):
-        return f"<< ORDER: {self.order_ts} (${self.total / 100}) >>"
+        return (
+            f"<< ORDER: {self.status} {self.order_ts} (${(self.total or 0) / 100}) >>"
+        )
 
 
 # orderitem model
@@ -103,10 +105,10 @@ class Order(db.Model, SerializerMixin):
 class OrderItem(db.Model, SerializerMixin):
     __tablename__ = "order_items"
 
-    serialize_rules = ("-order", "-item", "item.name", "item.price", "item.image_url")
+    serialize_rules = ("-order", "-item", "item.price", "item.name", "item.image_url")
 
     id = db.Column(db.Integer, primary_key=True)
-    quantity = db.Column(db.Integer, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False, default=1)
     price = db.Column(db.Integer)
     order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
     item_id = db.Column(db.Integer, db.ForeignKey("items.id"), nullable=False)
@@ -116,7 +118,7 @@ class OrderItem(db.Model, SerializerMixin):
     # TODO: add validation
 
     def __repr__(self):
-        return f"<< ORDER_ITEM: {self.quantity} @ ${self.price / 100}) >>"
+        return f"<< ORDER_ITEM: {self.item.name} {self.quantity} @ ${self.item.price / 100} >>"
 
 
 if __name__ == "__main__":
@@ -167,5 +169,5 @@ if __name__ == "__main__":
     order_item = OrderItem(id=1, quantity=2, price=319, order_id=1, item_id=1)
     print(f"{order_item}\n")
     print(
-        f"{order_item.id}\n{order_item.quantity}\n{order_item.price}\n{order_item.order_id}\n{order_item.item_id}\n"
+        f"{order_item.id}\n{order_item.quantity}\n{order_item.item.price}\n{order_item.order_id}\n{order_item.item_id}\n"
     )

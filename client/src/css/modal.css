@@ -21,22 +21,30 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   text-align: center;
   animation: fadeInScale 0.3s ease;
-}
 
-.modal button {
-  margin: 2rem 1rem 0;
-  padding: 10px 20px;
-  border: none;
-  background-color: var(--clr-brand);
-  box-shadow: 0 3px #c28c00, 0 2px #ffd966 inset;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+  & .text-container {
+    margin-bottom: 2rem;
+  }
 
-.modal button:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px #c28c00;
+  & button {
+    display: inline;
+    width: 6rem;
+    height: 2rem;
+    background-color: var(--clr-brand);
+    border-radius: 50px;
+
+    &:first-child {
+      margin: 0 1.5rem 0 auto;
+    }
+
+    &:last-child {
+      margin: 0 auto 0 1.5rem;
+    }
+
+    &:active {
+      transform: translateY(2px);
+    }
+  }
 }
 
 @keyframes fadeInScale {

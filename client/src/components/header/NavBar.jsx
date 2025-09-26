@@ -21,7 +21,7 @@ export default function NavBar() {
       <ul>{links}</ul>
       {user && (
         <div className='user-acknowledgment'>
-          <span>Welcome {user.f_name}!</span> <span onClick={triggerLogout}>Logout</span>
+          <span>Welcome {user.fName}!</span> <span onClick={triggerLogout}>Logout</span>
         </div>
       )}
     </nav>

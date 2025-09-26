@@ -1,17 +1,21 @@
 // Home.jsx
 
 import React, { useState, useContext } from "react";
+import { useOutletContext } from "react-router-dom";
 import ProdCard from "./ProdCard";
-import { ItemContext } from "../../contexts";
-import SplitPage from "../templates/SplitPage";
-import SortFilter from "./SortFilter";
+import { OrderContext } from "../../contexts";
+import SplitPageWrapper from "../info-page/SplitPageWrapper";
+import HomeSidebar from "./HomeSidebar";
+import CartMgmtWrapper from "../cart-management/CartMgmtWrapper";
 import "../../css/home.css";
-import "../../css/info-page.css";
 
 export default function Home() {
-  const { items } = useContext(ItemContext);
+  const { items } = useOutletContext();
+  const { cartItems } = useContext(OrderContext);
   const [filterCategory, setFilterCategory] = useState("all");
   const [itemSort, setItemSort] = useState("department");
+
+  if (!items || !cartItems) return <p>Loading...</p>;
 
   // get all item categories for filtering
   const categories = [
@@ -50,24 +54,30 @@ export default function Home() {
       }
     });
   };
-
+  console.log(items);
   const displayItems = sortItems(filterItems(items));
 
-  const cards = displayItems.map((item) => <ProdCard key={item.id} item={item} />);
-
-  const sidebar = (
-    <SortFilter
-      categories={categories}
-      filterCategory={filterCategory}
-      setFilterCategory={setFilterCategory}
-      itemSort={itemSort}
-      setItemSort={setItemSort}
-    />
-  );
+  const cards = displayItems.map((item) => {
+    return (
+      <CartMgmtWrapper key={item.id}>
+        <ProdCard item={item} cartItems={cartItems} />
+      </CartMgmtWrapper>
+    );
+  });
 
   return (
-    <SplitPage sidebar={sidebar}>
-      <div className='item-grid'>{cards}</div>;
-    </SplitPage>
+    <SplitPageWrapper>
+      {/* sidebar */}
+      <HomeSidebar
+        categories={categories}
+        filterCategory={filterCategory}
+        setFilterCategory={setFilterCategory}
+        itemSort={itemSort}
+        setItemSort={setItemSort}
+      />
+
+      {/* main content */}
+      <div className='item-grid'>{cards}</div>
+    </SplitPageWrapper>
   );
 }

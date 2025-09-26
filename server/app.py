@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+from enum import Enum
 
 from config import api, app, bcrypt, db
 from flask import make_response, request, session
@@ -18,14 +19,44 @@ with open("messages.json", "r") as m:
 
 DUMMY_HASH = bcrypt.generate_password_hash("dummy123").decode("utf-8")
 
-# serialize fields for order responses
+# serialize rules
 
-ORDER_RESP_FIELDS = (
+ITEM_SER_FIELDS = (
     "id",
-    "user_id",
-    "order_items.item_id",
-    "order_items.quantity",
+    "name",
+    "origin",
+    "description",
+    "price",
+    "category",
+    "unit",
+    "pkg_qty",
+    "image_url",
 )
+
+# arg enums
+
+
+class Action(Enum):
+    CHECKOUT = "checkout"
+
+
+class Status(Enum):
+    OPEN = "open"
+
+
+# authentication protection
+
+
+class AuthResource(Resource):
+    def dispatch_request(self, *args, **kwargs):
+        if "user_id" not in session:
+            return {"error": "Unauthorized"}, 401
+        return super().dispatch_request(*args, **kwargs)
+
+    @property
+    def current_user(self):
+        return User.query.get(session["user_id"])
+
 
 # views
 
@@ -36,6 +67,17 @@ def index():
 
 
 class AllUsers(Resource):
+    def get(self):
+        user_id = session.get("user_id")
+        if not user_id:
+            return make_response({"message": "User not authenticated"}, 401)
+
+        user = User.query.get(user_id)
+        if not user:
+            return make_response({"message": msg["ID_NOT_FOUND"]}, 401)
+
+        return user.to_dict(rules=("-_password_hash",)), 200
+
     def post(self):
         fields = find_req_fields(User)
         data = {k: request.json.get(k) for k in fields}
@@ -60,18 +102,18 @@ class Session(Resource):
     def get(self):
         user_id = session.get("user_id")
         if not user_id:
-            return make_response({"message": "User not logged in"}, 401)
+            return make_response({"message": "User not authenticated"}, 401)
 
         user = User.query.get(user_id)
         if not user:
-            return make_response({"message": "User not found"}, 404)
+            return make_response({"message": msg["ID_NOT_FOUND"]}, 401)
 
         return user.to_dict(only=("role", "f_name")), 200
 
     def post(self):
         data = request.json or {}
         if not data:
-            return make_response({"message": msg["NO_DATA"]}, 404)
+            return make_response({"message": msg["NO_DATA"]}, 400)
 
         required = ["email", "password"]
         if falsey := find_falsey({k: data.get(k) for k in required}):
@@ -101,7 +143,7 @@ api.add_resource(Session, "/session")
 
 class AllItems(Resource):
     def get(self):
-        items = [i.to_dict() for i in Item.query.all()]
+        items = [i.to_dict(only=ITEM_SER_FIELDS) for i in Item.query.all()]
         return make_response(items, 200)
 
     def post(self):
@@ -116,7 +158,7 @@ class AllItems(Resource):
 
         new_item = Item(**data)
         db.session.add(new_item)
-        db.commit()
+        db.session.commit()
 
         return make_response(new_item.to_dict(), 201)
 
@@ -128,9 +170,12 @@ class ItemById(Resource):
     def get(self, id):
         item = Item.query.get(id)
         if not item:
-            return make_response({"error": msg["ID_NOT_FOUND"]}, 404)
+            return make_response({"message": msg["ID_NOT_FOUND"]}, 404)
 
-        return make_response(item.to_dict(), 200)
+        return make_response(
+            item.to_dict(only=ITEM_SER_FIELDS),
+            200,
+        )
 
 
 api.add_resource(ItemById, "/items/<int:id>")
@@ -144,16 +189,15 @@ class AllOrders(Resource):
 
         status = request.args.get("status")
 
-        user_orders = Order.query.filter(Order.user_id == user_id)
+        query = Order.query.filter(Order.user_id == user_id)
         if status == "open":
-            user_orders = user_orders.filter(Order.status == "open")
+            query = query.filter(Order.status == "open")
 
-        user_orders = user_orders.all()
-        if not user_orders:
-            return make_response({"message": msg["NO_ORDER"]}, 404)
+        user_orders = query.all()
 
         return make_response(
-            [o.to_dict(only=ORDER_RESP_FIELDS) for o in user_orders], 200
+            [o.to_dict() for o in user_orders],
+            200,
         )
 
     def post(self):
@@ -169,7 +213,7 @@ class AllOrders(Resource):
         db.session.add(new_order)
         db.session.commit()
 
-        return make_response(new_order.to_dict(only=ORDER_RESP_FIELDS))
+        return make_response(new_order.to_dict(), 201)
 
 
 api.add_resource(AllOrders, "/orders")
@@ -185,12 +229,25 @@ class OrderById(Resource):
         if not updates:
             return make_response({"message": msg["NO_DATA"]}, 400)
 
+        action = request.args.get("action")
+        if action == "checkout":
+            if order.status != "open":
+                return make_response({"message": msg["NOT_OPEN_ORDER"]}, 400)
+
+            if not len(order.order_items):
+                return make_response({"message": msg["ORDER_EMPTY"]}, 400)
+
+            for oi in order.order_items:
+                oi.price = oi.item.price
+
+            order.total = sum(oi.price * oi.quantity for oi in order.order_items)
+
         for k, v in updates.items():
             setattr(order, k, v)
 
         db.session.commit()
 
-        return make_response(order.to_dict(only=ORDER_RESP_FIELDS))
+        return make_response(order.to_dict(), 200)
 
     def delete(self, id):
         order = Order.query.get(id)
@@ -200,7 +257,7 @@ class OrderById(Resource):
         db.session.delete(order)
         db.session.commit()
 
-        return make_response({"message": msg["DEL_SUCCESS"]}, 200)
+        return make_response({"message": msg["REC_DELETED"]}, 200)
 
 
 api.add_resource(OrderById, "/orders/<int:id>")
@@ -209,20 +266,67 @@ api.add_resource(OrderById, "/orders/<int:id>")
 class AllOrderItems(Resource):
     def get(self):
         order_id = request.args.get("order_id")
+        if not order_id:
+            return make_response({"error": msg["NO_ORDER_ID"]}, 400)
 
-        query = OrderItem.query
-        if order_id:
-            query = query.filter(OrderItem.order_id == order_id)
+        order_items = OrderItem.query.filter(OrderItem.order_id == order_id).all()
 
-        order_items = query.all()
+        serialized_items = [
+            oi.to_dict(rules=("-item", "item.name", "item.image_url", "item.price"))
+            for oi in order_items
+        ]
 
-        return make_response([oi.to_dict(rules=()) for oi in order_items], 200)
+        return make_response(serialized_items, 200)
 
     def post(self):
-        print()
+        fields = ["order_id", "item_id"]
+        data = {k: request.json.get(k) for k in fields}
+
+        if falsey := find_falsey(data):
+            return make_response(
+                {"error": msg["MISSING_FIELDS"].format(fields="".join(falsey))},
+                422,
+            )
+
+        new_order_item = OrderItem(**data)
+        db.session.add(new_order_item)
+        db.session.commit()
+
+        return make_response(new_order_item.to_dict(), 201)
 
 
 api.add_resource(AllOrderItems, "/order_items")
+
+
+class OrderItemById(Resource):
+    def patch(self, id):
+        order_item = OrderItem.query.get(id)
+        if not order_item:
+            return make_response({"message": msg["ID_NOT_FOUND"]}, 404)
+
+        updates = request.json or {}
+        if not updates:
+            return make_response({"message": msg["NO_DATA"]}, 400)
+
+        for k, v in updates.items():
+            setattr(order_item, k, v)
+
+        db.session.commit()
+
+        return make_response(order_item.to_dict(), 200)
+
+    def delete(self, id):
+        order_item = OrderItem.query.get(id)
+        if not order_item:
+            return make_response({"message": msg["ID_NOT_FOUND"]}, 404)
+
+        db.session.delete(order_item)
+        db.session.commit()
+
+        return make_response({"message": msg["REC_DELETED"]}, 200)
+
+
+api.add_resource(OrderItemById, "/order_items/<int:id>")
 
 
 if __name__ == "__main__":

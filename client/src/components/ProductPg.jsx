@@ -1,56 +1,77 @@
 // ProductPg.jsx
 
-import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
-import { ItemContext } from "../contexts";
-import SplitPage from "./templates/SplitPage";
+import React from "react";
+import { useParams, useOutletContext } from "react-router-dom";
+import CartMgmtWrapper from "./cart-management/CartMgmtWrapper";
+import QuantityAdjustBtn from "./cart-management/QantityAdjustBtn";
+import SplitPageWrapper from "./info-page/SplitPageWrapper";
 import Heading from "./info-page/Heading";
-import QtyAdj from "./QtyAdj";
-import "../css/info-page.css";
+import "../css/product-page.css";
 
 export default function ProductPg() {
-  const { id } = useParams();
-  const { items } = useContext(ItemContext);
-  const [item, setItem] = useState(null);
-
-  useEffect(() => {
-    if (!items) return;
-
-    const existingItem = items.find((i) => i.id === Number(id));
-    if (existingItem) {
-      setItem(existingItem);
-    } else {
-      fetch(`/items/${id}`)
-        .then((r) => r.json())
-        .then(setItem);
-    }
-  }, [id, items]);
-
-  if (!item) return <p>Loading...</p>;
-
-  const sidebar = (
-    <>
-      <Heading text='Order Details' isPgHead={false} />
-      <QtyAdj itemId={item.id} />;
-    </>
+  return (
+    <CartMgmtWrapper>
+      <ProductPageDisplay />
+    </CartMgmtWrapper>
   );
+}
+
+function ProductPageDisplay({ actionFunc }) {
+  const { id } = useParams();
+  const { items } = useOutletContext();
+
+  if (!items.length) return <p>Loading...</p>;
+
+  const item = items.find((i) => i.id === Number(id));
+  if (!item) return <p>Item not found.</p>;
+
+  const { description, imageUrl, name, origin, pkgQty, price, quantity, unit } = item;
+  const formattedPrice = (price / 100).toFixed(2);
 
   return (
-    <SplitPage sidebar={sidebar}>
+    <SplitPageWrapper>
+      {/* sidebar */}
+      <aside className='product-page'>
+        <Heading text='In Your Cart' isPgHead={false} subText={name} />
+        <div className='cart-mgmt'>
+          <div className='item-count'>
+            <p>{quantity}</p>
+          </div>
+          <div className='buttons'>
+            <QuantityAdjustBtn
+              action='increment'
+              content='+'
+              actionFunc={(e) => actionFunc(e, Number(id), 1)}
+            />
+            <QuantityAdjustBtn
+              action='dump'
+              content={<img src='/images/trash-white.svg' alt='remove all' />}
+              actionFunc={(e) => actionFunc(e, Number(id))}
+            />
+            <QuantityAdjustBtn
+              action='decrement'
+              content='-'
+              actionFunc={(e) => actionFunc(e, Number(id), -1)}
+            />
+          </div>
+        </div>
+      </aside>
+
+      {/* main content */}
       <article className='product-info'>
         <div className='img-wrapper-sq'>
-          <img className='img-fit-sq' src={item.image_url} alt={item.name} />
+          <img className='img-fit-sq' src={imageUrl} alt={name} />
         </div>
         <div className='text'>
-          <Heading text={item.name} subText={`Product of ${item.origin}`} />
-          <p className='desc'>{item.description}</p>
+          <Heading text={name} subText={`Product of ${origin}`} />
+          <p className='desc'>{description}</p>
           <p className='pricing'>
-            <span className='price'>${(item.price / 100).toFixed(2)} </span>
-            <span className='pkg-desc'>/ {item.unit} </span>
-            {item.pkg_qty && <span className='pkg-qty'>({item.pkg_qty})</span>}
+            <span className='price'>${formattedPrice} </span>
+            <span className='pkg-desc'>/ {unit} </span>
+            {pkgQty && <span className='pkg-qty'>({pkgQty})</span>}
           </p>
         </div>
       </article>
-    </SplitPage>
+    </SplitPageWrapper>
   );
 }
