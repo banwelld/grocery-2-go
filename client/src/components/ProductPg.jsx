@@ -16,7 +16,7 @@ export default function ProductPg() {
   );
 }
 
-function ProductPageDisplay({ actionFunc }) {
+function ProductPageDisplay({ cartMgmtFunc }) {
   const { id } = useParams();
   const { items } = useOutletContext();
 
@@ -41,17 +41,17 @@ function ProductPageDisplay({ actionFunc }) {
             <QuantityAdjustBtn
               action='increment'
               content='+'
-              actionFunc={(e) => actionFunc(e, Number(id), 1)}
+              cartMgmtFunc={(e) => cartMgmtFunc(e, Number(id), 1)}
             />
             <QuantityAdjustBtn
               action='dump'
               content={<img src='/images/trash-white.svg' alt='remove all' />}
-              actionFunc={(e) => actionFunc(e, Number(id))}
+              cartMgmtFunc={(e) => cartMgmtFunc(e, Number(id))}
             />
             <QuantityAdjustBtn
               action='decrement'
               content='-'
-              actionFunc={(e) => actionFunc(e, Number(id), -1)}
+              cartMgmtFunc={(e) => cartMgmtFunc(e, Number(id), -1)}
             />
           </div>
         </div>

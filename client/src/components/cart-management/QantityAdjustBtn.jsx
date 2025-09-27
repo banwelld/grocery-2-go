@@ -2,7 +2,7 @@
 
 import React from "react";
 
-export default function QuantityAdjustBtn({ action, content, actionFunc }) {
+export default function QuantityAdjustBtn({ action, content, cartMgmtFunc }) {
   return (
     <button
       className={`cart-mgmt-btn ${action}`}
@@ -11,7 +11,7 @@ export default function QuantityAdjustBtn({ action, content, actionFunc }) {
       onClick={(e) => {
         e.stopPropagation();
         e.preventDefault();
-        actionFunc(e);
+        cartMgmtFunc(e);
       }}
     >
       {content}

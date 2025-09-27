@@ -25,16 +25,16 @@ main.split-page > * {
   margin-block-end: 0.5rem;
 }
 
-.main-content {
+.main-info {
   display: block;
   background-color: #fff;
 }
 
-.main-content > *:not(.item-grid) {
+.main-info > *:not(.item-grid) {
   width: 75%;
   margin: auto;
 }
 
-.main-content > *:not(.product-info) h1 {
+.main-info > *:not(.product-info) h1 {
   margin-bottom: 1.5rem;
 }

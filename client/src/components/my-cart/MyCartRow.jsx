@@ -5,20 +5,21 @@ import { useNavigate } from "react-router-dom";
 import AcctField from "../../components/info-page/AcctField";
 import QuantityAdjustBtn from "../cart-management/QantityAdjustBtn";
 
-export default function CartRow({ cartItem, toggleCart, actionFunc }) {
+export default function CartRow({ cartItem, toggleCartClass, cartMgmtFunc }) {
   const navigate = useNavigate();
 
   if (!cartItem || !cartItem?.item) <p>Loading item…</p>;
 
-  const { itemId, item, quantity } = cartItem;
-  const { name, imageUrl, price } = item;
+  const { itemId, quantity } = cartItem;
+  const { name, imageUrl, price } = cartItem.item;
 
   const rowTotal = price * quantity;
 
   const toProductPg = () => navigate(`../items/${itemId}`);
+  const adjQuantity = (e) => cartMgmtFunc(e, itemId);
 
   return (
-    <div className={`cart-row items ${toggleCart}`} onClick={toProductPg}>
+    <div className={`cart-row items ${toggleCartClass}`} onClick={toProductPg}>
       <div className='product'>
         <span className='img-wrapper-sq'>
           <img src={imageUrl} alt={name} className='img-fit-sq' />
@@ -30,7 +31,7 @@ export default function CartRow({ cartItem, toggleCart, actionFunc }) {
         <QuantityAdjustBtn
           action='increment'
           content={<img src='images/up-red.svg' alt='remove all' />}
-          actionFunc={(e) => actionFunc(e, itemId, 1)}
+          cartMgmtFunc={adjQuantity}
         />
         <div className='qty'>
           <p>{quantity}</p>
@@ -38,7 +39,7 @@ export default function CartRow({ cartItem, toggleCart, actionFunc }) {
         <QuantityAdjustBtn
           action='decrement'
           content={<img src='images/down-red.svg' alt='remove all' />}
-          actionFunc={(e) => actionFunc(e, itemId, -1)}
+          cartMgmtFunc={adjQuantity}
         />
       </div>
       <AcctField className='row-total money' fieldAmt={rowTotal} />
@@ -46,7 +47,7 @@ export default function CartRow({ cartItem, toggleCart, actionFunc }) {
         <QuantityAdjustBtn
           action='dump'
           content={<img src='images/trash-red.svg' alt='remove all' />}
-          actionFunc={(e) => actionFunc(e, itemId)}
+          cartMgmtFunc={adjQuantity}
         />
       </div>
     </div>

@@ -94,10 +94,9 @@ export const App = () => {
         .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
         .then(({ ok, data }) => {
           if (ok) {
-            console.log("typeof onLogout in triggerLogout:", typeof onLogout);
             onLogout();
           } else {
-            alert(`Error (logout): ${data.error}`);
+            alert(`Error (delete): ${data.error}`);
           }
         });
     };

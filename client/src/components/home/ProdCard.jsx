@@ -4,7 +4,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import QuantityAdjustBtn from "../cart-management/QantityAdjustBtn";
 
-export default function ProdCard({ item, actionFunc }) {
+export default function ProdCard({ item, cartMgmtFunc }) {
   const navigate = useNavigate();
 
   const { id, imageUrl, name, origin, price, quantity, unit } = item;
@@ -44,7 +44,7 @@ export default function ProdCard({ item, actionFunc }) {
                   <img src='/images/down-red.svg' alt='decrement amount by one' />
                 )
               }
-              actionFunc={(e) => actionFunc(e, id, -1)}
+              cartMgmtFunc={(e) => cartMgmtFunc(e, id, -1)}
             />
             <span className='item-count'>{quantity}</span>
           </>
@@ -58,7 +58,7 @@ export default function ProdCard({ item, actionFunc }) {
               "Add to cart"
             )
           }
-          actionFunc={(e) => actionFunc(e, id, 1)}
+          cartMgmtFunc={(e) => cartMgmtFunc(e, id, 1)}
         />
       </div>
     </article>

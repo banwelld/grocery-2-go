@@ -1,20 +1,14 @@
 // CartMgmtWrapper.jsx
 
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { OrderContext } from "../../contexts";
-import { getData, postData, patchData } from "../../helpers";
+import { OrderContext, UserContext } from "../../contexts";
+import { postData, patchData } from "../../helpers";
 
-export default function CartMgmtWrapper({ injectUserData = false, children }) {
-  const child = React.Children.only(children);
-
-  const [user, setUser] = useState(null);
+export default function CartMgmtWrapper({ children }) {
+  const { user } = useContext(UserContext);
   const { cartOrder, setCartOrder, setCartItems, cartItems } = useContext(OrderContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    getData("/users", (data) => setUser(data));
-  }, []);
 
   if (!user) return;
 
@@ -105,7 +99,7 @@ export default function CartMgmtWrapper({ injectUserData = false, children }) {
     }
   };
 
-  const handleIncrement = (userId, orderId, itemId, targetItem, adjustment) => {
+  const handleIncrement = (userId, orderId, itemId, targetItem, adjustment = 1) => {
     if (!orderId)
       return postData("/orders", { user_id: userId }, onCreateOrder, itemId, adjustment);
 
@@ -123,7 +117,7 @@ export default function CartMgmtWrapper({ injectUserData = false, children }) {
     );
   };
 
-  const handleDecrement = (orderId, cartItem, adjustment) => {
+  const handleDecrement = (orderId, cartItem, adjustment = -1) => {
     if (!orderId || !cartItem || cartItem.quantity < 1) return;
     if (cartItem.quantity === 1) return delOrderItem(cartItem.id);
 
@@ -148,9 +142,14 @@ export default function CartMgmtWrapper({ injectUserData = false, children }) {
     );
   };
 
-  const injection = !injectUserData
-    ? { actionFunc: handleClick }
-    : { actionFunc: handleClick, user: user };
-
-  return React.cloneElement(child, injection);
+  return (
+    <>
+      {React.Children.map(children, (child) => {
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child, { cartMgmtFunc: handleClick });
+        }
+        return child;
+      })}
+    </>
+  );
 }

@@ -3,13 +3,13 @@
 import React from "react";
 import "../../css/info-page.css";
 
-export default function SplitPageWrapper({ children }) {
-  const [sidebar, mainContent] = React.Children.toArray(children);
+export default function SplitPageWrapper({ className, children }) {
+  const [sidebar, mainInfo] = React.Children.toArray(children);
 
   return (
-    <main className='split-page'>
-      <section className='side-bar'>{sidebar}</section>
-      <section className='main-content'>{mainContent}</section>
+    <main className={`split-page ${className}`}>
+      <aside className='side-bar'>{sidebar}</aside>
+      <div className='main-info'>{mainInfo}</div>
     </main>
   );
 }
