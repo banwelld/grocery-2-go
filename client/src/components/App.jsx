@@ -5,7 +5,7 @@ import { Outlet, ScrollRestoration, useNavigate } from "react-router-dom";
 import Header from "./header/Header";
 import OkCancelModal from "./OkCancelModal";
 import { UserContext, OrderContext } from "../contexts";
-import { getData, sortBy, validateOrders } from "../helpers";
+import { getData, deleteData, sortBy, validateOrders } from "../helpers";
 
 export const App = () => {
   const [items, setItems] = useState([]);
@@ -87,25 +87,22 @@ export const App = () => {
   };
 
   const triggerLogout = () => {
-    const logoutUser = () => {
-      fetch("/session", {
-        method: "DELETE",
-      })
-        .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
-        .then(({ ok, data }) => {
-          if (ok) {
-            onLogout();
-          } else {
-            alert(`Error (delete): ${data.error}`);
-          }
-        });
-    };
-
+    const logoutUser = deleteData("/session", onLogout);
     const logoutMsg = "Are you sure that you'd like to logout?";
 
     return triggerModal(
       logoutMsg,
       () => logoutUser(),
+      () => setModal(null)
+    );
+  };
+
+  const triggerOrderSubmit = (submissionFunc) => {
+    const submitMsg = "Click OK to confirm submission or Cancel to abort.";
+
+    return triggerModal(
+      submitMsg,
+      () => submissionFunc(),
       () => setModal(null)
     );
   };
@@ -119,6 +116,7 @@ export const App = () => {
           setCartOrder,
           cartItems,
           setCartItems,
+          triggerOrderSubmit,
         }}
       >
         <div className='site-wrapper'>

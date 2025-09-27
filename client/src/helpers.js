@@ -33,6 +33,20 @@ const setData = (path, method, data, onSet, ...args) => {
     });
 };
 
+export const deleteData = (path, onDelete) => {
+  fetch(path, {
+    method: "DELETE",
+  })
+    .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
+    .then(({ ok, data }) => {
+      if (ok) {
+        onDelete();
+      } else {
+        alert(`Error (delete): ${data.error}`);
+      }
+    });
+};
+
 export const validateOrders = (orders, isCart) => {
   if (!Array.isArray(orders)) {
     console.error("Expected 'orders' to be array and got wrong type.");

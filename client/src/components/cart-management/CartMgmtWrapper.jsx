@@ -7,10 +7,9 @@ import { postData, patchData } from "../../helpers";
 
 export default function CartMgmtWrapper({ children }) {
   const { user } = useContext(UserContext);
-  const { cartOrder, setCartOrder, setCartItems, cartItems } = useContext(OrderContext);
+  const { cartOrder, setCartOrder, setCartItems, cartItems, triggerOrderSubmit } =
+    useContext(OrderContext);
   const navigate = useNavigate();
-
-  if (!user) return;
 
   const addCartItem = (cartItemId, orderId, itemId, item, quantity) => {
     setCartItems((cart) => [
@@ -80,9 +79,7 @@ export default function CartMgmtWrapper({ children }) {
     const clickAction = e.currentTarget.dataset.action;
     const targetItem = cartItems?.find((i) => i.itemId === itemId) ?? {};
     const orderId = cartOrder?.id ?? 0;
-    const userId = user.id;
-
-    if (!user) return navigate("/login");
+    const userId = user?.id;
 
     switch (clickAction) {
       case "increment":
@@ -135,11 +132,13 @@ export default function CartMgmtWrapper({ children }) {
 
   const handleCheckout = (orderId, itemList, submissionData) => {
     if (!itemList.length || !orderId) return;
-    return patchData(
-      `orders/${orderId}?action=checkout`,
-      { ...submissionData, status: "submitted" },
-      onCheckout
-    );
+    const submitOrder = () =>
+      patchData(
+        `orders/${orderId}?action=checkout`,
+        { ...submissionData, status: "submitted" },
+        onCheckout
+      );
+    return triggerOrderSubmit(() => submitOrder());
   };
 
   return (

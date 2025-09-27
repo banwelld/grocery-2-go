@@ -55,7 +55,7 @@ class AuthResource(Resource):
 
     @property
     def current_user(self):
-        return User.query.get(session["user_id"])
+        return User.query.filter(User.id == session["user_id"])
 
 
 # views
@@ -72,7 +72,7 @@ class AllUsers(Resource):
         if not user_id:
             return make_response({"message": "User not authenticated"}, 401)
 
-        user = User.query.get(user_id)
+        user = User.query.filter(User.id == user_id).first()
         if not user:
             return make_response({"message": msg["ID_NOT_FOUND"]}, 401)
 
@@ -104,7 +104,7 @@ class Session(Resource):
         if not user_id:
             return make_response({"message": "User not authenticated"}, 401)
 
-        user = User.query.get(user_id)
+        user = User.query.filter(User.id == user_id).first()
         if not user:
             return make_response({"message": msg["ID_NOT_FOUND"]}, 401)
 
@@ -168,7 +168,7 @@ api.add_resource(AllItems, "/items")
 
 class ItemById(Resource):
     def get(self, id):
-        item = Item.query.get(id)
+        item = Item.query.filter(Item.id == id).first()
         if not item:
             return make_response({"message": msg["ID_NOT_FOUND"]}, 404)
 
@@ -201,13 +201,9 @@ class AllOrders(Resource):
         )
 
     def post(self):
-        user_id = request.json.get("user_id")
-
+        user_id = session["user_id"]
         if not user_id:
-            return make_response(
-                {"error": msg["MISSING_FIELDS"].format("user_id")},
-                422,
-            )
+            return make_response({"error": msg["NOT_AUTH"]}, 401)
 
         new_order = Order(user_id=user_id)
         db.session.add(new_order)
@@ -221,7 +217,7 @@ api.add_resource(AllOrders, "/orders")
 
 class OrderById(Resource):
     def patch(self, id):
-        order = Order.query.get(id)
+        order = Order.query.filter(Order.id == id).first()
         if not order:
             return make_response({"message": msg["NO_ORDER"]}, 404)
 
@@ -250,7 +246,7 @@ class OrderById(Resource):
         return make_response(order.to_dict(), 200)
 
     def delete(self, id):
-        order = Order.query.get(id)
+        order = Order.query.filter(Order.id == id).first()
         if not order:
             return make_response({"message": msg["NO_ORDER"]}, 404)
 
@@ -300,7 +296,7 @@ api.add_resource(AllOrderItems, "/order_items")
 
 class OrderItemById(Resource):
     def patch(self, id):
-        order_item = OrderItem.query.get(id)
+        order_item = OrderItem.query.filter(OrderItem.id == id).first()
         if not order_item:
             return make_response({"message": msg["ID_NOT_FOUND"]}, 404)
 
@@ -316,7 +312,7 @@ class OrderItemById(Resource):
         return make_response(order_item.to_dict(), 200)
 
     def delete(self, id):
-        order_item = OrderItem.query.get(id)
+        order_item = OrderItem.query.filter(OrderItem.id == id).first()
         if not order_item:
             return make_response({"message": msg["ID_NOT_FOUND"]}, 404)
 
