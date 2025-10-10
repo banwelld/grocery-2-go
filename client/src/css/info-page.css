@@ -1,25 +1,24 @@
 main.split-page > * {
   display: block;
-  padding-top: 1.5rem;
 }
 
-.side-bar {
+.sidebar {
   padding: 0 1.5rem;
 }
 
-.side-bar .heading {
+.sidebar .heading {
   width: 100%;
   text-align: center;
-  border-bottom: #888 solid 1px;
-  padding-bottom: 0.5rem;
+  border-bottom: var(--border);
 }
 
-.side-bar h1 {
+.sidebar h1 {
   font-size: 2rem;
   line-height: 1.25;
 }
 
-.side-bar h2 {
+.sidebar h2 {
+  text-align: center;
   font-size: 1.2rem;
   color: var(--clr-pop);
   margin-block-end: 0.5rem;
@@ -30,11 +29,39 @@ main.split-page > * {
   background-color: #fff;
 }
 
-.main-info > *:not(.item-grid) {
+.main-info > *:not(.product-grid) {
   width: 75%;
-  margin: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.main-info > *:not(.product-info) h1 {
-  margin-bottom: 1.5rem;
+.submission-info {
+  display: flex;
+  column-gap: 5rem;
+  justify-content: center;
+}
+
+.submission-info section {
+  flex: 0 1 30%;
+  margin-top: unset;
+}
+
+.submission-info button {
+  margin: unset;
+}
+
+.submission-info .input-wrapper {
+  text-align: unset;
+}
+
+.submission-info a {
+  display: block;
+  color: var(--clr-pop);
+  text-decoration: underline;
+  margin-top: 1rem;
+
+  &:hover {
+    font-weight: 500;
+    filter: brightness(0.8);
+  }
 }

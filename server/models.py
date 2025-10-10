@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from config import bcrypt, db
 from sqlalchemy.ext.associationproxy import association_proxy
@@ -11,7 +11,7 @@ from sqlalchemy_serializer import SerializerMixin
 class User(db.Model, SerializerMixin):
     __tablename__ = "users"
 
-    serialize_rules = ("-orders", "-items")
+    serialize_rules = ("-orders", "-products", "-_password_hash")
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, unique=True, nullable=False)
@@ -20,8 +20,13 @@ class User(db.Model, SerializerMixin):
     l_name = db.Column(db.String, nullable=False)
     phone = db.Column(db.String, nullable=False)
     _password_hash = db.Column(db.String, nullable=False)
+    registration_ts = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
     orders = db.relationship("Order", back_populates="user")
-    items = association_proxy("orders", "items")
+    products = association_proxy("orders", "products")
 
     def __repr__(self):
         return f"<< USER: {self.l_name}, {self.f_name} ({self.role}) >>"
@@ -39,13 +44,13 @@ class User(db.Model, SerializerMixin):
         return bcrypt.check_password_hash(self._password_hash, password)
 
 
-# item model
+# product model
 
 
-class Item(db.Model, SerializerMixin):
-    __tablename__ = "items"
+class Product(db.Model, SerializerMixin):
+    __tablename__ = "products"
 
-    serialize_rules = ("-orders", "-order_items")
+    serialize_rules = ("-orders", "-order_products")
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
@@ -56,13 +61,12 @@ class Item(db.Model, SerializerMixin):
     unit = db.Column(db.String, nullable=False)
     pkg_qty = db.Column(db.String, nullable=True)
     image_url = db.Column(db.String, nullable=False)
-    order_items = db.relationship("OrderItem", back_populates="item", cascade="all")
-    orders = association_proxy(
-        "order_items", "order", creator=lambda o: OrderItem(order=o)
+    order_products = db.relationship(
+        "OrderProduct", back_populates="product", cascade="all"
     )
 
     def __repr__(self):
-        return f"<< ITEM: {self.name} (${self.price / 100} / {self.unit}) >>"
+        return f"<< PRODUCT: {self.name} (${self.price / 100} / {self.unit}) >>"
 
 
 # order model
@@ -71,26 +75,34 @@ class Item(db.Model, SerializerMixin):
 class Order(db.Model, SerializerMixin):
     __tablename__ = "orders"
 
-    serialize_rules = ("-items", "-order_items")
+    serialize_rules = ("-order_products.order", "-user.orders", "-user.products")
 
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String)
     city = db.Column(db.String)
     province_cd = db.Column(db.String)
     postal_cd = db.Column(db.String)
+    product_count = db.Column(db.Integer)
     total = db.Column(db.Integer)
-    order_ts = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    order_ts = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
     status_ts = db.Column(
-        db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
     )
     status = db.Column(db.String, nullable=False, default="open")
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     user = db.relationship("User", back_populates="orders", cascade="all")
-    order_items = db.relationship(
-        "OrderItem", back_populates="order", cascade="all, delete-orphan"
+    order_products = db.relationship(
+        "OrderProduct", back_populates="order", cascade="all, delete-orphan"
     )
-    items = association_proxy(
-        "order_items", "item", creator=lambda i: OrderItem(item=i)
+    products = association_proxy(
+        "order_products", "product", creator=lambda i: OrderProduct(product=i)
     )
 
     def __repr__(self):
@@ -99,26 +111,26 @@ class Order(db.Model, SerializerMixin):
         )
 
 
-# orderitem model
+# orderproduct model
 
 
-class OrderItem(db.Model, SerializerMixin):
-    __tablename__ = "order_items"
+class OrderProduct(db.Model, SerializerMixin):
+    __tablename__ = "order_products"
 
-    serialize_rules = ("-order", "-item", "item.price", "item.name", "item.image_url")
+    serialize_rules = ("-order",)
 
     id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False, default=1)
     price = db.Column(db.Integer)
     order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
-    item_id = db.Column(db.Integer, db.ForeignKey("items.id"), nullable=False)
-    item = db.relationship("Item", back_populates="order_items")
-    order = db.relationship("Order", back_populates="order_items")
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
+    product = db.relationship("Product", back_populates="order_products")
+    order = db.relationship("Order", back_populates="order_products")
 
     # TODO: add validation
 
     def __repr__(self):
-        return f"<< ORDER_ITEM: {self.item.name} {self.quantity} @ ${self.item.price / 100} >>"
+        return f"<< ORDER_PRODUCT: {self.product.name} {self.quantity} @ ${self.product.price / 100} >>"
 
 
 if __name__ == "__main__":
@@ -136,7 +148,7 @@ if __name__ == "__main__":
         f"{user.id}\n{user.role}\n{user.username}\n{user.f_name}\n{user.l_name}\n{user.phone}\n{user.password_hash}\n"
     )
 
-    item = Item(
+    product = Product(
         id=1,
         name="Red Bell Pepper",
         category="produce",
@@ -146,14 +158,14 @@ if __name__ == "__main__":
         pkg_qty="",
         image_url="http://www.grocery.com/red_bell_pepper.jpg",
     )
-    print(f"{item}\n")
+    print(f"{product}\n")
     print(
-        f"{item.id}\n{item.name}\n{item.category}\n{item.origin}\n{item.price}\n{item.unit}\n{item.image_url}\n"
+        f"{product.id}\n{product.name}\n{product.category}\n{product.origin}\n{product.price}\n{product.unit}\n{product.image_url}\n"
     )
 
     order = Order(
         id=1,
-        order_ts=datetime.now(),
+        order_ts=lambda: datetime.now(timezone.utc)(),
         address="123 Somerset Dr.",
         city="Pleasantville",
         province_cd="ON",
@@ -166,8 +178,8 @@ if __name__ == "__main__":
         f"{order.id}\n{order.order_ts}\n{order.address}\n{order.city}\n{order.province_cd}\n{order.postal_cd}\n{order.total}\n{order.user_id}\n"
     )
 
-    order_item = OrderItem(id=1, quantity=2, price=319, order_id=1, item_id=1)
-    print(f"{order_item}\n")
+    order_product = OrderProduct(id=1, quantity=2, price=319, order_id=1, product_id=1)
+    print(f"{order_product}\n")
     print(
-        f"{order_item.id}\n{order_item.quantity}\n{order_item.item.price}\n{order_item.order_id}\n{order_item.item_id}\n"
+        f"{order_product.id}\n{order_product.quantity}\n{order_product.product.price}\n{order_product.order_id}\n{order_product.product_id}\n"
     )

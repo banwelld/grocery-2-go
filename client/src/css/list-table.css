@@ -1,0 +1,111 @@
+/* list-table.css */
+
+.list-table {
+  display: grid;
+  align-items: center;
+  border-top: var(--border);
+  border-bottom: var(--border);
+
+  &.product {
+    grid-template-columns: 1fr 15ch 25ch 15ch 7ch;
+  }
+
+  &.order {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  & .img-wrapper-sq {
+    height: 1.8rem;
+  }
+
+  & > *:nth-child(even).row.data {
+    background-color: var(--clr-base);
+  }
+}
+
+.list-table .row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  border-bottom: var(--border);
+  padding: auto 0;
+  align-items: center;
+  text-align: center;
+  height: 2rem;
+  column-gap: 20px;
+}
+
+.list-table :is(.labels, .totals) {
+  font-size: 1.05rem;
+  font-weight: 600;
+  padding: 0.5rem 0;
+}
+
+.list-table .totals {
+  color: #fff;
+  background-color: var(--clr-pop);
+}
+
+.list-table .data {
+  font-size: 0.95rem;
+
+  &:hover {
+    font-weight: 600;
+    color: var(--clr-pop);
+    cursor: pointer;
+
+    & button {
+      opacity: 1;
+    }
+  }
+}
+
+.list-table :is(.name, .product-tally > *) {
+  margin: auto 0px;
+}
+
+.list-table .product {
+  display: inline-flex;
+  margin-left: 1rem;
+  text-align: left;
+  gap: 15px;
+}
+
+.list-table .money {
+  display: flex;
+  margin: 0 1rem;
+
+  & > span:first-child {
+    text-align: start;
+    flex: 1 1 auto;
+  }
+}
+
+.list-table .product-tally {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.list-table button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+
+  &:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.list-table button.dump {
+  width: 18px;
+  height: 18px;
+  border-radius: 0;
+  margin: 0 20px;
+}

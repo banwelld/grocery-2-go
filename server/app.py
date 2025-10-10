@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
 import json
+from datetime import datetime, timezone
 from enum import Enum
 
 from config import api, app, bcrypt, db
 from flask import make_response, request, session
 from flask_restful import Resource
 from helpers import find_falsey, find_req_fields
-from models import Item, Order, OrderItem, User
+from models import Order, OrderProduct, Product, User
 
 # get error messages from messages.json
 
@@ -19,24 +20,11 @@ with open("messages.json", "r") as m:
 
 DUMMY_HASH = bcrypt.generate_password_hash("dummy123").decode("utf-8")
 
-# serialize rules
-
-ITEM_SER_FIELDS = (
-    "id",
-    "name",
-    "origin",
-    "description",
-    "price",
-    "category",
-    "unit",
-    "pkg_qty",
-    "image_url",
-)
 
 # arg enums
 
 
-class Action(Enum):
+class ActionType(Enum):
     CHECKOUT = "checkout"
 
 
@@ -76,7 +64,7 @@ class AllUsers(Resource):
         if not user:
             return make_response({"message": msg["ID_NOT_FOUND"]}, 401)
 
-        return user.to_dict(rules=("-_password_hash",)), 200
+        return user.to_dict(), 200
 
     def post(self):
         fields = find_req_fields(User)
@@ -92,7 +80,7 @@ class AllUsers(Resource):
         db.session.add(new_user)
         db.session.commit()
 
-        return make_response(new_user.to_dict(only=("role", "f_name")), 201)
+        return make_response(new_user.to_dict(), 201)
 
 
 api.add_resource(AllUsers, "/users")
@@ -108,7 +96,7 @@ class Session(Resource):
         if not user:
             return make_response({"message": msg["ID_NOT_FOUND"]}, 401)
 
-        return user.to_dict(only=("role", "f_name")), 200
+        return user.to_dict(), 200
 
     def post(self):
         data = request.json or {}
@@ -131,7 +119,7 @@ class Session(Resource):
             return make_response({"error": msg["INVALID_CREDS"]}, 401)
 
         session["user_id"] = user.id
-        return user.to_dict(only=("role", "f_name")), 200
+        return user.to_dict(), 200
 
     def delete(self):
         session.pop("user_id", None)
@@ -141,13 +129,13 @@ class Session(Resource):
 api.add_resource(Session, "/session")
 
 
-class AllItems(Resource):
+class AllProducts(Resource):
     def get(self):
-        items = [i.to_dict(only=ITEM_SER_FIELDS) for i in Item.query.all()]
-        return make_response(items, 200)
+        products = [i.to_dict() for i in Product.query.all()]
+        return make_response(products, 200)
 
     def post(self):
-        fields = find_req_fields(Item)
+        fields = find_req_fields(Product)
         data = {k: request.json.get(k) for k in fields}
 
         if falsey := find_falsey(data):
@@ -156,29 +144,29 @@ class AllItems(Resource):
                 422,
             )
 
-        new_item = Item(**data)
-        db.session.add(new_item)
+        new_product = Product(**data)
+        db.session.add(new_product)
         db.session.commit()
 
-        return make_response(new_item.to_dict(), 201)
+        return make_response(new_product.to_dict(), 201)
 
 
-api.add_resource(AllItems, "/items")
+api.add_resource(AllProducts, "/products")
 
 
-class ItemById(Resource):
+class ProductById(Resource):
     def get(self, id):
-        item = Item.query.filter(Item.id == id).first()
-        if not item:
+        product = Product.query.filter(Product.id == id).first()
+        if not product:
             return make_response({"message": msg["ID_NOT_FOUND"]}, 404)
 
         return make_response(
-            item.to_dict(only=ITEM_SER_FIELDS),
+            product.to_dict(),
             200,
         )
 
 
-api.add_resource(ItemById, "/items/<int:id>")
+api.add_resource(ProductById, "/products/<int:id>")
 
 
 class AllOrders(Resource):
@@ -194,11 +182,9 @@ class AllOrders(Resource):
             query = query.filter(Order.status == "open")
 
         user_orders = query.all()
+        order_dicts = [o.to_dict() for o in user_orders]
 
-        return make_response(
-            [o.to_dict() for o in user_orders],
-            200,
-        )
+        return make_response(order_dicts, 200)
 
     def post(self):
         user_id = session["user_id"]
@@ -216,6 +202,20 @@ api.add_resource(AllOrders, "/orders")
 
 
 class OrderById(Resource):
+    def get(self, id):
+        order = Order.query.filter(Order.id == id).first()
+        if not order:
+            return make_response({"message": msg["NO_ORDER"]}, 404)
+
+        response = order.to_dict(
+            rules=(
+                "order_products",
+                "-order_products.order",
+            )
+        )
+
+        return make_response(response, 200)
+
     def patch(self, id):
         order = Order.query.filter(Order.id == id).first()
         if not order:
@@ -225,18 +225,20 @@ class OrderById(Resource):
         if not updates:
             return make_response({"message": msg["NO_DATA"]}, 400)
 
-        action = request.args.get("action")
-        if action == "checkout":
+        action_type = request.args.get("action_type")
+        if action_type == "checkout":
             if order.status != "open":
                 return make_response({"message": msg["NOT_OPEN_ORDER"]}, 400)
 
-            if not len(order.order_items):
+            if not len(order.order_products):
                 return make_response({"message": msg["ORDER_EMPTY"]}, 400)
 
-            for oi in order.order_items:
-                oi.price = oi.item.price
+            for oi in order.order_products:
+                oi.price = oi.product.price
 
-            order.total = sum(oi.price * oi.quantity for oi in order.order_items)
+            order.total = sum(oi.price * oi.quantity for oi in order.order_products)
+            order.product_count = sum(oi.quantity for oi in order.order_products)
+            order.order_ts = datetime.now(timezone.utc)
 
         for k, v in updates.items():
             setattr(order, k, v)
@@ -259,23 +261,27 @@ class OrderById(Resource):
 api.add_resource(OrderById, "/orders/<int:id>")
 
 
-class AllOrderItems(Resource):
+class AllOrderProducts(Resource):
     def get(self):
         order_id = request.args.get("order_id")
         if not order_id:
             return make_response({"error": msg["NO_ORDER_ID"]}, 400)
 
-        order_items = OrderItem.query.filter(OrderItem.order_id == order_id).all()
+        order_products = OrderProduct.query.filter(
+            OrderProduct.order_id == order_id
+        ).all()
 
-        serialized_items = [
-            oi.to_dict(rules=("-item", "item.name", "item.image_url", "item.price"))
-            for oi in order_items
+        serialized_products = [
+            oi.to_dict(
+                rules=("-product", "product.name", "product.image_url", "product.price")
+            )
+            for oi in order_products
         ]
 
-        return make_response(serialized_items, 200)
+        return make_response(serialized_products, 200)
 
     def post(self):
-        fields = ["order_id", "item_id"]
+        fields = ["order_id", "product_id"]
         data = {k: request.json.get(k) for k in fields}
 
         if falsey := find_falsey(data):
@@ -284,20 +290,20 @@ class AllOrderItems(Resource):
                 422,
             )
 
-        new_order_item = OrderItem(**data)
-        db.session.add(new_order_item)
+        new_order_product = OrderProduct(**data)
+        db.session.add(new_order_product)
         db.session.commit()
 
-        return make_response(new_order_item.to_dict(), 201)
+        return make_response(new_order_product.to_dict(), 201)
 
 
-api.add_resource(AllOrderItems, "/order_items")
+api.add_resource(AllOrderProducts, "/order_products")
 
 
-class OrderItemById(Resource):
+class OrderProductById(Resource):
     def patch(self, id):
-        order_item = OrderItem.query.filter(OrderItem.id == id).first()
-        if not order_item:
+        order_product = OrderProduct.query.filter(OrderProduct.id == id).first()
+        if not order_product:
             return make_response({"message": msg["ID_NOT_FOUND"]}, 404)
 
         updates = request.json or {}
@@ -305,24 +311,24 @@ class OrderItemById(Resource):
             return make_response({"message": msg["NO_DATA"]}, 400)
 
         for k, v in updates.items():
-            setattr(order_item, k, v)
+            setattr(order_product, k, v)
 
         db.session.commit()
 
-        return make_response(order_item.to_dict(), 200)
+        return make_response(order_product.to_dict(), 200)
 
     def delete(self, id):
-        order_item = OrderItem.query.filter(OrderItem.id == id).first()
-        if not order_item:
+        order_product = OrderProduct.query.filter(OrderProduct.id == id).first()
+        if not order_product:
             return make_response({"message": msg["ID_NOT_FOUND"]}, 404)
 
-        db.session.delete(order_item)
+        db.session.delete(order_product)
         db.session.commit()
 
         return make_response({"message": msg["REC_DELETED"]}, 200)
 
 
-api.add_resource(OrderItemById, "/order_items/<int:id>")
+api.add_resource(OrderProductById, "/order_products/<int:id>")
 
 
 if __name__ == "__main__":

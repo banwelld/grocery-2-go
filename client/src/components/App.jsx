@@ -1,25 +1,24 @@
 // App.jsx
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Outlet, ScrollRestoration, useNavigate } from "react-router-dom";
-import Header from "./header/Header";
+import SiteHeader from "./site-header/SiteHeader";
 import OkCancelModal from "./OkCancelModal";
-import { UserContext, OrderContext } from "../contexts";
-import { getData, deleteData, sortBy, validateOrders } from "../helpers";
+import { UserContext, OrderContext, ProductContext } from "../contexts/contexts";
+import { getData, deleteData, sortBy, validateOrders } from "../helpers/helpers";
 
 export const App = () => {
-  const [items, setItems] = useState([]);
+  const [products, setProducts] = useState([]);
   const [user, setUser] = useState(null);
-  const [cartOrder, setCartOrder] = useState({});
-  const [cartItems, setCartItems] = useState([]);
+  const [basket, setBasket] = useState(null);
   const [orders, setOrders] = useState([]);
   const [modal, setModal] = useState(null);
   const navigate = useNavigate();
 
-  // fetch all items
+  // fetch all products
 
   useEffect(() => {
-    getData("/items", onGetItems);
+    getData("/products", onGetProducts);
   }, []);
 
   // authenticate previous user
@@ -28,15 +27,9 @@ export const App = () => {
     getData("/session", onLogin, false);
   }, []);
 
-  // ensure items have quantities
-
-  useEffect(() => {
-    setItems((prevItems) => mergeCartQuantities(prevItems, cartItems));
-  }, [cartItems]);
-
   // followups to fetch actions
 
-  const onGetItems = (items) => setItems(sortBy(items, "name"));
+  const onGetProducts = (p) => setProducts(sortBy(p, "name"));
 
   const onLogin = (data, goToHome = true) => {
     setUser(data);
@@ -48,31 +41,14 @@ export const App = () => {
     const validated = validateOrders(orders, isCart);
     if (!isCart) return setOrders(validated);
     if (!validated) return;
-    setCartOrder(validated);
-    getData(`/order_items?order_id=${validated.id}`, onGetCartItems);
-  };
-
-  const onGetCartItems = (cartItems) => {
-    setCartItems(cartItems);
+    setBasket(validated);
   };
 
   const onLogout = () => {
     setUser(null);
-    setCartOrder({});
-    setCartItems([]);
+    setBasket(null);
     setOrders([]);
     navigate("/");
-  };
-
-  // append cart-item quantities to items
-
-  const mergeCartQuantities = (items, cartItems) => {
-    const cartMap = new Map(cartItems.map((ci) => [ci.itemId, ci.quantity]));
-
-    return items.map((item) => ({
-      ...item,
-      quantity: cartMap.get(item.id) || 0,
-    }));
   };
 
   // logout modal
@@ -109,23 +85,23 @@ export const App = () => {
 
   return (
     <UserContext.Provider value={{ user, onLogin, triggerLogout }}>
-      <OrderContext.Provider
-        value={{
-          orders,
-          cartOrder,
-          setCartOrder,
-          cartItems,
-          setCartItems,
-          triggerOrderSubmit,
-        }}
-      >
-        <div className='site-wrapper'>
-          <Header />
-          <Outlet context={{ items, setItems }} />
-          <ScrollRestoration />
-          <OkCancelModal {...modal} />
-        </div>
-      </OrderContext.Provider>
+      <ProductContext.Provider value={{ products, setProducts }}>
+        <OrderContext.Provider
+          value={{
+            orders,
+            basket,
+            setBasket,
+            triggerOrderSubmit,
+          }}
+        >
+          <div className='site-wrapper'>
+            <SiteHeader />
+            <Outlet />
+            <ScrollRestoration />
+            <OkCancelModal {...modal} />
+          </div>
+        </OrderContext.Provider>
+      </ProductContext.Provider>
     </UserContext.Provider>
   );
 };

@@ -28,6 +28,7 @@ form :is(input, select) {
 form > button {
   display: flex;
   background-color: var(--clr-brand);
+  font-weight: 600;
   padding: 10px 20px;
 
   &:active {

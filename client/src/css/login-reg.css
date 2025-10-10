@@ -2,11 +2,10 @@
 
 main.full-page {
   background-color: #fff;
-  padding-top: 1.5rem;
   min-height: 100%;
 }
 
-.wrapper {
+.count-wrapper {
   display: block;
   width: 50%;
   margin: 0 auto;
@@ -21,8 +20,8 @@ main.full-page {
 }
 
 .message {
-  border-top: solid #888 1px;
-  border-bottom: solid #888 1px;
+  border-top: var(--border);
+  border-bottom: var(--border);
   padding: 1rem 0;
 }
 

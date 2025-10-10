@@ -49,6 +49,44 @@ button {
   }
 }
 
+section {
+  margin: 1.5rem 0;
+}
+
+.heading-group {
+  display: block;
+
+  & .ancillary-text {
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    border-top: var(--border);
+    border-bottom: var(--border);
+  }
+}
+
+aside .heading-group {
+  text-align: center;
+  display: block;
+  margin: 1.5rem 0;
+
+  & > h2 {
+    font-size: 1.61834em;
+  }
+}
+
+:is(.basket-info, .order-info, .full-page) .heading-group {
+  margin: 1.5rem auto;
+}
+
+:is(.product-card, .product-info) .heading-group {
+  & .ancillary-text {
+    margin: 0.3rem 0 1rem;
+    padding: unset;
+    font-size: 0.9rem;
+    border: unset;
+  }
+}
+
 .std-padding {
   padding: 2rem;
 }
@@ -96,4 +134,20 @@ button:focus-visible {
   outline: none;
   box-shadow: 0 0 2px 3px color-mix(in srgb, var(--clr-pop-lt), transparent 30%);
   transition: box-shadow 0.2s ease-in-out;
+}
+
+:has(> .canada) {
+  display: flex;
+  height: 1rem;
+  padding: auto 0;
+  column-gap: 0.5rem;
+}
+
+span.canada {
+  font-weight: 600;
+  color: #ee1b24;
+}
+
+img.canada {
+  height: 100%;
 }

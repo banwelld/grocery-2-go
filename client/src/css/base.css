@@ -15,10 +15,15 @@
   --font-utility: "Avenir Next";
 
   /* common patterns */
-  --wd-card: 180px;
+  --wd-card: 200px;
   --pd-card-ext: 10px;
   --wd-card-img: calc(var(--wd-card) - (2 * var(--pd-card-ext)));
-  --shd-pg-overlap: #333 0px 0px 5px 1px;
+  --shadow-pg: #333 0px 0px 5px 1px;
+  --shadow-btn: #333 2px 2px 3px 1px;
+  --shadow-btn-act: #333 1px 1px 2px 1px;
+  --border: solid #aaa 1px;
+
+  /* tables */
 }
 
 /* TODO: Delete outline colours before finalizing */

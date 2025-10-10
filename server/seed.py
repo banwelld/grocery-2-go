@@ -5,12 +5,12 @@ from random import randint, sample
 
 from app import app
 from faker import Faker
-from models import Item, Order, OrderItem, User, db
+from models import Order, OrderProduct, Product, User, db
 
-# open up AI-generated item data
+# open up AI-generated product data
 
-with open("seed_items.json", "r") as f:
-    seed_item_data = json.load(f)
+with open("seed_products.json", "r") as f:
+    seed_product_data = json.load(f)
 
 fake = Faker("en_CA")
 
@@ -28,6 +28,7 @@ def new_user():
     user_prefix = f"{randint(2, 9)}{str(randint(1, 99)).zfill(2)}"
     user["phone"] = f"{user_area_cd}{user_prefix}{user_suffix}"
     user["password"] = "This!23456"
+    user["registration_ts"] = fake.date_time_between(start_date="-1y", end_date="-60d")
     return User(**user)
 
 
@@ -42,29 +43,28 @@ def new_order(user_id, is_submitted):
         city=fake.city(),
         province_cd=province,
         postal_cd=fake.postalcode_in_province(province_abbr=province),
-        total=0,
         user_id=user_id,
         status="submitted",
     )
 
 
-def new_order_item(order_id, item_id):
-    return OrderItem(
+def new_order_product(order_id, product_id):
+    return OrderProduct(
         quantity=randint(1, 3),
-        item_id=item_id,
+        product_id=product_id,
         order_id=order_id,
     )
 
 
-def generate_item_list():
+def generate_product_list():
     return [
-        Item(
-            **item_data,
+        Product(
+            **product_data,
             description=fake.paragraph(nb_sentences=4)
             + "\n\n"
             + fake.paragraph(nb_sentences=2),
         )
-        for item_data in seed_item_data
+        for product_data in seed_product_data
     ]
 
 
@@ -73,9 +73,9 @@ if __name__ == "__main__":
         print("\nStarting seed...\n")
 
         print("Deleting data...\n")
-        OrderItem.query.delete()
+        OrderProduct.query.delete()
         Order.query.delete()
-        Item.query.delete()
+        Product.query.delete()
         User.query.delete()
 
         db.session.commit()
@@ -86,12 +86,12 @@ if __name__ == "__main__":
         db.session.add_all(users)
         db.session.flush()
 
-        print("Creating items...\n")
-        items = generate_item_list()
+        print("Creating products...\n")
+        products = generate_product_list()
 
-        db.session.add_all(items)
+        db.session.add_all(products)
 
-        print("Creating orders with items...\n")
+        print("Creating orders with products...\n")
         open_orders = [new_order(user.id, False) for user in sample(users, 10)]
         submitted_orders = [new_order(user.id, True) for user in sample(users, 10)]
 
@@ -100,14 +100,25 @@ if __name__ == "__main__":
         db.session.add_all(all_orders)
         db.session.flush()
 
-        order_items = [
-            new_order_item(order.id, item.id)
+        order_products = [
+            new_order_product(order.id, product.id)
             for order in all_orders
-            for item in sample(items, randint(3, 15))
+            for product in sample(products, randint(3, 15))
         ]
 
-        db.session.add_all(order_items)
+        db.session.add_all(order_products)
         db.session.flush
+
+        submitted_orders = Order.query.filter(Order.status == "submitted").all()
+
+        for order in submitted_orders:
+            order.total = sum(
+                product.quantity * product.product.price
+                for product in order.order_products
+            )
+            order.product_count = sum(
+                product.quantity for product in order.order_products
+            )
 
         print("Adding Dave Bawell with orders...\n")
         dave = User(

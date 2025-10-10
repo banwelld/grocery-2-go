@@ -1,0 +1,27 @@
+[
+  {
+    "path": "/",
+    "label": "Home",
+    "visible": "all"
+  },
+  {
+    "path": "/users/:id",
+    "label": "View profile",
+    "visible": "member"
+  },
+  {
+    "path": "/orders",
+    "label": "View previous orders",
+    "visible": "member"
+  },
+  {
+    "path": "/my-basket",
+    "label": "View my basket",
+    "visible": "member"
+  },
+  {
+    "path": "/login",
+    "label": "Login / Register",
+    "visible": "guest"
+  }
+]

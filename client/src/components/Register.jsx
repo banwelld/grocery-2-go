@@ -1,11 +1,11 @@
 // Register.jsx
 
 import React, { useContext } from "react";
-import { UserContext } from "../contexts";
+import { UserContext } from "../contexts/contexts";
 import { Formik, Form } from "formik";
-import CustomInput from "./CustomInput";
+import FormikInput from "./FormikInput";
 import { RegisterSchema } from "../form-schemas";
-import { postData } from "../helpers";
+import { postData } from "../helpers/helpers";
 import "../css/login-reg.css";
 import "../css/forms.css";
 
@@ -21,7 +21,7 @@ export default function Register() {
             <p>
               We're thrilled that you've decided to create an account! Just give us a
               little info about yourself and you'll be all ready to load up a shopping
-              cart.
+              basket.
             </p>
             <p>
               All fields are mandatory so make sure your form is complete. Make sure that
@@ -43,33 +43,33 @@ export default function Register() {
           onSubmit={(data) => postData("/users", data, onLogin)}
         >
           <Form>
-            <CustomInput
+            <FormikInput
               type='email'
               tabIndex={1}
               placeholder='email address'
               name='email'
               autoFocus
             />
-            <CustomInput
+            <FormikInput
               tabIndex={2}
               placeholder='first name'
               type='text'
               name='f_name'
             />
-            <CustomInput tabIndex={3} placeholder='last name' type='text' name='l_name' />
-            <CustomInput
+            <FormikInput tabIndex={3} placeholder='last name' type='text' name='l_name' />
+            <FormikInput
               tabIndex={4}
               placeholder='phone number (digits only)'
               type='tel'
               name='phone'
             />
-            <CustomInput
+            <FormikInput
               tabIndex={5}
               placeholder='password'
               type='password'
               name='password'
             />
-            <CustomInput
+            <FormikInput
               tabIndex={6}
               placeholder='confirm password'
               type='password'
