@@ -1,15 +1,13 @@
 // routes.js
 
-import { App } from "./components/App";
+import { App } from "./app/App";
 import ErrorPage from "./components/ErrorPage";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import UserAuth from "./pages/user-auth/UserAuth";
 import Home from "./pages/home/Home";
 import Product from "./pages/product/Product";
 import Basket from "./pages/basket/Basket";
-import ShowOrderHist from "./components/ShowOrderHist";
-import ShowUser from "./components/ShowUser";
-import ShowOrder from "./components/ShowOrder";
+import User from "./pages/user/User";
+import Order from "./pages/order/Order";
 
 const routes = [
   {
@@ -18,13 +16,11 @@ const routes = [
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Home /> },
-      { path: "login", element: <Login /> },
-      { path: "register", element: <Register /> },
-      { path: "users/:id", element: <ShowUser /> },
+      { path: "user-auth", element: <UserAuth /> },
+      { path: "users/:id", element: <User /> },
       { path: "products/:id", element: <Product /> },
       { path: "my-basket", element: <Basket /> },
-      { path: "orders", element: <ShowOrderHist /> },
-      { path: "orders/:id", element: <ShowOrder /> },
+      { path: "orders/:id", element: <Order /> },
     ],
   },
 ];

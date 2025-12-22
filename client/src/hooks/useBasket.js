@@ -1,78 +1,56 @@
-// useBasket.js
+// /client/src/hooks/useBasket.js
 
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { OrderContext, ProductContext } from "../contexts/contexts";
-import { patchData } from "../helpers/helpers";
+import { OrderContext } from "../contexts/contexts";
+import { patchData, logException } from "../helpers/helpers";
+import { errorMessages as msg } from "./constants";
 
 export default function useBasket() {
-  const { basket, setBasket, triggerOrderSubmit } = useContext(OrderContext);
-  const { products } = useContext(ProductContext);
+  const { basket, setBasket } = useContext(OrderContext);
   const navigate = useNavigate();
 
-  const orderProducts = useMemo(
-    () => basket?.orderProducts ?? [],
-    [basket?.orderProducts]
-  );
-
   const orderId = basket?.id ?? 0;
+  const products = basket?.orderProducts ?? [];
 
-  const noBasket = !orderId;
-  const basketEmpty = orderProducts.length === 0;
-  const notOpenOrder = basket?.status !== "open";
+  const hasBasket = !!orderId && orderId >= 1;
+  const hasItems = Array.isArray(products) && products.length >= 1;
+  const isOpen = hasBasket && basket?.status === "open";
 
-  // basket summary
+  const orderTotal = products?.reduce((total, curr) => {
+    return total + curr?.product?.price * curr?.quantity;
+  }, 0);
 
-  const basketSummary = useMemo(() => {
-    let basketTotal = 0;
-    let basketQuantity = 0;
-
-    for (const op of orderProducts) {
-      const product = products.find((p) => p.id === op.productId);
-      if (!product) continue;
-      basketTotal += product.price * op.quantity;
-      basketQuantity += op.quantity;
-    }
-
-    return { basketTotal, basketQuantity };
-  }, [orderProducts, products]);
-
-  // response handler
-
-  const orderPagePath = `/orders/${orderId}`;
-
-  const onCheckout = (orderId) => {
-    setBasket(null);
-    navigate(orderPagePath);
-  };
+  const itemCount = products?.reduce((total, curr) => (total += curr?.quantity), 0);
 
   // checkout function
 
-  const onCheckoutClick = (submissionData) => {
-    if (notOpenOrder)
-      return console.log(
-        "Attempted basket action on order with status other than 'open'."
-      );
+  const handleCheckout = (submissionData) => {
+    if (!hasBasket || !hasItems) return logException(msg.EMPTY_BASKET);
 
-    if (noBasket || basketEmpty) return;
+    if (!isOpen) return logException(msg.ORDER_STATUS);
 
-    const submitOrder = () =>
-      patchData(
-        `orders/${orderId}?action_type=checkout`,
-        { ...submissionData, status: "submitted" },
-        (orderId) => onCheckout(orderId)
-      );
-    return triggerOrderSubmit(submitOrder);
+    patchData(`orders/${orderId}?action_type=checkout`, {
+      ...submissionData,
+      status: "submitted",
+    })
+      .then(() => {
+        setBasket(null);
+        navigate(`/orders/${orderId}`);
+      })
+      .catch((err) => console.error("Checkout failed: ", err));
   };
 
   return {
     orderId,
-    ...basketSummary,
-    onCheckoutClick,
-    basketProducts: orderProducts,
+    itemCount,
+    orderTotal,
+    handleCheckout,
+    products,
     basket,
     setBasket,
-    noBasket,
-    basketEmpty,
+    hasBasket,
+    hasItems,
+    isOpen,
   };
 }

@@ -1,45 +1,50 @@
-#root,
-.site-wrapper {
-  display: flex;
-  flex-direction: column;
-  flex: 0 1 100%;
-  min-height: 100vh;
+html,
+body {
+  height: 100vh;
   width: 100vw;
 }
 
-html,
-body {
-  height: 100%;
-  scrollbar-width: thin;
-  scroll-behavior: smooth;
-  overflow-x: clip;
+.site-wrapper {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: var(--wd-sidebar) 1fr;
+  grid-template-areas:
+    "header header"
+    "main main";
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
-.site-header {
-  position: sticky;
-  top: 0px;
+.header {
+  grid-area: header;
 }
 
 main {
-  flex: 1 1 auto;
+  display: grid;
+  grid-area: main;
+  grid-template-columns: subgrid;
+  grid-template-areas: "sidebar main-content";
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.sidebar,
+.main-content {
+  min-height: 0;
   height: 100%;
 }
 
-main.full-page {
-  display: block;
-}
-
-main.split-page {
-  display: grid;
-  grid-template-columns: 30ch 1fr;
-}
-
 .sidebar {
-  display: flex;
-  flex: 0 0 200px;
+  max-width: var(--wd-sidebar);
+  grid-area: sidebar;
+  overflow: hidden;
 }
 
-.main-info {
-  display: flex;
-  flex: 0 1 100%;
+.main-content {
+  max-width: var(--wd-main-content);
+  grid-area: main-content;
+  overflow-y: auto;
+  isolation: isolate;
 }

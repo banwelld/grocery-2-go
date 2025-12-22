@@ -1,0 +1,120 @@
+/* /client/src/css/pages.css */
+
+.main-content {
+  width: 100%;
+  background: var(--clr-surface1);
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  padding: 1rem 0 2rem;
+}
+
+.content__section {
+  display: block;
+  margin: 0 auto 2rem;
+}
+
+.content__section--root {
+  max-width: var(--wd-content-sec);
+}
+
+.content__header {
+  color: var(--clr-frame-md);
+  margin-bottom: var(--margin-sec-mn);
+}
+
+.content__header--root {
+  color: var(--clr-brand2);
+}
+
+.content__intro:has(.content__ui-text) {
+  margin-bottom: 2.5rem;
+}
+
+.content__ui-text {
+  padding: 0.75rem 1ch;
+  border-top: var(--border);
+  border-bottom: var(--border);
+}
+
+.content__ui-text > *:not(:last-of-type) {
+  margin-block-end: 1rem;
+}
+
+.content a {
+  display: block;
+  color: var(--clr-brand2);
+  text-decoration: underline;
+  margin-top: 1rem;
+
+  &:hover {
+    font-weight: 600;
+    filter: brightness(0.8);
+  }
+}
+
+.sidebar {
+  padding: 1rem 0 2rem;
+}
+
+.sidebar__section {
+  display: block;
+}
+
+.sidebar__section > * {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.sidebar__header {
+  color: var(--clr-brand2);
+}
+
+.sidebar__header > h1 {
+  font-size: 2.6rem;
+  font-weight: 700;
+}
+
+.sidebar__header > h2 {
+  font-size: 1.8rem;
+}
+
+.sidebar--home .sidebar__header > h2 {
+  margin: var(--margin-sec-mn) auto 0.5rem;
+}
+
+.sidebar__ui-text {
+  font-weight: 500;
+  padding: 0.5rem 0;
+  text-align: center;
+  margin: 1rem auto var(--margin-sec-mn);
+  border-top: var(--border-strong);
+  border-bottom: var(--border-strong);
+}
+
+.main-content button:not(.quantity-adjust__button),
+.sidebar:not(.sidebar--product) button {
+  border: unset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: var(--clr-brand2);
+  color: var(--clr-surface1);
+  padding: 0.5rem 0;
+  width: 20ch;
+  margin: 1rem auto 1rem;
+  border-radius: var(--border-rad-max);
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: var(--shadow-btn);
+  transition: all 0.2s ease-out;
+
+  &:hover {
+    filter: brightness(1.2);
+  }
+
+  &:active {
+    transform: translateY(2px);
+    box-shadow: var(--shadow-btn-active);
+  }
+}

@@ -1,29 +1,52 @@
 :root {
   /*colours*/
-  --clr-brand: hsl(36, 84%, 56%);
-  --clr-pop: hsl(348, 100%, 28%);
-  --clr-pop-lt: hsl(348, 100%, 50%);
-  --clr-frame-lt: hsl(214, 16%, 20%);
-  --clr-frame-dk: hsl(214, 16%, 8%);
-  --clr-base: hsl(36, 84%, 94%);
-  --clr-util-lt: #ffffff;
-  --clr-util-dk: #000000;
+  --clr-brand1: lch(72.27% 68.17 74);
+  --clr-brand1-lt: oklch(
+    from var(--clr-brand1) calc(l * 1.25) calc(c * 1.9) calc(h * 0.9)
+  );
+  --clr-brand2: hsl(348, 100%, 28%);
+  --clr-brand2-lt: oklch(from var(--clr-brand2) calc(l * 1.2) calc(c * 1.45) h);
+  --clr-frame: hsl(214, 16%, 20%);
+  --clr-frame-dk: oklch(from var(--clr-frame) calc(l * 0.5) c h);
+  --clr-frame-md: oklch(from var(--clr-frame) calc(l * 1.5) c h);
+  --clr-frame-lt: oklch(from var(--clr-frame) calc(l * 2.5) c h);
+  --clr-surface1: #fff;
+  --clr-surface2: oklch(from var(--clr-brand1) calc(l * 1.29) calc(c * 0.33) h);
 
   /*fonts*/
-  --font-brand: "Fugaz One";
-  --font-heading: "Epilogue";
-  --font-utility: "Avenir Next";
+  --font-heading: "Baloo 2";
+  --font-utility: "Montserrat";
 
-  /* common patterns */
+  /* important patterns */
+  --margin-card: 10px;
+  --margin-para: 0.5rem;
+  --margin-sec-mn: 1.5rem;
+  --margin-sec-md: 2rem;
+  --margin-sec-mx: 2.5rem;
+
+  --wd-sidebar: 25ch;
+  --wd-pr-image-lg: 500px;
+  --wd-pr-image-sm: 
+  --wd-main-content: calc(100vw - var(--wd-sidebar));
+  --wd-content-sec: 60ch;
   --wd-card: 200px;
-  --pd-card-ext: 10px;
-  --wd-card-img: calc(var(--wd-card) - (2 * var(--pd-card-ext)));
-  --shadow-pg: #333 0px 0px 5px 1px;
-  --shadow-btn: #333 2px 2px 3px 1px;
-  --shadow-btn-act: #333 1px 1px 2px 1px;
-  --border: solid #aaa 1px;
+  --wd-card-content: calc(var(--wd-card) - (2 * var(--margin-card)));
 
-  /* tables */
+  --shadow-page: var(--clr-frame-dk) 0px 0px 5px 1px;
+  --shadow-btn: var(--clr-frame-dk) 2px 2px 3px 1px;
+  --shadow-btn-active: var(--clr-frame-md) 1px 1px 1px 1px;
+  --shadow-btn-qa: var(--clr-frame-md) 0px 0px 2px;
+
+  --border-rad-max: 50px;
+  --border-rad-min: 10px;
+
+  --border-round-L: 50px 0 0 50px;
+  --border-round-R: 0 50px 50px 0;
+
+  --border: solid var(--clr-frame-md) 1px;
+  --border-strong: solid var(--clr-frame-md) 2px;
+  --border-brand2: solid var(--clr-brand2) 1px;
+  --border-brand2-strong: solid var(--clr-brand2) 2px;
 }
 
 /* TODO: Delete outline colours before finalizing */
@@ -36,17 +59,63 @@
 }
 
 * {
-  padding: 0px;
-  margin: 0px;
+  margin: 0;
   box-sizing: border-box;
-  line-height: 1;
-  margin-block-start: 0px;
-  margin-block-end: 0px;
+  line-height: 1.3;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  padding-inline-start: 0;
 }
 
 body {
-  background: var(--clr-base);
+  background: var(--clr-surface2);
   font-family: var(--font-utility);
-  color: var(--clr-util-dk);
   font-size: 16px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  line-height: 1;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+a {
+  text-decoration: none;
+  font-family: inherit;
+  color: inherit;
+}
+
+p + p {
+  margin: 1rem 0 0;
+}
+
+.quantity-adjust__button {
+  all: unset;
+}
+
+.text-link {
+  text-decoration: underline;
+  color: var(--clr-brand2);
+  font-weight: 400;
+
+  &:hover {
+    font-weight: 600;
+  }
+}
+
+.click-suppressor {
+  display: contents;
 }

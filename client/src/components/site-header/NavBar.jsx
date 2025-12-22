@@ -1,32 +1,24 @@
-// NavBar.jsx
+// /client/src/components/site-header/NavBar.jsx
 
-import { useContext } from "react";
-import { NavLink } from "react-router-dom";
-import navLinks from "../site-header/nav-links.json";
-import { UserContext } from "../../contexts/contexts";
+import LinkItem from "./LinkItem";
+import { navLinkConfig } from "./navLinkConfig";
 
-export default function NavBar() {
-  const { user, triggerLogout } = useContext(UserContext);
-  const { fName } = user ?? { fName: "guest" };
-
-  const filteredLinks = navLinks.filter((link) =>
-    user ? link.visible !== "guest" : link.visible !== "member"
+export default function NavBar({ role, bemBlock, bemElem = "nav-bar" }) {
+  const userScopedLinks = navLinkConfig.filter(
+    (link) => link.visible === role || link.visible === "all"
   );
-
   return (
-    <nav>
-      <ul>
-        {filteredLinks.map((link) => (
-          <li key={link.path}>
-            <NavLink to={link.path}>{link.label}</NavLink>
-          </li>
+    <nav className={`${bemBlock}__${bemElem}`}>
+      <ul className={`${bemElem}__list`}>
+        {userScopedLinks.map((link) => (
+          <LinkItem
+            label={link.label}
+            path={link.path}
+            bemBlock={bemElem}
+            key={link.path}
+          />
         ))}
       </ul>
-      {user && (
-        <div className='user-acknowledgment'>
-          <span>Welcome {fName}!</span> <span onClick={triggerLogout}>Logout</span>
-        </div>
-      )}
     </nav>
   );
 }

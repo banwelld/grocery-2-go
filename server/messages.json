@@ -8,5 +8,10 @@
   "REC_DELETED": "record was successfully deleted",
   "NO_ORDER_ID": "no order id parameter passed with request",
   "ORDER_NOT_OPEN": "the requested order is not an open order",
-  "EMPTY_ORDER": "order is empty - no checkout required"
+  "EMPTY_ORDER": "order is empty - no checkout required",
+  "INVALID_QUANTITY": "invalid quantity (expected integer)",
+  "NEGATIVE_QUANTITY": "invalid quantity (expected positive integer)",
+  "INVALID_COMBO": "invalid update request (expected quantity separate from all others)",
+  "LOGGED_OUT": "logged out",
+  "UNAUTHORIZED": "Unauthorized"
 }

@@ -1,48 +1,36 @@
-// helpers.js
+// client/srd/helpers/helpers.js
 
-export const getData = (path, onFetch, ...args) => {
-  fetch(path)
-    .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
-    .then(({ ok, data }) => {
-      if (ok) {
-        onFetch(toCamelCase(data), ...args);
-      } else {
-        console.log(`Error (get): ${data.error}`);
-      }
-    });
-};
+import clsx from "clsx";
 
-const setData = (path, method, data, onSet, ...args) => {
+const INVALID = "INVALID DATA RECEIVED";
+
+// site-wide helper functions
+
+export const isPlainObject = (v) => v?.constructor === Object;
+
+export const fetchJson = (path, options = {}, camelize = true) =>
   fetch(path, {
-    method: method,
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
-    .then(({ ok, data }) => {
-      if (ok) {
-        onSet(toCamelCase(data), ...args);
-      } else {
-        console.log(`Error (post/patch): ${data.error}`);
-      }
-    });
-};
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    ...options,
+  }).then((res) =>
+    res.json().then((data) => {
+      if (!res.ok) throw new Error(`Error (${options.method || "GET"}): ${data.error}`);
+      return camelize ? toCamelCase(data) : data;
+    })
+  );
 
-export const deleteData = (path, onDelete) => {
-  fetch(path, {
-    method: "DELETE",
-  })
-    .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
-    .then(({ ok, data }) => {
-      if (ok) {
-        onDelete();
-      } else {
-        console.log(`Error (delete): ${data.error}`);
-      }
-    });
+export const getData = (path) => fetchJson(path);
+export const deleteData = (path) => fetchJson(path, { method: "DELETE" });
+export const postData = (path, body) =>
+  fetchJson(path, { method: "POST", body: JSON.stringify(body) });
+export const patchData = (path, body) =>
+  fetchJson(path, { method: "PATCH", body: JSON.stringify(body) });
+
+export const completeLogin = ({ setUser, data, onGetOrders }) => {
+  setUser(data);
+  return getData("/orders?status=open")
+    .then((data) => onGetOrders(data))
+    .catch((err) => console.error("Fetch basket failed:", err));
 };
 
 export const toTitleCase = (string) => {
@@ -53,15 +41,26 @@ export const toTitleCase = (string) => {
     .join(" ");
 };
 
-export const toParagraphs = (textArr) =>
-  textArr.map((line, index) => <p key={index}>{line}</p>);
+export const paragraphsFromArray = (array) => {
+  const isValid =
+    Array.isArray(array) && array.length > 0 && array.every((i) => typeof i === "string");
+
+  if (!isValid) {
+    console.error(
+      "paragraphsFromArray function received invalid data. Expected array of strings."
+    );
+    return <p>{INVALID}</p>;
+  }
+
+  return array.map((line, i) => <p key={i}>{line}</p>);
+};
 
 export const formatPhoneString = (phoneNum) => {
   if (typeof phoneNum !== "string" || phoneNum.length !== 10) return "Unknown";
   return `(${phoneNum.slice(0, 3)}) ${phoneNum.slice(3, -4)} - ${phoneNum.slice(-4)}`;
 };
 
-export const getOrderDate = (tsField) => tsField.slice(0, 10);
+export const tsToDate = (tsField) => tsField.slice(0, 10);
 
 export const autoPlural = (noun, quantity, withQuantity = true) => {
   if (!(typeof noun === "string")) return noun;
@@ -69,13 +68,29 @@ export const autoPlural = (noun, quantity, withQuantity = true) => {
   return withQuantity ? `${quantity} ${nounAgrees}` : nounAgrees;
 };
 
-export const validateOrders = (orders, isCart) => {
+export function isValidTableConfig(tableConfig) {
+  const { columnConfig } = tableConfig;
+  if (!Array.isArray(columnConfig) || columnConfig.length === 0) {
+    return false;
+  }
+
+  for (const col of columnConfig) {
+    const { headerColSpan } = col;
+    if (!Number.isInteger(headerColSpan) || headerColSpan < 0) {
+      return false;
+    }
+  }
+
+  const spanSum = columnConfig.reduce((sum, col) => sum + col.headerColSpan, 0);
+
+  return spanSum === columnConfig.length;
+}
+
+export const validateOrders = (orders) => {
   if (!Array.isArray(orders)) {
     console.error("Expected 'orders' to be array and got wrong type.");
     return null;
   }
-
-  if (!isCart) return orders;
 
   const orderCount = orders.length;
   const openOrders = orders.filter((o) => o.status === "open");
@@ -114,16 +129,44 @@ function getLatestOrder(orders, dateField = "statusTs") {
   });
 }
 
-export const postData = (path, data, onPost, ...args) =>
-  setData(path, "POST", data, onPost, ...args);
-
-export const patchData = (path, data, onPatch, ...args) => {
-  setData(path, "PATCH", data, onPatch, ...args);
+export const isInteger = (value) => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === "number") return Number.isInteger(value);
+  if (typeof value === "string") return /^-?\d+$/.test(value.trim());
+  return false;
 };
 
-export const sortBy = (array, key) => {
-  const keyFn = typeof key === "function" ? key : (item) => item[key];
-  return [...array].sort((a, b) => keyFn(a).localeCompare(keyFn(b)));
+export const compareSortValues = ({
+  key = null,
+  type = "string",
+  direction = "asc",
+} = {}) => {
+  const validTypes = new Set(["string", "number"]);
+
+  if (!validTypes.has(type)) {
+    console.warn(`compareKeyValues: invalid type "${type}"`);
+    return () => 0;
+  }
+
+  return (a, b) => {
+    const valA = key ? a[key] : a;
+    const valB = key ? b[key] : b;
+
+    let result;
+
+    switch (type) {
+      case "string":
+        result = String(valA).localeCompare(String(valB));
+        break;
+      case "number":
+        result = Number(valA) - Number(valB);
+        break;
+    }
+
+    const orient = (result) => (direction === "asc" ? result : -result);
+
+    return orient(result);
+  };
 };
 
 export const addUpdateAttr = (objectArr, attrib, valueOrFn) => {
@@ -133,17 +176,22 @@ export const addUpdateAttr = (objectArr, attrib, valueOrFn) => {
   }));
 };
 
-export const toDecimal = (amtInt) => (amtInt / 100).toFixed(2);
+export const isValidString = (value) => {
+  return typeof value === "string" && value.trim().length > 0;
+};
+
+export const isRenderable = (value) => isValidString(value) || isInteger(value);
+
+export const intToDecimalPrice = (priceInt, isCurrency = true) => {
+  const decimalPrice = (priceInt / 100).toFixed(2);
+  return isCurrency ? `$ ${decimalPrice}` : `${decimalPrice}`;
+};
 
 export const tallyOrder = (orderProducts) =>
-  orderProducts?.reduce((total, orderProduct) => total + orderProduct.quantity, 0) ?? 0;
+  orderProducts?.reduce((total, op) => total + op.quantity, 0) ?? 0;
 
 export const getOrderTotal = (orderProducts) =>
-  orderProducts?.reduce(
-    (total, orderProduct) =>
-      total + orderProduct?.quantity * orderProduct?.product?.price,
-    0
-  ) ?? 0;
+  orderProducts?.reduce((total, op) => total + op?.quantity * op?.product?.price, 0) ?? 0;
 
 export function toCamelCase(obj) {
   if (Array.isArray(obj)) {
@@ -159,34 +207,30 @@ export function toCamelCase(obj) {
   return obj;
 }
 
-export function userToTableData(user) {
-  const { fName, lName, email, phone, registrationTs } = user;
-  return {
-    name: ["Customer", `${fName} ${lName}`],
-    phone: ["Phone", formatPhoneString(phone)],
-    email: ["Email", email],
-    regDt: ["Joined on", registrationTs.slice(0, 10)],
-  };
-}
+export const toClassName = ({
+  bemBlock = "invalid-missing-block",
+  bemElem = null,
+  bemMod = null,
+  conditionalMod = null,
+  showConditional = false,
+} = {}) => {
+  const isNonEmpty = (param) => typeof param === "string" && param.length > 0;
 
-export function orderToTableData(order) {
-  const { productCount, user } = order;
-  const { fName, lName, email, phone } = user;
+  const hasValidBlock = isNonEmpty(bemBlock) && bemBlock !== "invalid-missing-block";
+  if (!hasValidBlock) {
+    console.warn("'bemBlock' argument missing or invalid");
+    return bemBlock;
+  }
 
-  return {
-    name: ["Customer", `${fName} ${lName}`],
-    phone: ["Phone", formatPhoneString(phone)],
-    email: ["Email", email],
-    address: [
-      "Deliver To",
-      toParagraphs([
-        order.address,
-        `${order.city}, ${order.provinceCd}  ${order.postalCd}`,
-      ]),
-    ],
-    orderdt: ["Order Dt", getOrderDate(order.orderTs)],
-    statusdt: [`${toTitleCase(order.status)} Dt`, getOrderDate(order.statusTs)],
-    productCount: ["Items", productCount],
-    total: ["Total", `$ ${toDecimal(order.total)}`],
-  };
-}
+  const baseClass = isNonEmpty(bemElem) ? `${bemBlock}__${bemElem}` : `${bemBlock}`;
+
+  return clsx(baseClass, {
+    [`${baseClass}--${bemMod}`]: isNonEmpty(bemMod),
+    [`${baseClass}--${conditionalMod}`]: isNonEmpty(conditionalMod) && showConditional,
+  });
+};
+
+export const logException = (message, err) => {
+  console.warn(message);
+  console.error(err);
+};

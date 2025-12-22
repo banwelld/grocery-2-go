@@ -1,57 +1,69 @@
-// Home.jsx
+// /client/src/pages/home/Home.jsx
 
 import { useState } from "react";
 import { useContext } from "react";
 import { ProductContext } from "../../contexts/contexts";
-import ProdCard from "./ProdCard";
-import SplitPageWrapper from "../../components/SplitPageWrapper";
-import HomeSidebar from "./HomeSidebar";
-import "../../css/home.css";
+import PageFrame from "../../components/PageFrame";
+import Sidebar from "./Sidebar";
+import MainContent from "./MainContent";
+import { compareSortValues } from "../../helpers/helpers";
+import { sortConfig as srt } from "./homeConfig";
+import { PageName as pn } from "../page-enums";
+import "./home.css";
 
 export default function Home() {
   const { products } = useContext(ProductContext);
   const [category, setCategory] = useState("all");
-  const [selectedSort, setSelectedSort] = useState("department");
+  const [sortName, setSortName] = useState("department");
+
+  // prep all products for display
 
   if (!products) return <p>Loading...</p>;
 
-  const categories = [
-    "all",
-    ...[...new Set(products.map((i) => i.category))].sort((a, b) => a.localeCompare(b)),
+  const matchCategory = (p) => category === "all" || p.category === category;
+  const filterFn = (products) => products.filter(matchCategory);
+
+  const comparator = srt.find((s) => s.value === sortName).comparator;
+  const sortFn = (p) => [...p].sort(comparator);
+
+  const displayProducts = sortFn(filterFn(products));
+
+  const allCategories = Array.from(new Set(products.map((p) => p.category)));
+  const sortedCategories = [...allCategories].sort(compareSortValues);
+  const filterLabels = ["all", ...sortedCategories];
+
+  const sidebarConfig = [
+    {
+      sectionProps: {
+        heading: "Filter by:",
+        bemMod: "filters",
+      },
+      listProps: {
+        items: filterLabels,
+        selected: category,
+        setterFn: setCategory,
+        bemBlock: "sidebar",
+      },
+    },
+    {
+      sectionProps: {
+        heading: "Sort by:",
+        bemMod: "sorts",
+      },
+      listProps: {
+        items: srt,
+        selected: sortName,
+        setterFn: setSortName,
+        bemBlock: "sidebar",
+      },
+    },
   ];
 
-  const filterProducts = (products) => {
-    return products.filter((p) => {
-      return category === "all" || p.category === category;
-    });
-  };
-
-  const sortOptions = {
-    department: (a, b) => a.category.localeCompare(b.category),
-    "name ↥": (a, b) => a.name.localeCompare(b.name),
-    "name ↧": (a, b) => b.name.localeCompare(a.name),
-    "price ↥": (a, b) => a.price - b.price,
-    "price ↧": (a, b) => b.price - a.price,
-  };
-
-  const sortLabels = Object.keys(sortOptions);
-
-  const sortProducts = (p) => [...p].sort(sortOptions[selectedSort]);
-
-  const displayProducts = sortProducts(filterProducts(products));
-
   return (
-    <SplitPageWrapper>
-      <HomeSidebar
-        filter={{ category, setCategory, categories }}
-        sort={{ selectedSort, setSelectedSort, sortLabels }}
-      />
-
-      <div className='product-grid'>
-        {displayProducts.map((p) => (
-          <ProdCard key={p.id} product={p} />
-        ))}
-      </div>
-    </SplitPageWrapper>
+    <PageFrame
+      sidebar={<Sidebar sidebarConfig={sidebarConfig} />}
+      mainContent={<MainContent products={displayProducts} />}
+      pageName={pn.HOME}
+    />
   );
 }

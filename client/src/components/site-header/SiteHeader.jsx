@@ -1,22 +1,20 @@
-// SiteHeader.jsx
+// /client/src/components/site-header/SiteHeader.jsx
 
-import HeaderLogo from "./HeaderLogo";
-import HeaderBasket from "./HeaderBasket";
-import NavBar from "./NavBar";
-import "../../css/site-header.css";
+import HeaderBanner from "./HeaderBanner";
+import HeaderTally from "./HeaderTally";
+import UserScoped from "./UserScoped";
+import "./site-header.css";
+
+const BLOCK = "header";
 
 export default function SiteHeader() {
   return (
-    <div className='site-header'>
-      <div className='upper'>
-        <div className='header-logo'>
-          <HeaderLogo />
-        </div>
-        <div className='header-basket'>
-          <HeaderBasket />
-        </div>
+    <div className={BLOCK}>
+      <div className={`${BLOCK}__upper`}>
+        <HeaderBanner bemBlock={BLOCK} />
+        <HeaderTally bemBlock={BLOCK} />
       </div>
-      <NavBar />
+      <UserScoped bemBlock={BLOCK} />
     </div>
   );
 }

@@ -1,6 +1,0 @@
-{
-  "ADD_ONE": "increment",
-  "REMOVE_ONE": "decrement",
-  "REMOVE_ALL": "dump",
-  "SUBMIT_FORM": "checkout"
-}

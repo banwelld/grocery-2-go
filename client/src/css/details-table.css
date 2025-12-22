@@ -1,0 +1,25 @@
+/* details-table.css */
+
+.table--details th {
+  color: var(--clr-brand2);
+  text-align: end;
+  padding-right: 2ch;
+  text-transform: capitalize;
+}
+
+.table--details tr {
+  display: grid;
+  grid-template-columns: 14ch auto;
+  padding: 0.25rem 0;
+
+  &:first-child {
+    padding-top: unset;
+  }
+
+  &:last-child {
+    padding-bottom: unset;
+  }
+}
+.table--details td {
+  white-space: pre;
+}

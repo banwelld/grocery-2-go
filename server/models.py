@@ -58,7 +58,7 @@ class Product(db.Model, SerializerMixin):
     origin = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=True)
     price = db.Column(db.Integer, nullable=False)
-    unit = db.Column(db.String, nullable=False)
+    sale_unit = db.Column(db.String, nullable=False)
     pkg_qty = db.Column(db.String, nullable=True)
     image_url = db.Column(db.String, nullable=False)
     order_products = db.relationship(
@@ -66,7 +66,7 @@ class Product(db.Model, SerializerMixin):
     )
 
     def __repr__(self):
-        return f"<< PRODUCT: {self.name} (${self.price / 100} / {self.unit}) >>"
+        return f"<< PRODUCT: {self.name} (${self.price / 100} / {self.sale_unit}) >>"
 
 
 # order model
@@ -154,13 +154,13 @@ if __name__ == "__main__":
         category="produce",
         origin="canada",
         price=359,
-        unit="kg",
+        sale_unit="kg",
         pkg_qty="",
         image_url="http://www.grocery.com/red_bell_pepper.jpg",
     )
     print(f"{product}\n")
     print(
-        f"{product.id}\n{product.name}\n{product.category}\n{product.origin}\n{product.price}\n{product.unit}\n{product.image_url}\n"
+        f"{product.id}\n{product.name}\n{product.category}\n{product.origin}\n{product.price}\n{product.sale_unit}\n{product.image_url}\n"
     )
 
     order = Order(
