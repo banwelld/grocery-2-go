@@ -18,6 +18,7 @@
   --font-utility: "Montserrat";
 
   /* important patterns */
+  --header-height: 142px;
   --margin-card: 10px;
   --margin-para: 0.5rem;
   --margin-sec-mn: 1.5rem;
@@ -26,9 +27,8 @@
 
   --wd-sidebar: 25ch;
   --wd-pr-image-lg: 500px;
-  --wd-pr-image-sm: 
-  --wd-main-content: calc(100vw - var(--wd-sidebar));
-  --wd-content-sec: 60ch;
+  --wd-pr-image-sm: 200px;
+  --wd-content-sec: 66ch;
   --wd-card: 200px;
   --wd-card-content: calc(var(--wd-card) - (2 * var(--margin-card)));
 
@@ -36,6 +36,8 @@
   --shadow-btn: var(--clr-frame-dk) 2px 2px 3px 1px;
   --shadow-btn-active: var(--clr-frame-md) 1px 1px 1px 1px;
   --shadow-btn-qa: var(--clr-frame-md) 0px 0px 2px;
+  --shadow-inset: var(--clr-frame-lt) inset 1px 1px 5px;
+
 
   --border-rad-max: 50px;
   --border-rad-min: 10px;
@@ -45,6 +47,7 @@
 
   --border: solid var(--clr-frame-md) 1px;
   --border-strong: solid var(--clr-frame-md) 2px;
+  --border-light: solid var(--clr-frame-lt) 1px;
   --border-brand2: solid var(--clr-brand2) 1px;
   --border-brand2-strong: solid var(--clr-brand2) 2px;
 }
@@ -68,6 +71,7 @@
 }
 
 body {
+  color: var(--clr-frame-dk);
   background: var(--clr-surface2);
   font-family: var(--font-utility);
   font-size: 16px;
@@ -102,17 +106,18 @@ p + p {
   margin: 1rem 0 0;
 }
 
-.quantity-adjust__button {
-  all: unset;
-}
-
-.text-link {
-  text-decoration: underline;
+.button--text {
+  border: none;
+  background: none;
+  font-size: 1rem;
+  cursor: pointer;
   color: var(--clr-brand2);
-  font-weight: 400;
+  font-weight: 500;
+  transition: all 0.2s ease-out;
 
   &:hover {
-    font-weight: 600;
+    color: var(--clr-brand2-lt);
+    text-decoration: underline;
   }
 }
 

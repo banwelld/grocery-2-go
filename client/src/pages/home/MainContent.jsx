@@ -1,10 +1,17 @@
 // /client/src/pages/home/MainContent.jsx
 
-import ProductCard from "./ProductCard";
+import ProductCard from "../../components/product-card/ProductCard";
+import { toClassName } from "../../helpers/helpers";
 
 export default function MainContent({ products }) {
+  const bemProps = {
+    bemBlock: "content",
+    bemElem: "container",
+    bemMod: "home",
+  };
+
   return (
-    <div className='main-content__container--home'>
+    <div className={toClassName(bemProps)}>
       {products.map((p) => (
         <ProductCard key={p.id} product={p} />
       ))}

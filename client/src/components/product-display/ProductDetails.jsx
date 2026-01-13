@@ -1,39 +1,44 @@
 // client/src/pages/product/ProductDetails.jsx
 
-import SectionFrame from "../SectionFrame";
+import SectionFrame from "../section-frames/SectionFrame";
 import ProductOrigin from "./ProductOrigin";
-import { isInteger, intToDecimalPrice, toClassName } from "../../helpers/helpers";
+import { isInteger, divideIntBy100, toClassName } from "../../helpers/helpers";
 import { displayConfig } from "./displayConfig";
 
 export default function ProductDetails({ product, displayVariant = "card" }) {
   const { description, name, origin, pkgQty, price, saleUnit } = product;
 
-  const { bemBlock, bemElem, headingLevel, showDescription, showPackageSize } =
+  const { bemBlock, bemElem, isTopLevel, showDescription, showPackageSize } =
     displayConfig[displayVariant];
 
-  const decimalPrice = intToDecimalPrice(price);
-  const packageType = isInteger(saleUnit) ? `${saleUnit}-pack` : saleUnit;
+  const decimalPrice = divideIntBy100(price);
+  const packageType = isInteger({ value: saleUnit, positiveOnly: true }) ? `${saleUnit}-pack` : saleUnit;
 
-  const sectionBem = { bemBlock, bemMod: bemElem };
-  const originBem = { bemBlock, bemElem };
+  const sectionProps = {
+    heading: name,
+    isTopLevel,
+    bemBlock,
+    bemMod: bemElem,
+  };
+  const bemProps = { bemBlock, bemElem };
 
   return (
-    <SectionFrame heading={name} headingLevel={headingLevel} {...sectionBem}>
-      <ProductOrigin country={origin} {...originBem} />
+    <SectionFrame {...sectionProps}>
+      <ProductOrigin origin={origin} {...{ bemProps }} />
       {showDescription && (
-        <p className={toClassName({ bemBlock, bemElem, bemMod: "description" })}>
+        <p className={toClassName({ bemMod: "description", ...bemProps })}>
           {description}
         </p>
       )}
-      <p className={toClassName({ bemBlock, bemElem, bemMod: "price" })}>
-        <span className={toClassName({ bemBlock, bemElem, bemMod: "amount" })}>
-          {decimalPrice}{" "}
+      <p className={toClassName({ bemMod: "price", ...bemProps })}>
+        <span className={toClassName({ bemMod: "amount", ...bemProps })}>
+          $ {decimalPrice}{" "}
         </span>
-        <span className={toClassName({ bemBlock, bemElem, bemMod: "package-type" })}>
+        <span className={toClassName({ bemMod: "package-type", ...bemProps })}>
           / {packageType}{" "}
         </span>
         {showPackageSize && !!pkgQty && (
-          <span className={toClassName({ bemBlock, bemElem, bemMod: "package-size" })}>
+          <span className={toClassName({ bemMod: "package-size", ...bemProps })}>
             ({pkgQty})
           </span>
         )}

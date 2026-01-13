@@ -1,24 +1,37 @@
 // /client/src/components/site-header/navLinkConfig.js
 
-export const navLinkConfig = [
+export const Role = Object.freeze({
+  GUEST: "guest",
+  CUSTOMER: "customer",
+});
+
+export const Restriction = Object.freeze({
+  NO_CART: "NO_CART",
+});
+
+export const getLinkConfig = (user) => [
   {
     path: "/",
     label: "Home",
-    visible: "all",
+    visibleTo: [Role.GUEST, Role.CUSTOMER],
+    hiddenIf: [],
   },
   {
-    path: "/users/:id",
+    path: `/users/${user.id}`,
     label: "View my profile",
-    visible: "customer",
+    visibleTo: [Role.CUSTOMER],
+    hiddenIf: [],
   },
   {
-    path: "/my-basket",
-    label: "View my basket",
-    visible: "customer",
+    path: "/my-cart",
+    label: "View my cart",
+    visibleTo: [Role.CUSTOMER],
+    hiddenIf: [Restriction.NO_CART],
   },
   {
     path: "/user-auth",
     label: "Login / Register",
-    visible: "guest",
+    visibleTo: [Role.GUEST],
+    hiddenIf: [],
   },
 ];

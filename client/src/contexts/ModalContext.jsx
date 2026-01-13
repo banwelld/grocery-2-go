@@ -1,6 +1,6 @@
 // /client/src/app/ModalContext.js
 
-import { useState, useContext, createContext } from "react";
+import { useState, createContext } from "react";
 import { isValidString } from "../helpers/helpers";
 
 export const ModalContext = createContext(null);
@@ -10,10 +10,10 @@ export function ModalProvider({ children }) {
 
   const openModal = ({
     uiText = null,
-    confirmButtonLabel = "OK",
-    cancelButtonLabel = "Cancel",
-    onConfirmClick = () => {},
-    onCancelClick = () => {},
+    proceedLabel = "OK",
+    closeLabel = "Cancel",
+    proceed = () => { },
+    onClose = () => { },
   }) => {
     if (!isValidString(uiText))
       return console.warn(
@@ -22,20 +22,18 @@ export function ModalProvider({ children }) {
 
     setModalPayload({
       uiText,
-      confirmButtonLabel,
-      cancelButtonLabel,
-      onConfirmClick,
-      onCancelClick,
+      proceedLabel,
+      closeLabel,
+      proceed,
+      onClose,
     });
   };
 
-  const killModal = () => setModalPayload(null);
+  const resetModal = () => setModalPayload(null);
 
   return (
-    <ModalContext.Provider value={{ modalPayload, openModal, killModal }}>
+    <ModalContext.Provider value={{ modalPayload, openModal, resetModal }}>
       {children}
     </ModalContext.Provider>
   );
 }
-
-export const useModal = () => useContext(ModalContext);

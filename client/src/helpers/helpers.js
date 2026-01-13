@@ -2,8 +2,6 @@
 
 import clsx from "clsx";
 
-const INVALID = "INVALID DATA RECEIVED";
-
 // site-wide helper functions
 
 export const isPlainObject = (v) => v?.constructor === Object;
@@ -26,33 +24,12 @@ export const postData = (path, body) =>
 export const patchData = (path, body) =>
   fetchJson(path, { method: "PATCH", body: JSON.stringify(body) });
 
-export const completeLogin = ({ setUser, data, onGetOrders }) => {
-  setUser(data);
-  return getData("/orders?status=open")
-    .then((data) => onGetOrders(data))
-    .catch((err) => console.error("Fetch basket failed:", err));
-};
-
 export const toTitleCase = (string) => {
   return string
     .trim()
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
-};
-
-export const paragraphsFromArray = (array) => {
-  const isValid =
-    Array.isArray(array) && array.length > 0 && array.every((i) => typeof i === "string");
-
-  if (!isValid) {
-    console.error(
-      "paragraphsFromArray function received invalid data. Expected array of strings."
-    );
-    return <p>{INVALID}</p>;
-  }
-
-  return array.map((line, i) => <p key={i}>{line}</p>);
 };
 
 export const formatPhoneString = (phoneNum) => {
@@ -68,71 +45,46 @@ export const autoPlural = (noun, quantity, withQuantity = true) => {
   return withQuantity ? `${quantity} ${nounAgrees}` : nounAgrees;
 };
 
-export function isValidTableConfig(tableConfig) {
-  const { columnConfig } = tableConfig;
-  if (!Array.isArray(columnConfig) || columnConfig.length === 0) {
-    return false;
-  }
-
-  for (const col of columnConfig) {
-    const { headerColSpan } = col;
-    if (!Number.isInteger(headerColSpan) || headerColSpan < 0) {
-      return false;
-    }
-  }
-
-  const spanSum = columnConfig.reduce((sum, col) => sum + col.headerColSpan, 0);
-
-  return spanSum === columnConfig.length;
-}
-
 export const validateOrders = (orders) => {
   if (!Array.isArray(orders)) {
-    console.error("Expected 'orders' to be array and got wrong type.");
+    console.warn("Expected 'orders' to be an array.", orders);
     return null;
   }
 
-  const orderCount = orders.length;
   const openOrders = orders.filter((o) => o.status === "open");
-  const openOrderCount = openOrders.length;
 
-  if (orderCount === 0) return null;
-  if (orderCount === 1 && orders[0].status === "open") return orders[0];
+  if (openOrders.length === 0) return null;
+  if (openOrders.length === 1) return openOrders[0];
 
-  console.error("The basket-load API response contained more than one order.", orders);
+  console.warn("The cart response contained more than one open order.", openOrders);
 
-  if (openOrderCount === 0) {
-    console.log("No open order in API response");
-    return null;
-  }
+  const mostRecent = openOrders.reduce((latest, current) => {
+    return new Date(current.statusTs) > new Date(latest.statusTs) ? current : latest;
+  });
 
-  if (openOrderCount === 1) {
-    console.log("Using the single open order found in API response.");
-    return openOrders[0];
-  }
-
-  const latestOrder = getLatestOrder(openOrders);
-  console.log(
-    "Multiple open orders found in API response. Using most recent (greatest ID number)."
+  console.warn(
+    "Invariant violated: multiple open orders detected. Falling back to most recent open order.",
+    mostRecent
   );
-  return latestOrder;
+
+  return mostRecent;
 };
 
-function getLatestOrder(orders, dateField = "statusTs") {
-  if (!orders || orders.length === 0) return null;
-
-  return orders.reduce((latest, current) => {
-    const latestTime = new Date(latest[dateField]).getTime();
-    const currentTime = new Date(current[dateField]).getTime();
-
-    return currentTime > latestTime ? current : latest;
-  });
-}
-
-export const isInteger = (value) => {
+export const isInteger = ({value, positiveOnly = false, min1 = false}) => {  
   if (value === null || value === undefined) return false;
-  if (typeof value === "number") return Number.isInteger(value);
-  if (typeof value === "string") return /^-?\d+$/.test(value.trim());
+  
+  const base = min1 ? 1 : 0;
+
+  if (typeof value === "number") return Number.isInteger(value) && (!positiveOnly || value >= base);
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    
+    if (trimmed.length === 0) return false;
+
+    const num = Number(trimmed);
+    return Number.isInteger(num) && (!positiveOnly || num >= base);
+  }
   return false;
 };
 
@@ -152,20 +104,14 @@ export const compareSortValues = ({
     const valA = key ? a[key] : a;
     const valB = key ? b[key] : b;
 
-    let result;
-
-    switch (type) {
-      case "string":
-        result = String(valA).localeCompare(String(valB));
-        break;
-      case "number":
-        result = Number(valA) - Number(valB);
-        break;
-    }
+    const result = {
+      string: String(valA).localeCompare(String(valB)),
+      number: Number(valA) - Number(valB),
+    };
 
     const orient = (result) => (direction === "asc" ? result : -result);
 
-    return orient(result);
+    return orient(result[type]);
   };
 };
 
@@ -180,12 +126,13 @@ export const isValidString = (value) => {
   return typeof value === "string" && value.trim().length > 0;
 };
 
-export const isRenderable = (value) => isValidString(value) || isInteger(value);
+export const isRenderable = (value) => isValidString(value) || isInteger({value});
 
-export const intToDecimalPrice = (priceInt, isCurrency = true) => {
-  const decimalPrice = (priceInt / 100).toFixed(2);
-  return isCurrency ? `$ ${decimalPrice}` : `${decimalPrice}`;
-};
+export const divideIntBy100 = (priceInt) => {
+  if (isInteger({value: priceInt, positiveOnly: true})) return (priceInt / 100).toFixed(2);
+  console.warn(`divideIntBy100: invalid price integer ${priceInt} (${typeof priceInt})`);
+  return "??";
+}
 
 export const tallyOrder = (orderProducts) =>
   orderProducts?.reduce((total, op) => total + op.quantity, 0) ?? 0;
@@ -207,30 +154,49 @@ export function toCamelCase(obj) {
   return obj;
 }
 
+export const isNonEmpty = (string) => typeof string === "string" && string.length > 0;
+
 export const toClassName = ({
   bemBlock = "invalid-missing-block",
   bemElem = null,
   bemMod = null,
-  conditionalMod = null,
-  showConditional = false,
+  bemMod2 = null,
+  showMod2 = false,
 } = {}) => {
-  const isNonEmpty = (param) => typeof param === "string" && param.length > 0;
+  const validBlock = isNonEmpty(bemBlock) && bemBlock !== "invalid-missing-block";
+  const validElem = !!bemElem && isNonEmpty(bemElem);
+  const validMod = !!bemMod && isNonEmpty(bemMod);
+  const validMod2 = !!bemMod2 && isNonEmpty(bemMod2);
 
-  const hasValidBlock = isNonEmpty(bemBlock) && bemBlock !== "invalid-missing-block";
-  if (!hasValidBlock) {
+  if (!validBlock && (validElem || validMod || validMod2)) {
     console.warn("'bemBlock' argument missing or invalid");
     return bemBlock;
   }
 
-  const baseClass = isNonEmpty(bemElem) ? `${bemBlock}__${bemElem}` : `${bemBlock}`;
+  const baseClass = validElem ? `${bemBlock}__${bemElem}` : `${bemBlock}`;
 
   return clsx(baseClass, {
-    [`${baseClass}--${bemMod}`]: isNonEmpty(bemMod),
-    [`${baseClass}--${conditionalMod}`]: isNonEmpty(conditionalMod) && showConditional,
+    [`${baseClass}--${bemMod}`]: validMod,
+    [`${baseClass}--${bemMod2}`]: validMod2 && showMod2,
   });
 };
+
+export const buildBemProps = ({ bemBlock, bemElem, bemMod }) => ({ bemBlock, bemElem, bemMod });
 
 export const logException = (message, err) => {
   console.warn(message);
   console.error(err);
+};
+
+export const runExclusive = ({fn, lockRef, setPending, setIsLoaded}) => {
+  if (lockRef.current) return;
+
+  lockRef.current = true;
+  setPending(true);
+
+  return fn().finally(() => {
+    lockRef.current = false;
+    setPending(false);
+    if (typeof setIsLoaded === "function") setIsLoaded(true);
+  });
 };

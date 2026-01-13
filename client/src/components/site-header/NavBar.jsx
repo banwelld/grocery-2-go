@@ -1,24 +1,25 @@
 // /client/src/components/site-header/NavBar.jsx
 
-import LinkItem from "./LinkItem";
-import { navLinkConfig } from "./navLinkConfig";
+import { useMemo } from "react";
+import useNavVisibility from "../../hooks/useNavVisibility";
+import NavBarLayout from "./NavBarLayout";
+import { getLinkConfig } from "./navLinkConfig";
+import { toClassName } from "../../helpers/helpers";
 
-export default function NavBar({ role, bemBlock, bemElem = "nav-bar" }) {
-  const userScopedLinks = navLinkConfig.filter(
-    (link) => link.visible === role || link.visible === "all"
-  );
+import "./nav-bar.css";
+
+export default function NavBar({ user = null }) {
+  const { role } = user ?? { role: "guest" };
+
+  const linkConfig = useMemo(() => {
+    return getLinkConfig(user ?? { id: 0 });
+  }, [user]);
+
+  const visibleLinkConfig = useNavVisibility(linkConfig, role);
+
   return (
-    <nav className={`${bemBlock}__${bemElem}`}>
-      <ul className={`${bemElem}__list`}>
-        {userScopedLinks.map((link) => (
-          <LinkItem
-            label={link.label}
-            path={link.path}
-            bemBlock={bemElem}
-            key={link.path}
-          />
-        ))}
-      </ul>
-    </nav>
+    <nav className={toClassName({ bemBlock: "nav-bar" })}>
+      <NavBarLayout linkConfig={visibleLinkConfig} bemBlock="nav-bar" />
+    </nav >
   );
 }

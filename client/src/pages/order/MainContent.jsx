@@ -1,44 +1,56 @@
 // /client/src/pages/order/MainContent.jsx
 
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import MainContentSection from "../../components/MainContentSection";
-import OrderDetailsTable from "../../components/tables/shared-tables/OrderDetailsTable";
-import ProductTable from "./ProductTable";
-import { getData, paragraphsFromArray } from "../../helpers/helpers";
-import { headings as h, sectionText as st } from "../../strings";
+import { useOrder } from "../../hooks/useOrder";
+import ContentSection from "../../components/section-frames/ContentSection";
+import OrderDetailsTable from "../../components/tables/OrderDetailsTable";
+import MappedTable from "../../components/tables/mapped-table/MappedTable";
+import tableConfig from "./tableConfig";
+import { OrderStatus } from "../../contexts/OrderContext";
+import { headings, uiText } from "../../strings";
 
-export default function MainContent() {
-  const { id } = useParams();
-  const [order, setOrder] = useState(null);
+const legalStatuses = new Set(Object.values(OrderStatus));
 
-  useEffect(() => {
-    getData(`/orders/${id}`)
-      .then((data) => setOrder(data))
-      .catch((err) => console.error("Fetch order failed: ", err));
-  }, [id]);
+export default function MainContent({ pageName }) {
+  const { order, status } = useOrder();
 
-  if (!order) return <p>Loading...</p>;
+  if (!order) return <p>Loading...</p>
 
   const { orderProducts, ...orderDetails } = order;
 
-  const headingKey = `ORDER_${orderDetails.status?.toUpperCase() ?? "UNKNOWN"}`;
-  const pageHeading = h[headingKey];
+  const headingKey =
+    legalStatuses.has(status) ?
+      `ORDER_${status.toUpperCase()}` :
+      "ORDER_UNKNOWN";
 
-  const uiText = paragraphsFromArray(st.ORDER);
+  const pageProps = {
+    heading: headings[headingKey],
+    uiText: uiText.ORDER,
+  };
+
+  const detailsSectionProps = {
+    heading: headings.ORDER_DETAILS,
+    bemMod: "order-details",
+  };
+
+  const productsSectionProps = {
+    heading: headings.CART_PRODUCTS,
+    bemMod: "order-products",
+  };
+
+  const tableProps = {
+    data: orderProducts,
+    tableConfig,
+    parentBemBlock: pageName,
+  };
 
   return (
-    <MainContentSection heading={pageHeading} uiText={uiText}>
-      <MainContentSection
-        heading={h.ORDER_DETAILS}
-        headingLevel={2}
-        bemMod='order-details'
-      >
-        <OrderDetailsTable order={orderDetails} />
-      </MainContentSection>
-      <MainContentSection heading={h.ORDER_LIST} headingLevel={2} bemMod='order-products'>
-        <ProductTable orderProducts={orderProducts} />
-      </MainContentSection>
-    </MainContentSection>
+    <ContentSection isTopLevel {...pageProps}>
+      <ContentSection {...detailsSectionProps}>
+        <OrderDetailsTable {...orderDetails} />
+      </ContentSection>
+      <ContentSection {...productsSectionProps}>
+        <MappedTable {...tableProps} />
+      </ContentSection>
+    </ContentSection>
   );
 }

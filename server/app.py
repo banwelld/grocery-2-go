@@ -89,6 +89,8 @@ class AllUsers(Resource):
         fields = find_req_fields(User)
         data = {k: request.json.get(k) for k in fields}
 
+        action = request.args.get("action")
+
         if falsey := find_falsey(data):
             return make_response(
                 {"error": msg.get("MISSING_FIELDS").format(fields="".join(falsey))},
@@ -99,10 +101,50 @@ class AllUsers(Resource):
         db.session.add(new_user)
         db.session.commit()
 
+        if action == "register":
+            session["user_id"] = new_user.id
+        
         return make_response(new_user.to_dict(), 201)
 
 
 api.add_resource(AllUsers, "/users")
+
+
+class UserById(Resource):
+    def patch(self, id):
+
+        user = get_user(id)
+        if not user:
+            return make_response({"error": msg.get("ID_NOT_FOUND")}, 404)
+
+        if user.id != session.get("user_id"):
+            return make_response({"error": msg.get("UNAUTHORIZED")}, 403)
+
+        updates = request.json or {}
+        if not updates:
+            return make_response({"error": msg.get("NO_DATA")}, 400)
+
+        for k, v in updates.items():
+            setattr(user, k, v)
+
+        db.session.commit()
+        return make_response(user.to_dict(), 200)
+
+    def delete(self, id):
+        user = get_user(id)
+        if not user:
+            return make_response({"error": msg.get("ID_NOT_FOUND")}, 404)
+
+        if user.id != session.get("user_id"):
+            return make_response({"error": msg.get("UNAUTHORIZED")}, 403)
+
+        db.session.delete(user)
+        db.session.commit()
+
+        return make_response({"message": msg.get("REC_DELETED")}, 200)
+
+
+api.add_resource(UserById, "/users/<int:id>")
 
 
 class Session(Resource):
@@ -192,13 +234,18 @@ class AllOrders(Resource):
             return make_response({"error": msg.get("NOT_AUTH")}, 401)
 
         status = request.args.get("status")
+        scope = request.args.get("scope")
 
         query = Order.query.filter(Order.user_id == user_id)
         if status == "open":
             query = query.filter(Order.status == "open")
+        if status == "non-open":
+            query = query.filter(Order.status != "open")
 
         user_orders = query.all()
-        order_dicts = [o.to_dict() for o in user_orders]
+        
+        args = {"rules": ("-order_products", "-user")} if scope == "shallow" else {}
+        order_dicts = [o.to_dict(**args) for o in user_orders]
 
         return make_response(order_dicts, 200)
 
@@ -359,12 +406,11 @@ class OrderProductById(Resource):
                 new_quantity = int(updates.get("quantity"))
             except (TypeError, ValueError):
                 return make_response({"error": msg.get("INVALID_QUANTITY")}, 400)
-            if new_quantity < 0:
-                return make_response({"error": msg.get("NEGATIVE_QUANTITY")}, 400)
+
             if len(updates) > 1:
                 return make_response({"error": msg.get("INVALID_COMBO")}, 400)
 
-        if has_quantity and new_quantity == 0:
+        if has_quantity and new_quantity <= 0:
             db.session.delete(order_product)
             db.session.commit()
             return make_response({"id": id, "status": "deleted"}, 200)

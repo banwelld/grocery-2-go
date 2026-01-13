@@ -1,17 +1,13 @@
 // /client/src/pages/user/Sidebar.jsx
 
-import SidebarSection from "../../components/SidebarSection";
+import SidebarSection from "../../components/section-frames/SidebarSection";
 
-export default function Sidebar({ isInfoView, setSearchParams }) {
-  const toggleView = () => {
-    setSearchParams({ view: isInfoView ? "update" : "info" });
-  };
 
-  const toggleBtnLabel = isInfoView ? "Update Info" : "View Customer Info";
 
+export default function Sidebar({ ToggleViewButton }) {
   return (
     <SidebarSection>
-      <button onClick={toggleView}>{toggleBtnLabel}</button>
+      <ToggleViewButton />
     </SidebarSection>
   );
 }

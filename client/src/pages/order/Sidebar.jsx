@@ -1,11 +1,13 @@
 // /client/src/pages/order/Sidebar.jsx
 
-import SidebarSection from "../../components/SidebarSection";
+import SidebarSection from "../../components/section-frames/SidebarSection";
 
-export default function Order({ handleCancelClick = null }) {
+
+
+export default function Order({ handleCancel = null }) {
   return (
     <SidebarSection>
-      <button onClick={handleCancelClick}>Cancel Order</button>
+      <button onClick={handleCancel}>Cancel Order</button>
     </SidebarSection>
   );
 }

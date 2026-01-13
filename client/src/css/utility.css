@@ -1,15 +1,5 @@
 /* /client/src/css/utility.css */
 
-.graceful-hover {
-  cursor: pointer;
-  transition: all 0.2s ease-in;
-}
-
-.graceful-hover:not(.active):hover {
-  color: var(--clr-brand2);
-  font-weight: 600;
-}
-
 a:focus-visible,
 input:focus-visible,
 select:focus-visible,

@@ -1,0 +1,201 @@
+/* /client/src/components/quantity-adjust/quantity-adjust.css */
+
+.quantity-adjust__button--table {
+  display: none;
+  background: none;
+  border: none;
+  padding: 0;
+  width: fit-content;
+  height: fit-content;
+  z-index: 100;
+  color: var(--clr-frame-md);
+  opacity: 0;
+  filter: blur(3px);
+  transition-behavior: allow-discrete;
+  transition-property: display opacity filter color;
+  transition-duration: 0.3s;
+  
+  &:hover {
+    color: var(--clr-brand2-lt);
+    filter: blur(0);
+    transition: all 0.3s ease-out;
+  }
+  
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.table__row--body:hover .quantity-adjust__button--table {
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  opacity: 1;
+  filter: blur(0);
+  transition: all 0.3s ease-out;
+
+  @starting-style {
+    opacity: 0;
+    filter: blur(3px);
+  }
+}
+
+.quantity-adjust--table {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1ch;
+}
+
+.quantity-adjust__quantity--table {
+  width: 100%;
+}
+
+.quantity-adjust--product-card {
+  display: flex;
+  align-items: center;
+  height: fit-content;
+  border-radius: var(--border-rad-max);
+  border: var(--border-brand2);
+  background: var(--clr-brand1);
+  margin: auto 0 0;
+  padding: 3px;
+  cursor: default;
+  box-shadow: var(--shadow-btn-qa);
+  overflow: hidden;
+  justify-content: space-between;
+  width: calc(var(--wd-card-content) * 0.9);
+  transition: width 0.25s ease-out;
+
+  &.quantity-adjust--collapsed {
+    justify-content: center;
+    width: 40px;
+  }
+}
+
+.quantity-adjust__button--product-card {
+  background: var(--clr-brand2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: var(--border);
+  border-radius: var(--border-rad-max);
+  cursor: pointer;
+  padding: 3px;
+  transition: all 0.3s ease-out;
+
+  svg {
+    color: var(--clr-surface1);
+    opacity: 0.8;
+    transition: all 0.3s ease-out;
+  }
+
+  &:active {
+    transform: scale(96%);
+  }
+
+  &:hover {
+    filter: brightness(1.1) saturate(1.1);
+    box-shadow: var(--shadow-btn-qa);
+
+    svg {
+      opacity: 1;
+    }
+
+    &:active {
+      box-shadow: none;
+    }
+  }
+}
+
+.quantity-adjust__quantity--product-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 5ch;
+  border-radius: var(--border-rad-max);
+  text-align: center;
+  font-size: 1rem;
+  background: var(--clr-surface1);
+  box-shadow: inset 1px 1px 5px #ccc, 0 0 1px var(--clr-brand2);
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  pointer-events: none;
+}
+
+.quantity-adjust--product-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  margin: auto;
+}
+
+.quantity-adjust__button--product-page {
+  color: var(--clr-surface2);
+  display: flex;
+  flex: 1 0 2rem;
+  justify-content: center;
+  align-items: center;
+  height: 2.5rem;
+  width: 2.5rem;
+  background: var(--clr-brand2);
+  border: var(--border);
+
+  &.quantity-adjust__button--down,
+  &.quantity-adjust__button--reset,
+  &:disabled {
+    border-radius: var(--border-round-L);
+    border-right: none;
+  }
+
+  &.quantity-adjust__button--up,
+  &.quantity-adjust__button--new {
+    border-radius: var(--border-round-R);
+    border-left: none;
+  }
+
+  &:hover {
+    filter: brightness(1.1);
+    cursor: pointer;
+
+    &:active svg {
+      transform: scale(0.95);
+    }
+  }
+  &:disabled {
+    background: var(--clr-frame-md);
+
+    &:hover {
+      filter: brightness(1);
+      cursor: not-allowed;
+    }
+
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+.quantity-adjust__quantity--product-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 7ch;
+  height: 2.5rem;
+  background: var(--clr-surface1);
+  border-top: var(--border);
+  border-bottom: var(--border);
+  box-shadow: var(--shadow-inset);
+  margin: 0.5rem 0;
+
+  p {
+    font-size: 1.3rem;
+  }
+}

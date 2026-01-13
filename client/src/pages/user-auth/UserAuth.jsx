@@ -1,22 +1,55 @@
 // /client/src/pages/user-auth/UserAuth.jsx
 
+import useUser from "../../hooks/useUser";
 import { useSearchParams } from "react-router-dom";
-import PageFrame from "../../components/PageFrame";
+import PageFrame from "../../components/section-frames/PageFrame";
 import Sidebar from "./Sidebar";
 import MainContent from "./MainContent";
-import { PageName as pn } from "../page-enums";
+import Button from "../../components/ui/Button";
+import { PageName } from "../enums";
+
+const PARAM_KEY = "view";
+
+const View = Object.freeze({
+  LOGIN: "LOGIN",
+  REGISTER: "REGISTER",
+});
+
+const ButtonLabel = Object.freeze({
+  [View.LOGIN]: "Sign me up!",
+  [View.REGISTER]: "Back to login",
+})
+
+const ToggleDestination = Object.freeze({
+  [View.LOGIN]: View.REGISTER,
+  [View.REGISTER]: View.LOGIN,
+})
 
 export default function UserAuth() {
+  const { isLoggedIn, userAuth: { login, register } } = useUser();
   const [searchParams, setSearchParams] = useSearchParams();
-  const view = searchParams.get("view") ?? "login";
+  const pageView = searchParams.get(PARAM_KEY) ?? View.LOGIN;
 
-  const isLoginView = view === "login";
+  const toggleView = () => {
+    const nextView = ToggleDestination[pageView];
+    setSearchParams({ [PARAM_KEY]: nextView });
+  };
+
+  const ToggleViewButton = () =>
+    <Button
+      onClick={toggleView}
+      label={ButtonLabel[pageView]}
+      disabled={isLoggedIn}
+    />
+
+  const sidebarProps = { ToggleViewButton, isLoggedIn };
+  const mainProps = { login, register, paramView: pageView, View, isLoggedIn };
 
   return (
     <PageFrame
-      sidebar={<Sidebar isLoginView={isLoginView} setSearchParams={setSearchParams} />}
-      mainContent={<MainContent paramView={view} />}
-      pageName={pn.USER_AUTH}
+      sidebar={<Sidebar {...sidebarProps} />}
+      mainContent={<MainContent {...mainProps} />}
+      pageName={PageName.USER_AUTH}
     />
   );
 }

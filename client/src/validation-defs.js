@@ -14,7 +14,7 @@ export const validateStreetAddress = yup
     "No leading or trailing spaces allowed",
     (value) => value === value?.trim()
   )
-  .required("** Required **");
+  .required(REQUIRED);
 
 export const validateCity = yup
   .string()
@@ -27,7 +27,7 @@ export const validateCity = yup
   )
   .required(REQUIRED);
 
-export const validateProvinceCd = yup.string().required(REQUIRED);
+export const validateProvinceCode = yup.string().required(REQUIRED);
 
 export const validatePostalCd = yup
   .string()
@@ -52,9 +52,9 @@ export const validatePostalCd = yup
 export const validateEmail = yup
   .string()
   .email("Invalid email.")
-  .required("** Required **");
+  .required(REQUIRED);
 
-export const validateRequiredString = yup.string().required("** Required **");
+export const validateRequiredString = yup.string().required(REQUIRED);
 
 export const validateName = yup
   .string()

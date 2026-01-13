@@ -2,12 +2,13 @@
 
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
-import { ProductContext } from "../../contexts/contexts";
-import PageFrame from "../../components/PageFrame";
+import { ProductContext } from "../../contexts/ProductContext";
+import PageFrame from "../../components/section-frames/PageFrame";
 import Sidebar from "./Sidebar";
 import ProductDisplay from "../../components/product-display/ProductDisplay";
-import { PageName as pn, LoadStatus as ls } from "../page-enums";
+import { PageName, LoadStatus } from "../enums";
 import "./product.css";
+
 
 export default function Product() {
   const { id } = useParams();
@@ -15,8 +16,8 @@ export default function Product() {
 
   const productId = Number(id);
 
-  const product = products?.find((p) => p.id === productId) ?? ls.LOADING;
-  const isLoading = product === ls.LOADING;
+  const product = products?.find((p) => p.id === productId) ?? LoadStatus.LOADING;
+  const isLoading = product === LoadStatus.LOADING;
 
   if (isLoading) return <p>Loading...</p>;
   if (!isLoading && !product) return <p>Product not found.</p>;
@@ -27,7 +28,7 @@ export default function Product() {
     <PageFrame
       sidebar={<Sidebar productId={productId} productName={productName} />}
       mainContent={<ProductDisplay product={product} displayVariant='page' />}
-      pageName={pn.PRODUCT}
+      pageName={PageName.PRODUCT}
     />
   );
 }

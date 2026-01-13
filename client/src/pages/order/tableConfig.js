@@ -1,59 +1,38 @@
-import MappedTableRow from "../../components/tables/mapped-table/MappedTableRow";
-import CurrencyCell from "../../components/tables/CurrencyCell";
-import ImageCell from "../../components/tables/ImageCell";
+import { 
+  ProductTableColumns as Column, 
+  ProductTableColumnLabels as Label 
+} from "../enums";
+import { 
+  CellRegistryKeys as CellKey, 
+  TableRegistryKeys as TableKey 
+} from "../../components/tables/mapped-table/MappedTableRegistry";
 
-const normalizeProductTableData = (data) => {
-  const { product, price, quantity } = data;
-  const { imageUrl, name } = product;
-
-  return {
-    image: { imageUrl, name },
-    name,
-    price,
-    tally: quantity,
-    total: price * quantity,
-  };
-};
-
-export const tableConfig = {
-  columnConfig: [
+const tableConfig = {
+  columns: [
     {
-      dataKey: "image",
-      headerColSpan: 2,
-      headerLabel: "Products",
-      cellComponent: ImageCell,
+      dataKey: Column.NAME,
+      label: Label.NAME,
+      cellRegistryKey: CellKey.DEFAULT,
     },
     {
-      dataKey: "name",
-      headerColSpan: 0,
-      headerLabel: null,
-      cellComponent: null,
+      dataKey: Column.PRICE,
+      label: Label.PRICE,
+      cellRegistryKey: CellKey.CURRENCY,
     },
     {
-      dataKey: "price",
-      headerColSpan: 1,
-      headerLabel: "Price",
-      cellComponent: CurrencyCell,
+      dataKey: Column.QUANTITY,
+      label: Label.QUANTITY,
+      cellRegistryKey: CellKey.DEFAULT,
     },
     {
-      dataKey: "tally",
-      headerColSpan: 1,
-      headerLabel: "Count",
-      cellComponent: null,
-    },
-    {
-      dataKey: "total",
-      headerColSpan: 1,
-      headerLabel: "Row Total",
-      cellComponent: CurrencyCell,
+      dataKey: Column.TOTAL,
+      label: Label.TOTAL,
+      cellRegistryKey: CellKey.CURRENCY,
     },
   ],
-  bemBlock: "table",
-  bemMod: "basket",
-  normalizeFn: normalizeProductTableData,
-  rowComponent: MappedTableRow,
-  getRowIdFn: (data) => data.product.id ?? null,
-  getPathFn: (id) => `/products/${id}`,
+  tableRegistryKey: TableKey.ORDER,
   loadingMessage: "Loading product...",
   emptyMessage: "No products to display.",
 };
+
+export default tableConfig;

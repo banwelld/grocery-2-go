@@ -1,25 +1,18 @@
 // /client/src/pages/user/MainContent.jsx
 
-import { useContext } from "react";
-import { UserContext } from "../../contexts/contexts";
-import MainContentSection from "../../components/MainContentSection";
+import ContentSection from "../../components/section-frames/ContentSection";
 import UserInfoAndOrders from "./UserInfoAndOrders";
-import UserUpdateSection from "./UserUpdateSection";
-import { paragraphsFromArray } from "../../helpers/helpers";
-import { headings as h, sectionText as st } from "../../strings";
+import UpdateUser from "./UpdateUser";
+import { headings, uiText } from "../../strings";
 
-export default function MainContent({ isInfoView }) {
-  const { user, setUser } = useContext(UserContext);
-
-  const uiText = paragraphsFromArray(st.USER);
-
+export default function MainContent({ user, updateUser, isReadView }) {
   return (
-    <MainContentSection heading={h.USER} uiText={uiText}>
-      {isInfoView ? (
+    <ContentSection isTopLevel heading={headings.USER} uiText={uiText.USER}>
+      {isReadView ? (
         <UserInfoAndOrders user={user} />
       ) : (
-        <UserUpdateSection user={user} setUser={setUser} />
+        <UpdateUser user={user} updateUser={updateUser} />
       )}
-    </MainContentSection>
+    </ContentSection>
   );
 }

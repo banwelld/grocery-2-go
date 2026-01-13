@@ -1,50 +1,34 @@
-import MappedTableRow from "../../components/tables/mapped-table/MappedTableRow";
-import CurrencyCell from "../../components/tables/CurrencyCell";
-import { tsToDate } from "../../helpers/helpers";
+import { 
+  CellRegistryKeys as CellKey, 
+  TableRegistryKeys as TableKey 
+} from "../../components/tables/mapped-table/MappedTableRegistry";
 
-const normalizeOrderTableData = (data) => {
-  const { orderTs, productCount, total, status } = data;
-  return {
-    date: tsToDate(orderTs),
-    quantity: productCount,
-    total,
-    status,
-  };
-};
-
-export const tableConfig = {
-  columnConfig: [
+const tableConfig = {
+  columns: [
     {
       dataKey: "date",
-      headerColSpan: 1,
-      headerLabel: "Order Date",
-      cellComponent: null,
+      label: "Order Date",
+      cellRegistryKey: CellKey.DEFAULT,
     },
     {
       dataKey: "quantity",
-      headerColSpan: 1,
-      headerLabel: "Item Count",
-      cellComponent: null,
+      label: "Item Count",
+      cellRegistryKey: CellKey.DEFAULT,
     },
     {
       dataKey: "total",
-      headerColSpan: 1,
-      headerLabel: "Order Total",
-      cellComponent: CurrencyCell,
+      label: "Order Total",
+      cellRegistryKey: CellKey.CURRENCY,
     },
     {
       dataKey: "status",
-      headerColSpan: 1,
-      headerLabel: "Status",
-      cellComponent: null,
+      label: "Status",
+      cellRegistryKey: CellKey.DEFAULT,
     },
   ],
-  bemBlock: "table",
-  bemMod: "order",
-  normalizeFn: normalizeOrderTableData,
-  rowComponent: MappedTableRow,
-  getRowIdFn: (data) => data.id ?? null,
-  getPathFn: (id) => `/orders/${id}`,
+  tableRegistryKey: TableKey.USER_ORDERS,
   loadingMessage: "Loading order...",
   emptyMessage: "No orders to display.",
 };
+
+export default tableConfig;

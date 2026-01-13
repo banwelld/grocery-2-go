@@ -37,6 +37,7 @@ def upgrade():
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("email", sa.String(), nullable=False),
         sa.Column("role", sa.String(), nullable=False),
+        sa.Column("status", sa.String(), nullable=False),
         sa.Column("f_name", sa.String(), nullable=False),
         sa.Column("l_name", sa.String(), nullable=False),
         sa.Column("phone", sa.String(), nullable=False),

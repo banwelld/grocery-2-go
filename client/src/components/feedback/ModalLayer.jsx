@@ -1,26 +1,27 @@
 // /client/src/app/ModalLayer.js
 
-import { useModal } from "../../contexts/ModalContext";
-import ConfirmationModal from "../feedback/ConfirmationModal";
+import { useModal } from "../../hooks/useModal";
+import ActionModal from "./ActionModal";
 
 export default function ModalLayer() {
-  const { modalPayload, killModal } = useModal();
+  const { modalPayload, resetModal } = useModal();
 
   if (!modalPayload) return null;
 
   return (
-    <ConfirmationModal
+    <ActionModal
       isOpen={!!modalPayload}
       uiText={modalPayload.uiText}
-      confirmButtonLabel={modalPayload.confirmButtonLabel}
-      cancelButtonLabel={modalPayload.cancelButtonLabel}
-      onConfirmClick={() => {
-        modalPayload.onConfirmClick();
-        killModal();
+      children={modalPayload.children}
+      proceedLabel={modalPayload.proceedLabel}
+      closeLabel={modalPayload.closeLabel}
+      proceed={() => {
+        modalPayload.proceed();
+        resetModal();
       }}
-      onCancelClick={() => {
-        modalPayload.onCancelClick();
-        killModal();
+      onClose={() => {
+        modalPayload.onClose();
+        resetModal();
       }}
     />
   );

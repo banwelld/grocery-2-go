@@ -1,38 +1,41 @@
 // /client/src/pages/home/Home.jsx
 
-import { useState } from "react";
-import { useContext } from "react";
-import { ProductContext } from "../../contexts/contexts";
-import PageFrame from "../../components/PageFrame";
+import { useState, useContext, useMemo } from "react";
+import { ProductContext } from "../../contexts/ProductContext";
+import PageFrame from "../../components/section-frames/PageFrame";
 import Sidebar from "./Sidebar";
 import MainContent from "./MainContent";
-import { compareSortValues } from "../../helpers/helpers";
 import { sortConfig as srt } from "./homeConfig";
-import { PageName as pn } from "../page-enums";
-import "./home.css";
+import { PageName } from "../enums";
+
 
 export default function Home() {
-  const { products } = useContext(ProductContext);
+  const { products, categories } = useContext(ProductContext);
   const [category, setCategory] = useState("all");
   const [sortName, setSortName] = useState("department");
 
-  // prep all products for display
+  const displayProducts = useMemo(() => {
+    if (!products) return [];
 
-  if (!products) return <p>Loading...</p>;
+    let result = [...products];
 
-  const matchCategory = (p) => category === "all" || p.category === category;
-  const filterFn = (products) => products.filter(matchCategory);
+    if (category !== "all") {
+      result = result.filter(p => p.category === category);
+    }
 
-  const comparator = srt.find((s) => s.value === sortName).comparator;
-  const sortFn = (p) => [...p].sort(comparator);
+    const sortOption = srt.find((s) => s.value === sortName);
+    if (sortOption) {
+      result.sort(sortOption.comparator);
+    }
 
-  const displayProducts = sortFn(filterFn(products));
+    return result;
+  }, [products, category, sortName]);
 
-  const allCategories = Array.from(new Set(products.map((p) => p.category)));
-  const sortedCategories = [...allCategories].sort(compareSortValues);
-  const filterLabels = ["all", ...sortedCategories];
+  const filterLabels = useMemo(() => {
+    return ["all", ...categories];
+  }, [categories]);
 
-  const sidebarConfig = [
+  const sidebarConfig = useMemo(() => [
     {
       sectionProps: {
         heading: "Filter by:",
@@ -41,7 +44,7 @@ export default function Home() {
       listProps: {
         items: filterLabels,
         selected: category,
-        setterFn: setCategory,
+        setState: setCategory,
         bemBlock: "sidebar",
       },
     },
@@ -53,17 +56,19 @@ export default function Home() {
       listProps: {
         items: srt,
         selected: sortName,
-        setterFn: setSortName,
+        setState: setSortName,
         bemBlock: "sidebar",
       },
     },
-  ];
+  ], [filterLabels, category, sortName]);
+
+  if (!products) return <p>Loading products...</p>;
 
   return (
     <PageFrame
-      sidebar={<Sidebar sidebarConfig={sidebarConfig} />}
+      sidebar={<Sidebar config={sidebarConfig} />}
       mainContent={<MainContent products={displayProducts} />}
-      pageName={pn.HOME}
+      pageName={PageName.HOME}
     />
   );
 }

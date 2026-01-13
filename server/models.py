@@ -16,6 +16,7 @@ class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, unique=True, nullable=False)
     role = db.Column(db.String, default="customer", nullable=False)
+    status = db.Column(db.String, default="active", nullable=False)
     f_name = db.Column(db.String, nullable=False)
     l_name = db.Column(db.String, nullable=False)
     phone = db.Column(db.String, nullable=False)

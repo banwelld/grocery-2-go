@@ -1,36 +1,49 @@
 // /client/src/pages/user/UserInfoAndOrders.jsx
 
-import { useState, useEffect } from "react";
-import MainContentSection from "../../components/MainContentSection";
-import UserDetailsTable from "../../components/tables/shared-tables/UserDetailsTable";
-import UserOrdersTable from "./UserOrdersTable";
-import { getData } from "../../helpers/helpers";
-import { LoadStatus as ls } from "../page-enums";
+import { useEffect } from "react";
+import useUserOrders from "../../hooks/useUserOrders";
+
+import ContentSection from "../../components/section-frames/ContentSection";
+import UserDetailsTable from "../../components/tables/UserDetailsTable";
+import MappedTable from "../../components/tables/mapped-table/MappedTable";
+
+import tableConfig from "./tableConfig";
 import { headings as h } from "../../strings";
 
 export default function UserInfoAndOrders({ user }) {
-  const [orders, setOrders] = useState(null);
+  const { orders, ordersLoaded, loadOrders } = useUserOrders();
 
   useEffect(() => {
-    getData("/orders")
-      .then((data) => setOrders(data))
-      .catch((err) => console.error("Fetch previous orders failed:", err));
-  }, []);
+    if (!ordersLoaded) loadOrders();
+  }, [ordersLoaded, loadOrders]);
 
-  const prevOrders = orders?.filter((o) => o?.status !== "open") ?? ls.LOADING;
+  const isLoadingOrders = !orders;
+  if (isLoadingOrders) return <p>Loading Orders...</p>;
 
-  const isLoadingOrders = prevOrders === ls.LOADING;
+  const detailsSectionProps = {
+    heading: h.USER_INFO,
+    bemMod: "user-info",
+  };
 
-  if (isLoadingOrders) return <p>Loading...</p>;
+  const ordersSectionProps = {
+    heading: h.USER_ORDERS,
+    bemMod: "order-history",
+  };
 
+  const ordersTableProps = {
+    data: orders,
+    tableConfig,
+    parentBemBlock: "user-orders",
+  };
+  console.log(orders);
   return (
     <>
-      <MainContentSection heading={h.USER_INFO} headingLevel={2} bemMod='user-info'>
+      <ContentSection {...detailsSectionProps}>
         <UserDetailsTable user={user} />
-      </MainContentSection>
-      <MainContentSection heading={h.USER_ORDERS} headingLevel={2} bemMod='order-history'>
-        <UserOrdersTable orders={prevOrders} />
-      </MainContentSection>
+      </ContentSection>
+      <ContentSection {...ordersSectionProps}>
+        <MappedTable {...ordersTableProps} />
+      </ContentSection>
     </>
   );
 }

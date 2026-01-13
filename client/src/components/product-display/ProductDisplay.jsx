@@ -3,18 +3,28 @@
 import ProductImage from "./ProductImage";
 import ProductDetails from "./ProductDetails";
 import { displayConfig } from "./displayConfig";
+import { toClassName } from "../../helpers/helpers";
+
+const BLOCK = "product-display";
 
 export default function ProductDisplay({ product, displayVariant = "card" }) {
-  const { name: alt, imageUrl: src } = product;
-  const { imageLoadMethod: loading } = displayConfig[displayVariant];
+  const { name, imageUrl } = product;
+  const { imageLoadMethod } = displayConfig[displayVariant];
 
-  const bemBlock = "product-display";
+  const imageProps = {
+    alt: name,
+    src: imageUrl,
+    loading: imageLoadMethod,
+    bemBlock: BLOCK,
+  };
+
+  const detailsProps = { product, displayVariant, bemBlock: BLOCK };
 
   return (
-    <div className={`${bemBlock}__container`}>
-      <div className={`${bemBlock}__inner`}>
-        <ProductImage {...{ alt, src, loading }} bemBlock={bemBlock} />
-        <ProductDetails {...{ product, displayVariant, bemBlock }} />
+    <div className={toClassName({ bemBlock: BLOCK, bemElem: "container" })}>
+      <div className={toClassName({ bemBlock: BLOCK, bemElem: "inner" })}>
+        <ProductImage {...imageProps} />
+        <ProductDetails {...detailsProps} />
       </div>
     </div>
   );

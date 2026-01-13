@@ -2,7 +2,6 @@
 
 export const displayConfig = {
   card: {
-    headingLevel: 2,
     bemBlock: "product-card",
     bemElem: "product-info",
     imageLoadMethod: "lazy",
@@ -10,7 +9,7 @@ export const displayConfig = {
     showPackageSize: false,
   },
   page: {
-    headingLevel: 1,
+    isTopLevel: true,
     bemBlock: "product-page",
     bemElem: "product-info",
     imageLoadMethod: "eager",

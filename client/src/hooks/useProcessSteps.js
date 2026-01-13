@@ -19,7 +19,7 @@ export default function useProcessSteps(steps) {
   const goTo = (stepIndex) =>
     setStepIndex(() => Math.min(Math.max(stepIndex, 0), lastStepIndex));
 
-  const StepComponent = currentComponent.Component;
+  const Component = currentComponent.Component;
   const props = currentComponent.props;
 
   return {
@@ -27,7 +27,7 @@ export default function useProcessSteps(steps) {
     goNext,
     goBack,
     goTo,
-    StepComponent,
+    Component,
     props,
     isLastStep: stepIndex === lastStepIndex,
     isFirstStep: stepIndex === 0,

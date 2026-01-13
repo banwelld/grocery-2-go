@@ -7,8 +7,8 @@
   column-gap: 0.5rem;
 }
 
-.product-card__country--canada,
-.product-page__country--canada {
+.product-card__origin--canada,
+.product-page__origin--canada {
   font-weight: 600;
   color: #cd0102;
 }

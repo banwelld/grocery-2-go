@@ -1,75 +1,37 @@
+/* //client/src/components/site-header/site-header.css */
+
 .header {
   font-family: var(--font-heading);
   box-shadow: var(--shadow-page);
   z-index: 20;
 }
 
-.header__upper,
-.header__lower {
+.header__row--upper,
+.header__row--lower {
   display: flex;
   flex: 1 1 auto;
 }
 
-.header__upper {
+.header__row--upper {
   background: var(--clr-frame-dk);
   padding: 10px 20px;
 }
 
-.header__lower {
+.header__row--lower {
   background: var(--clr-frame);
   padding: 0 20px;
 }
 
-.header__banner {
+.header__section--banner {
   display: flex;
   flex: 1 1 auto;
 }
 
-.banner__image {
+.header__container--banner {
   display: inline-block;
 }
 
-.header__nav-bar {
-  display: flex;
-  flex: 1 1 auto;
-  position: relative;
-  align-items: center;
-  font-weight: 600;
-  background: var(--clr-frame);
-  color: var(--clr-brand1);
-  padding-right: 20px;
-}
-
-.nav-bar__list {
-  width: fit-content;
-  list-style: none;
-}
-
-.nav-bar__item-container {
-  display: inline-block;
-}
-
-.nav-bar__link {
-  font-family: var(--font-utility);
-  display: flex;
-  align-items: center;
-  height: 100%;
-  padding: 7px 15px;
-  text-align: center;
-  transition: all 0.2s ease-out;
-
-  &:hover {
-    background: var(--clr-frame-md);
-    color: var(--clr-brand1-lt);
-  }
-
-  &.active {
-    background: oklch(from var(--clr-frame-md) calc(l * 0.87) c h);
-    color: var(--clr-brand1-lt);
-  }
-}
-
-.header__user-ack {
+.header__section--user-auth {
   display: flex;
   align-items: center;
   width: max-content;
@@ -79,7 +41,7 @@
   font-weight: 400;
 }
 
-.user-ack__logout {
+.button--user-auth {
   font-size: 1rem;
   color: var(--clr-brand1);
   background: none;

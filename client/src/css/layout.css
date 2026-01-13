@@ -1,50 +1,52 @@
 html,
 body {
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
+  overflow-x: hidden;
 }
 
 .site-wrapper {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: var(--wd-sidebar) 1fr;
-  grid-template-areas:
-    "header header"
-    "main main";
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
+  display: block;
+  padding-top: var(--header-height);
+  min-height: 100vh;
+  width: 100%;
 }
 
 .header {
-  grid-area: header;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);
+  z-index: 100;
 }
 
 main {
   display: grid;
-  grid-area: main;
-  grid-template-columns: subgrid;
-  grid-template-areas: "sidebar main-content";
+  grid-template-columns: var(--wd-sidebar) 1fr;
+  grid-template-areas: "sidebar content";
   height: 100%;
   width: 100%;
-  overflow: hidden;
 }
 
 .sidebar,
-.main-content {
+.content {
   min-height: 0;
-  height: 100%;
 }
 
 .sidebar {
   max-width: var(--wd-sidebar);
   grid-area: sidebar;
+  position: sticky;
+  top: var(--header-height);
+  align-self: start;
+  height: calc(100vh - var(--header-height));
   overflow: hidden;
 }
 
-.main-content {
-  max-width: var(--wd-main-content);
-  grid-area: main-content;
-  overflow-y: auto;
+.content {
+  width: 100%;
+  grid-area: content;
   isolation: isolate;
+  padding-bottom: 2rem;
 }
