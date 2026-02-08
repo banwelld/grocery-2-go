@@ -1,13 +1,27 @@
-// /client/src/pages/cart/CheckoutContext.jsx
-
-import { useContext } from "react";
-import { CheckoutProcessContext } from "../contexts/CheckoutProcessContext";
+import { useContext } from 'react';
+import { CheckoutProcessContext } from '../features/cart/context/CheckoutProcessContext';
 
 /**
  * @typedef {Object} UseCheckoutProcessReturn
- * @property {Object} cart - cart data { products, orderItemCount, orderTotal, cartLoaded }
- * @property {Object} checkout - checkout state { userConfirmed, setUserConfirmed, address, setAddress }
- * @property {Object} viewMode - view state { modeVariant, setCartMode, setCheckoutMode }
+ * @property {Object} cart
+ * @property {Array} cart.products
+ * @property {number} cart.id
+ * @property {number} cart.orderItemCount
+ * @property {number} cart.orderTotal
+ * @property {boolean} cart.cartLoaded
+ * @property {Object} checkoutProcess
+ * @property {function(Object): void} checkoutProcess.checkout
+ * @property {function(Object): void} checkoutProcess.resetSession
+ * @property {boolean} checkoutProcess.userConfirmed
+ * @property {function(boolean): void} checkoutProcess.setUserConfirmed
+ * @property {Object} checkoutProcess.address
+ * @property {function(Object): void} checkoutProcess.setAddress
+ * @property {Object} user
+ * @property {Object} user.user
+ * @property {boolean} user.isLoggedIn
+ * @property {Object} viewMode
+ * @property {string} viewMode.currentViewMode
+ * @property {function(): void} viewMode.toggleViewMode
  */
 
 /**

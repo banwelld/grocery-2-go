@@ -1,38 +1,30 @@
-// /client/src/hooks/useCart.js
-
-import { useContext } from "react";
-import { CartContext } from "../contexts/CartContext";
-import { errorMessages as msg } from "./constants";
+import { useContext } from 'react';
+import { CartContext } from '../features/cart/context/CartContext';
 
 /**
  * @typedef {Object} UseCartReturn
  * @property {Object} cart - current cart object
- * @property {Array} products - array of products in the cart
- * @property {function(Object): Promise<void>} checkout - submit the cart for checkout
- * @property {function(): void} loadCart - load the cart from the server
- * @property {function(): void} resetCart - clear the cart state
- * @property {number} orderTotal - total cost of the cart
- * @property {number} orderItemCount - count of items in the cart
- * @property {boolean} isPending - network request is currently pending
- * @property {boolean} cartLoaded - whether the initial cart load has completed
+ * @property {Object} cartStatus - status flags and base loaders
+ * @property {function(): void} cartStatus.loadCart - load the cart from the server
+ * @property {function(): void} cartStatus.resetCart - clear the cart state
+ * @property {boolean} cartStatus.isPending - network request is currently pending
+ * @property {boolean} cartStatus.cartLoaded - whether the initial cart load has completed
+ * @property {boolean} cartStatus.cartEmpty - whether the cart exists but has no items
+ * @property {Object} cartDetails - computed cart data
+ * @property {Array} cartDetails.products - array of products in the cart
+ * @property {number} cartDetails.orderTotal - total cost of the cart
+ * @property {number} cartDetails.orderItemCount - total item count in the cart
+ * @property {Object} cartActions - cart mutation functions
+ * @property {function(Object): void} cartActions.addToCart - add a product to the cart
+ * @property {function(Object): void} cartActions.takeFromCart - remove one of a product
+ * @property {function(Object): void} cartActions.resetProduct - remove all of a product
+ * @property {function(Object): Promise<void>} cartActions.checkout - submit the cart
  */
 
 /**
  * @returns {UseCartReturn}
  */
-export default function useCart() {
-  const { cartCtx, products } = useContext(CartContext);
-  const { cart, checkout, ...rest } = cartCtx;
 
-  const isValidCheckout = () => {
-    if (!cart || products.length === 0) {
-      console.warn(msg.EMPTY_CART);
-      return false;
-    }
-    return true;
-  };
+const useCart = () => useContext(CartContext);
 
-  const validatedCheckout = (data) => checkout(data, isValidCheckout);
-
-  return { cart, products, checkout: validatedCheckout, ...rest };
-}
+export default useCart;

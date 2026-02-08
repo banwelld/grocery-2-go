@@ -68,3 +68,66 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## MappedTable Configuration
+
+### Styling (`MappedTable.css`)
+
+The component imports `./MappedTable.css` by default. 
+- Ensure a file named `MappedTable.css` exists in the same directory.
+- To use your own global styles or CSS-in-JS, remove the import line from `MappedTable.jsx`.
+
+### Registry System (`MappedTableRegistry.js`)
+
+`MappedTable` relies on a centralized registry file to map abstract keys to concrete logic. You **must** create a `MappedTableRegistry.js` file colocated with the component. It must export the following 4 named objects:
+
+1.  **`CELL_REGISTRY`**: Maps a `cellRegistryKey` to a React Component.
+    *   *Usage*: Used to render non-string cell content (e.g., Images, Inputs, Formatted Currency).
+    *   *Default Key*: `DEFAULT` (renders data as-is).
+
+2.  **`NORMALIZER_REGISTRY`**: Maps a `tableRegistryKey` to a Normalizer Function.
+    *   *Function Signature*: `(rawDataRow) => normalizedObject`
+    *   *Purpose*: Transforms backend API data into a flat object where keys match your table's `columns` config.
+
+3.  **`PATH_BUILDER_REGISTRY`**: Maps a `tableRegistryKey` to a Path Function.
+    *   *Function Signature*: `(rowId) => "/string/path"`
+    *   *Purpose*: Determines where the user goes when clicking the row. Return `null` to disable linking for that table type.
+
+4.  **`ID_FINDER_REGISTRY`**: Maps a `tableRegistryKey` to an ID Resolver Function.
+    *   *Function Signature*: `(rawDataRow) => uniqueId`
+    *   *Purpose*: Extracts the unique identifier from your raw data (e.g., `row.id` or `row.product._id`). This ID is used for React keys and the Path Builder.
+
+#### Example `MappedTableRegistry.js`
+
+```javascript
+/* MappedTableRegistry.js */
+
+export const CELL_REGISTRY = {
+  DEFAULT: ({ data }) => <>{data}</>,
+  CURRENCY: ({ data }) => <span>${data.toFixed(2)}</span>,
+  IMAGE: ({ data }) => <img src={data} alt="" />,
+};
+
+export const NORMALIZER_REGISTRY = {
+  USER_LIST: (user) => ({
+    name: `${user.firstName} ${user.lastName}`,
+    email: user.email,
+    joined: new Date(user.createdAt).toLocaleDateString(),
+  }),
+};
+
+export const PATH_BUILDER_REGISTRY = {
+  USER_LIST: (id) => `/users/${id}`,
+};
+
+export const ID_FINDER_REGISTRY = {
+  USER_LIST: (user) => user.id,
+};
+```
+
+### `parentBemBlock` Argument
+
+The `parentBemBlock` prop is used to generate BEM-compliant class names for the table and its children.
+It allows the table to be styled according to the context in which it provides.
+- The root table element receives the class `table--[parentBemBlock]`.
+- Child elements inherit this block context.

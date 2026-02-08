@@ -1,0 +1,21 @@
+import DeliveryAddress from "./AddressInfoView";
+import UserInfoView from "./UserInfoView";
+
+export const checkoutSteps = (context) => [
+  {
+    Component: UserInfoView,
+    props: {
+      value: context.userConfirmed,
+      setState: context.setUserConfirmed,
+    },
+    validate: () => context.userConfirmed,
+  },
+  {
+    Component: DeliveryAddress,
+    props: {
+      value: context.address,
+      setState: context.setAddress,
+    },
+    validate: (data) => !!data,
+  },
+];

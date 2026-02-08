@@ -1,15 +1,26 @@
-// /client/src/app/AppLayout.jsx
+import { useEffect } from 'react';
+import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom';
 
-import { useEffect } from "react";
-import { Outlet, ScrollRestoration } from "react-router-dom";
-import useUser from "../hooks/useUser";
-import useCart from "../hooks/useCart";
-import SiteHeader from "../components/site-header/SiteHeader";
-import ModalLayer from "../components/feedback/ModalLayer";
+import useCart from '../hooks/useCart';
+import useUser from '../features/user/hooks/useUser';
+
+import Header from '../features/header/components/Header';
+import ModalLayer from '../components/ui/feedback/ModalLayer';
+import ToasterLayer from '../components/ui/feedback/ToasterLayer';
 
 export default function AppLayout() {
-  const { user } = useUser();
-  const { loadCart, resetCart } = useCart();
+  const { pathname } = useLocation();
+  const { cartStatus } = useCart() ?? {};
+  const { user } = useUser() ?? {};
+
+  const loadCart = cartStatus?.loadCart;
+  const resetCart = cartStatus?.resetCart;
+
+  useEffect(() => {
+    if (pathname !== '/') {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     if (user) {
@@ -22,11 +33,12 @@ export default function AppLayout() {
   return (
     <>
       <div className='site-wrapper'>
-        <SiteHeader />
+        <Header />
         <Outlet />
       </div>
       <ScrollRestoration getKey={(location) => location.pathname} />
       <ModalLayer />
+      <ToasterLayer />
     </>
   );
-};
+}

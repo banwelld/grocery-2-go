@@ -1,0 +1,46 @@
+form {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 0.5rem;
+}
+
+form input,
+form select,
+textarea {
+  width: 36ch;
+  padding: .4rem 1.5ch;
+  border-radius: var(--border-radius-max);
+  border: none;
+  background: var(--color-surface2);
+  box-shadow: inset #000000a0 1px 1px 2px;
+}
+
+form input,
+form select {
+  border-radius: var(--border-radius-max);
+}
+
+textarea {
+  height: 6rem;
+  border-radius: var(--border-radius-min)
+}
+
+.input-wrapper {
+  position: relative;
+  display: inline-block;
+  width:fit-content;
+  margin-bottom: 1rem;
+}
+
+.input-wrapper::after {
+  position: absolute;
+  content: attr(data-error);
+  color: var(--color-brand2);
+  font-size: 1rem;
+  display: inline-block;
+  margin-top: 0.5rem;
+  margin-left: 1ch;
+  white-space: nowrap;
+}

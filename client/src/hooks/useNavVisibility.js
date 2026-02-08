@@ -1,10 +1,10 @@
-// /client/src/hooks/useNavVisibility.js
-
-import useCart from "./useCart";
-import { Restriction } from "../components/site-header/navLinkConfig";
+import { Restriction } from '../features/header/components/header-nav/navLinkConfig';
+import useCart from './useCart';
 
 export default function useNavVisibility(linkConfig, role) {
-  const { products } = useCart();
+  const {
+    cartDetails: { products },
+  } = useCart();
 
   return linkConfig.filter((link) => {
     const hasRole = link.visibleTo?.includes(role) ?? false;

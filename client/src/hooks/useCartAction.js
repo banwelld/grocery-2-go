@@ -1,46 +1,47 @@
-import { useContext } from "react";
-import { CartContext } from "../contexts/CartContext";
-import { isInteger } from "../helpers/helpers";
-import { errorMessages as msg } from "./constants";
+import { useContext } from 'react';
+import { CartContext } from '../features/cart/context/CartContext';
+import { isInteger, logException } from '../utils/helpers';
+import Feedback from '../config/feedback';
+
+const { Errors } = Feedback;
 
 export default function useCartAction(productId) {
-  const { products, cartActionsCtx } = useContext(CartContext);
-  const { addToCart, takeFromCart, resetProduct } = cartActionsCtx;
+  const {
+    cartDetails: { products },
+    cartActions: { addToCart, takeFromCart, resetProduct },
+  } = useContext(CartContext);
 
   const product = products?.find((p) => p.productId === productId);
-  const quantity = product?.quantity;
-
-  const isValid = (orderProduct, delta) => {
-    const errors = [];
-
-    if (!orderProduct) errors.push(msg.NO_PRODUCT);
-    if (!isInteger({ value: delta }) || delta === 0) errors.push(msg.ADJUST_VALUE);
-
-    if (errors.length > 0) {
-      console.warn("Quantity adjustment failed: ", errors);
-      return false;
-    }
-
-    return true;
-  };
-
-  const hasProduct = !!product && product.quantity >= 1;
+  const quantity = product?.quantity || 0;
+  const hasProduct = !!product && quantity >= 1;
 
   const increment = (count = 1) => {
-    if (typeof count !== "number") count = 1;
-    if (product && !isValid(product, count)) return;
-    addToCart(productId, count);
+    const amount = typeof count === 'number' ? count : 1;
+
+    if (!isInteger({ value: amount }) || amount <= 0)
+      return logException(
+        Errors.INVALID.DATA('positive, non-zero integer', amount),
+        null,
+      );
+
+    return addToCart(productId, amount);
   };
 
   const decrement = (count = 1) => {
-    if (typeof count !== "number") count = 1;
-    if (!isValid(product, -count)) return;
-    takeFromCart(productId, count);
+    const amount = typeof count === 'number' ? count : 1;
+
+    if (!isInteger({ value: amount }) || amount <= 0)
+      return logException(
+        Errors.INVALID.DATA('positive, non-zero integer', amount),
+        null,
+      );
+
+    return takeFromCart(productId, amount);
   };
 
   const resetQuantity = () => {
     if (!product) return;
-    resetProduct(productId);
+    return resetProduct(productId);
   };
 
   return { quantity, increment, decrement, resetQuantity, hasProduct };

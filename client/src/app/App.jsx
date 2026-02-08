@@ -1,15 +1,33 @@
-// /client/src/app/App.jsx
+import { Outlet } from 'react-router-dom';
 
-import { UserProvider } from "../contexts/UserContext";
-import AppProviders from "./AppProviders";
-import AppLayout from "./AppLayout";
+import { ModalProvider } from '../contexts/ModalContext';
+import { UserProvider } from '../features/user/context/UserContext';
+import { ProductProvider } from '../features/collection/context/ProductContext';
+import { CartProvider } from '../features/cart/context/CartContext';
+import { UserOrdersProvider } from '../features/user/context/UserOrdersContext';
+import useUser from '../features/user/hooks/useUser';
 
 export default function App() {
   return (
-    <UserProvider>
-      <AppProviders>
-        <AppLayout />
-      </AppProviders>
-    </UserProvider>
+    <ModalProvider>
+      <UserProvider>
+        <AppProviders>
+          <Outlet />
+        </AppProviders>
+      </UserProvider>
+    </ModalProvider>
+  );
+}
+
+function AppProviders({ children }) {
+  const { user } = useUser();
+  return (
+    <ProductProvider>
+      <CartProvider key={user?.id ?? 'guest'}>
+        <UserOrdersProvider key={user?.id ?? 'guest'}>
+          {children}
+        </UserOrdersProvider>
+      </CartProvider>
+    </ProductProvider>
   );
 }

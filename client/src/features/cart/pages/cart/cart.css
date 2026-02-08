@@ -1,0 +1,36 @@
+/* /client/src/pages/cart/cart.css */
+
+.checkout__user-details {
+  margin-bottom: 2rem;
+}
+
+.table--user-details {
+  margin-bottom: var(--margin-section-mid);
+}
+
+.checkout__update-link {
+  color: var(--color-brand2);
+  font-weight: 600;
+
+  &:hover {
+    color: var(--color-brand2-light);
+    text-decoration: underline;
+    cursor: pointer;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
+    text-decoration-skip-ink: auto;
+  }
+}
+
+.checkout__wrpper--confirm-user {
+  margin: var(--margin-section-mid) 0;
+  display: flex;
+  padding: 1rem;
+  border: var(--border);
+}
+
+.checkout__wrapper--confirm-user label {
+  flex: 1 1 100%;
+  display: flex;
+  text-wrap: pretty;
+}

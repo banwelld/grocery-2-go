@@ -1,7 +1,8 @@
-// /client/src/app/ModalContext.js
+import { useState, createContext } from 'react';
+import { isValidString, logException } from '../utils/helpers';
+import Feedback from '../config/feedback';
 
-import { useState, createContext } from "react";
-import { isValidString } from "../helpers/helpers";
+const { Errors } = Feedback;
 
 export const ModalContext = createContext(null);
 
@@ -10,22 +11,22 @@ export function ModalProvider({ children }) {
 
   const openModal = ({
     uiText = null,
-    proceedLabel = "OK",
-    closeLabel = "Cancel",
-    proceed = () => { },
-    onClose = () => { },
+    confirmLabel = 'OK',
+    closeLabel = 'Cancel',
+    handleConfirm = () => {},
+    withClose = () => {},
+    ...rest
   }) => {
     if (!isValidString(uiText))
-      return console.warn(
-        "Modal payload uiText param missing or invalid: expected string"
-      );
+      return logException(Errors.INVALID.DATA('string', typeof uiText), null);
 
     setModalPayload({
       uiText,
-      proceedLabel,
+      confirmLabel,
       closeLabel,
-      proceed,
-      onClose,
+      handleConfirm,
+      withClose,
+      ...rest,
     });
   };
 

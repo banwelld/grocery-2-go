@@ -1,5 +1,3 @@
-// /client/src/hooks/useProcessSteps.js
-
 import { useState } from "react";
 
 export default function useProcessSteps(steps) {
