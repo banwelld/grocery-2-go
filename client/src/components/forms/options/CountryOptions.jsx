@@ -1,3 +1,5 @@
+import { DEFAULT_SELECT_VALUE as DEFAULT } from '../../../config/enums';
+
 const COUNTRIES = [
   { name: 'Afghanistan', code: 'AFG' },
   { name: 'Åland Islands', code: 'ALA' },
@@ -253,7 +255,7 @@ const COUNTRIES = [
 export default function CountryOptions() {
   return (
     <>
-      <option value='' disabled>
+      <option value={DEFAULT} disabled>
         select a country...
       </option>
       {COUNTRIES.map(({ code, name }) => (

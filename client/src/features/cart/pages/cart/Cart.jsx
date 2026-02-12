@@ -25,10 +25,10 @@ export default function Cart() {
 }
 
 const CartController = () => {
-  const { checkoutProcess, viewMode, cart, user } = useCheckoutProcess();
+  const { checkoutProcess, viewMode, cart, userDetails } = useCheckoutProcess();
   const { products, cartEmpty, cartLoaded, orderItemCount, orderTotal } = cart;
   const { currentViewMode, toggleViewMode } = viewMode;
-  const { isLoggedIn } = user;
+  const { isLoggedIn } = userDetails;
 
   if (!isLoggedIn) {
     return (
@@ -63,8 +63,8 @@ const CartController = () => {
 
   return (
     <PageFrame
-      Sidebar={<Sidebar {...sidebarProps} />}
-      PageContent={<PageContent {...mainProps} />}
+      sidebar={<Sidebar {...sidebarProps} />}
+      pageContent={<PageContent {...mainProps} />}
       pageName={pageName}
     />
   );

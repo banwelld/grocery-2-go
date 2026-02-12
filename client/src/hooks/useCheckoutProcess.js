@@ -16,9 +16,9 @@ import { CheckoutProcessContext } from '../features/cart/context/CheckoutProcess
  * @property {function(boolean): void} checkoutProcess.setUserConfirmed
  * @property {Object} checkoutProcess.address
  * @property {function(Object): void} checkoutProcess.setAddress
- * @property {Object} user
- * @property {Object} user.user
- * @property {boolean} user.isLoggedIn
+ * @property {Object} userDetails
+ * @property {Object} userDetails.user
+ * @property {boolean} userDetails.isLoggedIn
  * @property {Object} viewMode
  * @property {string} viewMode.currentViewMode
  * @property {function(): void} viewMode.toggleViewMode

@@ -1,5 +1,11 @@
 import { useState, useCallback } from 'react';
 
+import toast from 'react-hot-toast';
+
+import Feedback from '../config/feedback';
+
+const { Toasts } = Feedback;
+
 export const VIEW_MODES = Object.freeze({
   READ: 'READ',
   EDIT: 'EDIT',
@@ -12,8 +18,11 @@ export default function useViewMode({
   state: externalState,
   setState: setExternalState,
   paramName = 'view',
+  disableMode1 = false,
+  disableMode2 = false,
+  disableMessage = 'Toggle disabled',
 } = {}) {
-  const initialMode = startsMode2 ? mode2 : mode1;
+  const initialMode = startsMode2 && !disableMode2 ? mode2 : mode1;
   const [internalState, setInternalState] = useState(initialMode);
 
   const hasExternalState =
@@ -33,8 +42,21 @@ export default function useViewMode({
     currentViewMode = externalState;
   }
 
+  // force legal modal if one is disabled
+  if (disableMode2 && currentViewMode === mode2) currentViewMode = mode1;
+  if (disableMode1 && currentViewMode === mode1) currentViewMode = mode2;
+
   const toggleViewMode = useCallback(() => {
     const nextMode = currentViewMode === mode1 ? mode2 : mode1;
+
+    const isBlocked =
+      (nextMode === mode2 && disableMode2)
+      || (nextMode === mode1 && disableMode1);
+
+    if (isBlocked) {
+      toast.error(disableMessage);
+      return;
+    }
 
     if (isUrlState) {
       setExternalState({ [paramName]: nextMode });
@@ -51,6 +73,9 @@ export default function useViewMode({
     isUrlState,
     hasExternalState,
     paramName,
+    disableMode1,
+    disableMode2,
+    disableMessage,
   ]);
 
   return {

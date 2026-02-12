@@ -1,19 +1,21 @@
-const PROVINCES = [
+import { DEFAULT_SELECT_VALUE as DEFAULT } from '../../../config/enums';
+
+const CATEGORIES = [
   { name: 'Bakery' },
   { name: 'Condiments' },
   { name: 'Dairy' },
-  { name: 'Meat' },
+  { name: 'Meats' },
   { name: 'Produce' },
 ];
 
 export default function ProvinceOptions() {
   return (
     <>
-      <option value='' disabled>
+      <option value={DEFAULT} disabled>
         select a category...
       </option>
-      {PROVINCES.map(({ name }) => (
-        <option key={name} value={name}>
+      {CATEGORIES.map(({ name }) => (
+        <option key={name} value={name.toLowerCase()}>
           {name}
         </option>
       ))}

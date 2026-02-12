@@ -67,26 +67,26 @@ def get_order_prod(id):
 @app.before_request
 def load_user_id():
     g.user_id = session.get("user_id")
+    g.user = get_user(g.user_id)
+
+
+@app.errorhandler(ValueError)
+def handle_value_error(e):
+    return make_response(jsonify({"error": str(e)}), 422)
 
 
 # views
 
 
-@app.route("/")
-def index():
-    return "<h1>Project Server</h1>"
-
-
 class AllUsers(Resource):
     def post(self):
-        fields = find_req_fields(User)
-        data = {k: request.json.get(k) for k in fields}
-
-        action_type = request.args.get(FieldNames.ACTION_TYPE)
-
-        if falsey := find_falsey(data):
+        required_fields = find_req_fields(User)
+        if falsey := find_falsey(
+            {k: request.json.get(k) for k in required_fields}
+        ):
             return make_error(MsgKey.MISSING_FIELDS, 422, fields=falsey)
 
+        data = request.json or {}
         email = data.get(FieldNames.EMAIL)
         if User.query.filter_by(email=email).first():
             return make_error(MsgKey.EMAIL_TAKEN, 422)
@@ -95,6 +95,7 @@ class AllUsers(Resource):
         db.session.add(new_user)
         db.session.commit()
 
+        action_type = request.args.get(FieldNames.ACTION_TYPE)
         if action_type == ActionType.REGISTER:
             session[FieldNames.USER_ID] = new_user.id
 
@@ -127,25 +128,6 @@ class UserById(Resource):
 
         db.session.commit()
         return make_response(user.to_dict(), 200)
-
-    def delete(self, id):
-        user = get_user(id)
-        if not user:
-            return make_error(MsgKey.ID_NOT_FOUND, 404)
-
-        if user.id != g.user_id:
-            return make_error(MsgKey.UNCLOSED_ORDER, 422)
-
-        unclosed_statuses = [Status.SUBMITTED, Status.IN_PROCESS]
-        if any(
-            order for order in user.orders if order.status in unclosed_statuses
-        ):
-            return make_error(MsgKey.UNCLOSED_ORDER, 422)
-
-        db.session.delete(user)
-        db.session.commit()
-
-        return make_message(MsgKey.RECORD_DELETED)
 
 
 api.add_resource(UserById, "/users/<int:id>")
@@ -201,12 +183,16 @@ class AllProducts(Resource):
         return make_response(products, 200)
 
     def post(self):
-        fields = find_req_fields(Product)
-        data = {k: request.json.get(k) for k in fields}
+        if not g.user or g.user.role != "admin":
+            return make_error(MsgKey.UNAUTHORIZED, 403)
 
-        if falsey := find_falsey(data):
+        required_fields = find_req_fields(Product)
+        if falsey := find_falsey(
+            {k: request.json.get(k) for k in required_fields}
+        ):
             return make_error(MsgKey.MISSING_FIELDS, 422, fields=falsey)
 
+        data = request.json or {}
         new_product = Product(**data)
         db.session.add(new_product)
         db.session.commit()
@@ -219,6 +205,9 @@ api.add_resource(AllProducts, "/products")
 
 class ProductById(Resource):
     def patch(self, id):
+        if not g.user or g.user.role != "admin":
+            return make_error(MsgKey.UNAUTHORIZED, 403)
+
         product = get_product(id)
         if not product:
             return make_error(MsgKey.ID_NOT_FOUND, 404)
@@ -232,6 +221,19 @@ class ProductById(Resource):
 
         db.session.commit()
         return make_response(product.to_dict(), 200)
+
+    def delete(self, id):
+        if not g.user or g.user.role != "admin":
+            return make_error(MsgKey.UNAUTHORIZED, 403)
+
+        product = get_product(id)
+        if not product:
+            return make_error(MsgKey.ID_NOT_FOUND, 404)
+
+        db.session.delete(product)
+        db.session.commit()
+
+        return make_message(MsgKey.RECORD_DELETED)
 
 
 api.add_resource(ProductById, "/products/<int:id>")
@@ -267,6 +269,9 @@ class AllOrders(Resource):
         user_id = g.user_id
         if not user_id:
             return make_error(MsgKey.NOT_AUTH, 401)
+
+        if g.user.role == "admin":
+            return make_error(MsgKey.ADMIN_BASKET_FORBIDDEN, 403)
 
         new_order = Order(user_id=user_id)
         db.session.add(new_order)
@@ -331,7 +336,7 @@ class OrderById(Resource):
                 op.quantity for op in order.order_products
             )
             order.created_at = datetime.now(timezone.utc)
-
+        # only 'submitted' orders can be cancelled because they have not been prepared yet
         if (
             updates.get(FieldNames.STATUS) == Status.CANCELLED
             and order.status != Status.SUBMITTED
@@ -357,7 +362,7 @@ class OrderById(Resource):
 
         if order.user_id != g.user_id:
             return make_error(MsgKey.UNAUTHORIZED, 403)
-
+        # only cancelled orders can be deleted because they've never made it beyond submitted
         if order.status != Status.CANCELLED:
             return make_error(
                 MsgKey.INVALID_STATUS,
@@ -397,7 +402,7 @@ class AllOrderProducts(Resource):
                     "-product",
                     "product.name",
                     "product.image_filename",
-                    "product.price",
+                    "product.price_cents",
                 )
             )
             for op in order_products
@@ -406,14 +411,16 @@ class AllOrderProducts(Resource):
         return make_response(serialized_order_products, 200)
 
     def post(self):
-        fields = [FieldNames.ORDER_ID, FieldNames.PRODUCT_ID]
-        data = {k: request.json.get(k) for k in fields}
-
-        if falsey := find_falsey(data):
+        required_fields = [FieldNames.ORDER_ID, FieldNames.PRODUCT_ID]
+        if falsey := find_falsey(
+            {k: request.json.get(k) for k in required_fields}
+        ):
             return make_error(MsgKey.MISSING_FIELDS, 422, fields=falsey)
 
+        data = request.json or {}
+
         order = get_order(data.get(FieldNames.ORDER_ID))
-        if order.user_id != g.user_id:
+        if order.user_id != g.user_id or g.user.role == "admin":
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         product = get_product(data.get(FieldNames.PRODUCT_ID))

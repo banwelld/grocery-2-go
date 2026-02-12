@@ -24,16 +24,11 @@ export default function useOrderActions() {
         confirmLabel: 'Yes',
         closeLabel: 'No',
         handleConfirm: () =>
-          toast.promise(
-            updateStatus(OrderStatus.CANCELLED).then(() =>
-              navigate(`/users/${userId}`, { replace: true }),
-            ),
-            {
-              loading: Toasts.ORDER.CANCEL.BUSY,
-              success: Toasts.ORDER.CANCEL.SUCCESS,
-              error: Toasts.ORDER.CANCEL.FAILURE,
-            },
-          ),
+          toast.promise(updateStatus(OrderStatus.CANCELLED), {
+            loading: Toasts.ORDER.CANCEL.BUSY,
+            success: Toasts.ORDER.CANCEL.SUCCESS,
+            error: Toasts.ORDER.CANCEL.FAILURE,
+          }),
       });
     }
     logException(Errors.INVALID.STATUS(OrderStatus.SUBMITTED, status), null);

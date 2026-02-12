@@ -14,14 +14,14 @@ export default function ProductCard({
 }) {
   const navigate = useNavigate();
 
-  const { id } = product;
+  console.log(product);
 
-  if (!id)
+  if (!isDisplayOnly && !product.id)
     return (
       <div className={toBemClassName({ bemBlock: BLOCK })}>Loading...</div>
     );
 
-  const onClick = () => navigate(`products/${id}`);
+  const onClick = () => navigate(`products/${product?.id}`);
   const onKeyDown = (e) =>
     e.key === 'Enter' || e.key === ' ' ? onClick() : null;
 
@@ -30,7 +30,7 @@ export default function ProductCard({
     : { role: 'button', tabIndex: 0, onClick, onKeyDown };
 
   const quantityAdjustProps = {
-    productId: id,
+    productId: product?.id,
     parentBemBlock: BLOCK,
     collapseAtZero: true,
   };

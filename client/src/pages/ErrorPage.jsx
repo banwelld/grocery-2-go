@@ -1,17 +1,25 @@
 import { useRouteError } from 'react-router-dom';
 import Header from '../features/header/components/Header';
 import ContentSection from '../components/ui/frames/ContentSection';
-import { Headings } from '../config/constants';
+import { Headings, UiText } from '../config/constants';
 
-export default function ErrorPage({ heading, uiText }) {
+export default function ErrorPage({
+  heading = Headings.WHOOPS,
+  uiText = UiText.GENERAL_ERROR,
+}) {
   const error = useRouteError();
   const isRouteError = !!error;
 
-  const displayHeading = heading || error?.statusText || Headings.WHOOPS;
-  const displayText = uiText || error?.status || error?.message;
+  const displayHeading = error?.statusText || heading;
+  const displayText = error?.message || uiText;
 
   const content = (
-    <ContentSection isRoot heading={displayHeading} uiText={displayText} />
+    <ContentSection
+      isRoot
+      hasPageHeading
+      heading={displayHeading}
+      uiText={displayText}
+    />
   );
 
   if (isRouteError)

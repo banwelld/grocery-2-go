@@ -87,7 +87,7 @@ export function CheckoutProcessProvider({ children }) {
       address,
       setAddress,
     },
-    user: { user, isLoggedIn },
+    userDetails: { user, isLoggedIn },
     viewMode: { currentViewMode, toggleViewMode },
   };
 

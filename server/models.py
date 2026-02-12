@@ -1,9 +1,10 @@
-#!/usr/bin/env python3
+import re
 from datetime import datetime, timezone
 
 from config import bcrypt, db
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import validates
 from sqlalchemy_serializer import SerializerMixin
 
 # user model
@@ -53,6 +54,30 @@ class User(db.Model, SerializerMixin):
     def authenticate(self, password):
         return bcrypt.check_password_hash(self._password_hash, password)
 
+    @validates("email")
+    def validate_email(self, key, address):
+        if not address or not re.match(r"[^@]+@[^@]+\.[^@]+", address):
+            raise ValueError("Invalid email address format")
+        return address
+
+    @validates("role")
+    def validate_role(self, key, role):
+        if role not in ["customer", "admin"]:
+            raise ValueError("Invalid user role")
+        return role
+
+    @validates("status")
+    def validate_status(self, key, status):
+        if status not in ["active", "inactive"]:
+            raise ValueError("Invalid user status")
+        return status
+
+    @validates("name_first", "name_last")
+    def validate_names(self, key, value):
+        if not value or not value.strip():
+            raise ValueError(f"{key.replace('_', ' ')} cannot be empty")
+        return value.strip()
+
 
 # product model
 
@@ -71,12 +96,35 @@ class Product(db.Model, SerializerMixin):
     sale_unit = db.Column(db.String, nullable=False)
     package_quantity = db.Column(db.String, nullable=True)
     image_filename = db.Column(db.String, nullable=False)
+    created_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+    updated_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
     order_products = db.relationship(
         "OrderProduct", back_populates="product", cascade="all"
     )
 
     def __repr__(self):
         return f"<< PRODUCT: {self.id}, {self.category} (${self.price_cents / 100:.2f}) >>"
+
+    @validates("name", "category", "origin_country", "sale_unit")
+    def validate_strings(self, key, value):
+        if not value or not value.strip():
+            raise ValueError(f"{key.replace('_', ' ')} cannot be empty")
+        return value.strip()
+
+    @validates("price_cents")
+    def validate_price(self, key, value):
+        if value is not None and value < 0:
+            raise ValueError("Price must be a non-negative integer")
+        return value
 
 
 # order model
@@ -135,6 +183,19 @@ class Order(db.Model, SerializerMixin):
     def __repr__(self):
         return f"<< ORDER: {self.id}, {self.status} (${(self.final_total_cents or 0) / 100:.2f}) >>"
 
+    @validates("status")
+    def validate_status(self, key, status):
+        valid_statuses = [
+            "open",
+            "submitted",
+            "in_process",
+            "fulfilled",
+            "cancelled",
+        ]
+        if status not in valid_statuses:
+            raise ValueError(f"Invalid order status: {status}")
+        return status
+
 
 # orderproduct model
 
@@ -160,10 +221,20 @@ class OrderProduct(db.Model, SerializerMixin):
     )
     order = db.relationship("Order", back_populates="order_products")
 
-    # TODO: add validation
-
     def __repr__(self):
         return f"<< ORDER_PRODUCT: {self.id}, prod: {self.product_id} ({self.quantity}) >>"
+
+    @validates("price_cents")
+    def validate_price(self, key, value):
+        if value is not None and value < 0:
+            raise ValueError("Price must be a non-negative integer")
+        return value
+
+    @validates("quantity")
+    def validate_quantity(self, key, value):
+        if value is not None and value <= 0:
+            raise ValueError("Quantity must be greater than zero")
+        return value
 
 
 if __name__ == "__main__":

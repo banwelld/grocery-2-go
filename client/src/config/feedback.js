@@ -6,6 +6,7 @@ const Modals = {
   delete your order?`,
   CONFIRM_DELETE_USER: `Deletion is permanent. Your account and all of your
   orders will be deleted. Are you sure that you want to delete your account?`,
+  CONFIRM_DELETE_PRODUCT: `Deletion is permanent. Are you sure that you want to delete this product?`,
   CONFIRM_LOGOUT: `Are you sure that you want to logout?`,
 };
 
@@ -14,6 +15,13 @@ const Toasts = {
     BUSY: `Checking out...`,
     FAILURE: `Checkout failed`,
     SUCCESS: `Checked out!`,
+    ADMIN_PROFILE: `Requires manager credentials`,
+  },
+  RESTRICTION: {
+    AUTH_ONLY: `Members only. Please login.`,
+    CUSTOMER_ONLY: `Registered customers only.`,
+    GUEST_ONLY: `You're alrady logged in.`,
+    ADMIN_PROFILE: `Requires manager credentials`,
   },
   ORDER: {
     CANCEL: {
@@ -26,6 +34,7 @@ const Toasts = {
       BUSY: `Creating new cart...`,
       FAILURE: `Could not create new cart`,
       GUEST: `Please login to load a cart`,
+      ADMIN: `Admins cannot place orders.`,
       SUCCESS: `New cart initiated`,
     },
     DELETE: {
@@ -78,6 +87,11 @@ const Toasts = {
       BUSY: 'Updating product...',
       FAILURE: 'Could not update product',
       SUCCESS: 'Product updated!',
+    },
+    DELETE: {
+      BUSY: 'Deleting product...',
+      FAILURE: 'Could not delete product',
+      SUCCESS: 'Product deleted.',
     },
   },
   USER: {

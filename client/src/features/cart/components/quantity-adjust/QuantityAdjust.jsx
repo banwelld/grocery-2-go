@@ -68,7 +68,7 @@ export function QuantityAdjust({ productId, collapseAtZero, parentBemBlock }) {
         <>
           <AdjustButton {...decrementButtonProps} />
           <div className={toBemClassName(quantityBemProps)}>
-            {quantity || 0}
+            <p>{quantity || 0}</p>
           </div>
         </>
       )}

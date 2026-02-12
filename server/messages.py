@@ -16,6 +16,7 @@ class MsgKey:
     UNAUTHORIZED = "UNAUTHORIZED"
     UNCLOSED_ORDER = "UNCLOSED_ORDER"
     EMAIL_TAKEN = "EMAIL_TAKEN"
+    ADMIN_BASKET_FORBIDDEN = "ADMIN_BASKET_FORBIDDEN"
 
 
 MESSAGES = {
@@ -36,4 +37,5 @@ MESSAGES = {
     MsgKey.UNAUTHORIZED: "Unauthorized",
     MsgKey.UNCLOSED_ORDER: "Invalid Deletion: User has unfulfilled orders",
     MsgKey.EMAIL_TAKEN: "email address is already in use",
+    MsgKey.ADMIN_BASKET_FORBIDDEN: "admins cannot have baskets. only customers can place orders",
 }

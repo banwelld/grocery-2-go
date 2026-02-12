@@ -1,37 +1,29 @@
-import { useSearchParams } from 'react-router-dom';
-
-import useViewMode from '../../../../hooks/useViewMode';
-
 import { Headings, UiText } from '../../../../config/constants';
 import ContentSection from '../../../../components/ui/frames/ContentSection';
 import EditView from './EditView';
 import InfoView from './InfoView';
 
-export default function PageContent({ user, updateUser, onLoadOrders }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const { toggleViewMode, isMode1: isReadMode } = useViewMode({
-    state: searchParams,
-    setState: setSearchParams,
-    paramName: 'view',
-  });
-
+export default function PageContent({
+  user,
+  updateUser,
+  toggleViewMode,
+  isReadMode,
+  isCustomer,
+}) {
   const sectionProps = {
-    heading: Headings.USER,
-    uiText: isReadMode ? UiText.USER : null,
+    heading: Headings.USER_PROFILE,
+    uiText: isReadMode && isCustomer ? UiText.USER_PROFILE : null,
   };
 
   const infoViewProps = {
     user,
-    onLoadOrders,
     toggleViewMode,
+    isCustomer,
   };
 
   const editViewProps = {
     user,
-    onSubmit: () => {
-      return updateUser.then(toggleViewMode);
-    },
+    onSubmit: (data) => updateUser(data).then(toggleViewMode),
   };
 
   return (

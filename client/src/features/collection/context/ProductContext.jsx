@@ -1,24 +1,10 @@
 import toast from 'react-hot-toast';
-import {
-  createContext,
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  useCallback,
-} from 'react';
-import {
-  getData,
-  logException,
-  compareSortValues,
-  runExclusive,
-  postData,
-  patchData,
-} from '../../../utils/helpers';
+import { createContext, useState, useEffect, useRef, useMemo } from 'react';
+import { compareSortValues } from '../../../utils/helpers';
 import Feedback from '../../../config/feedback';
-import { toClient, toServer } from '../utils/productSerializer';
+import { createProductController } from './ProductController';
 
-const { Errors, Toasts } = Feedback;
+const { Toasts } = Feedback;
 
 export const ProductContext = createContext(null);
 
@@ -27,99 +13,25 @@ export function ProductProvider({ children }) {
   const [isPending, setIsPending] = useState(false);
   const isBusyRef = useRef(false);
 
-  const concurrencyControls = useMemo(
-    () => ({
-      lockRef: isBusyRef,
-      setPending: setIsPending,
-    }),
-    [],
-  );
+  const { fetchProducts, addProduct, updateProduct, deleteProduct } =
+    useMemo(() => {
+      const concurrencyControls = {
+        lockRef: isBusyRef,
+        setPending: setIsPending,
+      };
 
-  // fetch products
+      return createProductController({
+        setProducts,
+        concurrencyControls,
+      });
+    }, []);
 
+  // fetch products on mount
   useEffect(() => {
-    runExclusive({
-      doFetch: () =>
-        getData('/products', {}, false)
-          .then((data) => {
-            const sortedProducts = data
-              .map(toClient)
-              .sort(compareSortValues({ key: 'name' }));
-            setProducts(sortedProducts);
-          })
-          .catch((err) => {
-            logException(Errors.FAILURE.RECEIVE, err);
-            toast.error(Toasts.PRODUCTS.LOAD.FAILURE);
-          }),
-      ...concurrencyControls,
+    fetchProducts().catch(() => {
+      toast.error(Toasts.PRODUCTS.LOAD.FAILURE);
     });
-  }, [concurrencyControls]);
-
-  // add new product
-
-  const addProduct = useCallback(
-    (data) => {
-      const payload = { ...toServer(data) };
-      setProducts((prev) => [...prev, { ...data, id: 0 }]);
-
-      runExclusive({
-        doFetch: () =>
-          postData('/products', payload)
-            .then((serverData) => {
-              const newProduct = toClient(serverData);
-              setProducts((prev) => [
-                ...prev.filter((product) => product.id !== 0),
-                newProduct,
-              ]);
-            })
-            .catch((err) => {
-              logException(Errors.FAILURE.CREATE, err);
-              setProducts((prev) => prev.filter((product) => product.id !== 0));
-              throw err;
-            }),
-        ...concurrencyControls,
-      });
-    },
-    [concurrencyControls],
-  );
-
-  // update product
-
-  const updateProduct = useCallback(
-    (data, id) => {
-      let originalProduct;
-
-      setProducts((prev) => {
-        originalProduct = prev.find((p) => p.id === id);
-        return prev.map((p) => (p.id === id ? { ...p, ...data } : p));
-      });
-
-      const payload = toServer(data);
-
-      return runExclusive({
-        doFetch: () =>
-          patchData(`/products/${id}`, payload)
-            .then((serverData) => {
-              const updatedProduct = toClient(serverData);
-              setProducts((prev) =>
-                prev.map((p) => (p.id === id ? updatedProduct : p)),
-              );
-              return updatedProduct;
-            })
-            .catch((err) => {
-              logException(Errors.FAILURE.UPDATE, err);
-              if (originalProduct) {
-                setProducts((prev) =>
-                  prev.map((p) => (p.id === id ? originalProduct : p)),
-                );
-              }
-              throw err;
-            }),
-        ...concurrencyControls,
-      });
-    },
-    [concurrencyControls],
-  );
+  }, [fetchProducts]);
 
   const categories = useMemo(() => {
     if (!products) return [];
@@ -132,11 +44,12 @@ export function ProductProvider({ children }) {
       products,
       addProduct,
       updateProduct,
+      deleteProduct,
       isPending,
       findProduct: (id) => products.find((p) => p.id === id),
       categories,
     }),
-    [products, isPending, categories, addProduct, updateProduct],
+    [products, isPending, categories, addProduct, updateProduct, deleteProduct],
   );
 
   return (

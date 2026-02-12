@@ -23,8 +23,6 @@ export const UserStatus = Object.freeze({
  * @property {{
  *   updateUser: function(Object): Promise<void>,
  *   deleteUser: function(): Promise<void>,
- *   deactivateUser: function(): Promise<void>,
- *   activateUser: function(): Promise<void>
  * }} userActions - user management methods
  */
 

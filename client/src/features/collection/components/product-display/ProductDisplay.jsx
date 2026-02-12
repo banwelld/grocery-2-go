@@ -12,11 +12,15 @@ export default function ProductDisplay({
   const { name, imageFilename } = product;
   const { imageLoadMethod } = displayConfig[displayVariant];
 
-  const isURL = imageFilename.length >= 20;
+  const isURL = imageFilename?.length >= 20;
 
   const imageProps = {
     alt: name,
-    src: isURL ? imageFilename : `/images/products/${imageFilename}`,
+    src: !imageFilename
+      ? '/images/placeholder.png'
+      : isURL
+        ? imageFilename
+        : `/images/products/${imageFilename}`,
     loading: imageLoadMethod,
     bemBlock,
   };

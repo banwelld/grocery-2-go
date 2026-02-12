@@ -10,7 +10,7 @@ from models import Order, OrderProduct, Product, User, db
 # open up AI-generated product data
 
 with open("seed_products.json", "r") as f:
-    seed_product_data = json.load(f)
+    product_data = json.load(f)
 
 fake = Faker("en_CA")
 
@@ -58,20 +58,18 @@ def new_order_product(order_id, product_id):
 
 def generate_product_list():
     products = []
-    for product_data in seed_product_data:
-        data = product_data.copy()
-        data["origin_country"] = data.pop("origin")
-        data["price_cents"] = data.pop("price")
-
-        products.append(
-            Product(
-                **data,
-                description=[
-                    fake.paragraph(nb_sentences=4),
-                    fake.paragraph(nb_sentences=2),
-                ],
-            )
+    for product in product_data:
+        data = product.copy()
+        data["created_at"] = fake.date_time_between(
+            start_date="-3y", end_date="-1y"
         )
+        data["description"] = "\n\n".join(
+            [
+                fake.paragraph(nb_sentences=4),
+                fake.paragraph(nb_sentences=2),
+            ]
+        )
+        products.append(Product(**data))
     return products
 
 
@@ -116,7 +114,7 @@ if __name__ == "__main__":
         ]
 
         db.session.add_all(order_products)
-        db.session.flush
+        db.session.flush()
 
         submitted_orders = Order.query.filter(Order.status == "submitted").all()
 
@@ -139,7 +137,7 @@ if __name__ == "__main__":
         )
 
         db.session.add(dave)
-        db.session.flush
+        db.session.flush()
 
         open_order = Order.query.filter(Order.status == "open").first()
         submitted_order = Order.query.filter(

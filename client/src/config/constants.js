@@ -6,6 +6,8 @@ export const DataTypes = {
 };
 
 export const Headings = {
+  ADMIN_PROFILE: 'Product Admin Profile',
+  ADMIN_VIEW_SIDEBAR: `Product Selection`,
   CART: `My Shopping Cart`,
   CART_EMPTY: `Empty Cart`,
   CART_LIST: `Cart Contents`,
@@ -30,24 +32,21 @@ export const Headings = {
   ORDER_TOTALS: `Order Totals`,
   ORDER_UNKNOWN: `Order (unknown type)`,
   PRODUCT: `Product Details`,
+  PRODUCT_SELECTOR: `Select a product`,
   PRODUCT_SIDEBAR: `In Your Cart`,
-  PRODUCT_UPDATE: 'Manage Product Details',
+  PRODUCT_UPDATE: 'Manage Products',
   PRODUCTS: `Our Products`,
   REALTIME_VIEW: 'View Updates',
   REGISTER: `Sign Up!`,
   WHOOPS: `Whoops!`,
   UPDATE_PASSWORD: `Update User Password`,
   UPDATE_USER_INFO: `Update Personal Information`,
-  USER: `My Profile`,
+  USER_PROFILE: `My Profile`,
   USER_INFO: `Personal Information`,
   USER_ORDERS: `Order History`,
 };
 
 export const UiText = {
-  ALREADY_LOGGED_IN: [
-    `It looks like you're already logged in. Please logout before trying
-      to login or register.`,
-  ],
   CART: [
     `Welcome to your cart. Hover over any row to reveal options. You can click
       on a product's name to visit its information page or use the quantity
@@ -73,8 +72,16 @@ export const UiText = {
     `Please enter or confirm all needed information and click the 'next' button
       to confirm with checkout.`,
   ],
+  GENERAL_ERROR: [
+    <strong>ERROR 404:</strong>,
+    `The page that you're trying to access doesn't exist. Please confirm that
+      you've typed in the URL correctly and try again. Or, simply click on the
+      links above to navigate through the site. If the error persists, feel free
+      to call our support desk to report the error.`,
+  ],
   INVALID_PRODUCT_ID: (id) => [
-    `INVALID ID: We have no product in our collection with ID '${id}'.`,
+    <strong>INVALID ID:</strong>,
+    `We have no product in our collection with ID '${id}'.`,
   ],
   LOGIN: [
     `In order to provide you with products of the highest quality and at the
@@ -88,6 +95,7 @@ export const UiText = {
       persists, please contact suport.`,
   ],
   NOT_LOGGED_IN: [
+    <strong>ERROR 401:</strong>,
     `You must be logged in to view this page. Please login or register to continue.`,
   ],
   ORDER: [
@@ -107,7 +115,7 @@ export const UiText = {
     password must consist of at least 10 characters with a lowercase and
     uppercase character, a digit and a special character (e.g., !@#$%).`,
   ],
-  USER: [
+  USER_PROFILE: [
     `Welcome to your profile. Feel free to browse your personal information or
     your previous orders list.`,
     `If you notice that your information needs updating or would like to update
@@ -120,7 +128,12 @@ export const UiText = {
     `By checking this box, I affirm that the above information is accurate
     and complete.`,
   ],
-  WRONG_USER: [`You are not authorized to view this page.`],
+  WRONG_USER: [
+    <strong>ERROR 403:</strong>,
+    `You've attempted to access a profile with an ID that doesn't match the ID
+      that you're logged into. Please use the 'View my Profile' link or enter
+      the URL with your correct ID.`,
+  ],
 };
 
 export const InputTypes = Object.freeze({

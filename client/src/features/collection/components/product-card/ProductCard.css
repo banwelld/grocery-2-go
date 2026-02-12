@@ -18,7 +18,8 @@
   }
 }
 
-.content__section--display .product-card {
+.content__wrapper--product-update .product-card {
   height: fit-content;
   margin-top: var(--margin-section-mid);
+  cursor: default;
 }

@@ -252,3 +252,7 @@ button.button--text {
     color: var(--color-brand1-light);
   }
 }
+
+.button.button--admin {
+  margin-top: var(--margin-section-min)
+}

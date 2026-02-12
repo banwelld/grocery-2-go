@@ -10,7 +10,7 @@ import StreetAddress from '../../../../../components/ui/StreetAddress';
 import CartTotals from '../cart-view/CartTotals';
 
 export default function OrderConfirmationView({ children }) {
-  const { cart, checkoutProcess } = useCheckoutProcess();
+  const { cart, checkoutProcess, userDetails } = useCheckoutProcess();
   const { products, orderItemCount, orderTotal } = cart;
   const address = checkoutProcess?.address;
 
@@ -44,7 +44,7 @@ export default function OrderConfirmationView({ children }) {
         />
       </ContentSection>
       <ContentSection heading={Headings.USER_INFO}>
-        <UserDetailsTable user={checkoutProcess?.user} />
+        <UserDetailsTable user={userDetails?.user} />
       </ContentSection>
       <ContentSection heading={Headings.ORDER_LIST}>
         <MappedTable {...mappedTableProps} />

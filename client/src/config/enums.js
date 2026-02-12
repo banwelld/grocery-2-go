@@ -1,16 +1,19 @@
+export const DEFAULT_SELECT_VALUE = 'DEFAULT_SELECT_VALUE';
+
 export const PageName = Object.freeze({
   CART: 'checkout',
   LIST_VIEW: 'grid-view',
+  ADMIN_VIEW: 'product-admin',
   ORDER: 'order',
-  PRODUCT: 'product',
+  ITEM_VIEW: 'product-page',
   USER: 'user',
   USER_AUTH: 'auth',
 });
 
-export const UserRoles = Object.freeze({
+export const UserRole = Object.freeze({
+  ADMIN: 'admin',
   CUSTOMER: 'customer',
   GUEST: 'guest',
-  MANAGER: 'manager',
 });
 
 // cart domain

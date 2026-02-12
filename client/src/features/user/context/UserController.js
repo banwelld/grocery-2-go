@@ -23,7 +23,7 @@ export function createUserController({
       doFetch: () =>
         getData('/session')
           .then((data) => setUser(toClient(data, 'user')))
-          .catch((err) => logException(Errors.RECEIVE_FAILURE, err)),
+          .catch((err) => logException(Errors.FAILURE.RECEIVE, err)),
       setIsLoaded: setSessionLoaded,
       ...concurrencyControls,
     });
@@ -45,7 +45,7 @@ export function createUserController({
               logException(Errors.MISSING_CREDENTIALS, err);
               throw err;
             } else {
-              logException(Errors.CREATE_FAILURE, err);
+              logException(Errors.FAILURE.CREATE, err);
               throw err;
             }
           }),
@@ -73,7 +73,7 @@ export function createUserController({
               logException(Errors.MISSING_CREDENTIALS, err);
               throw err;
             } else {
-              logException(Errors.CREATE_FAILURE, err);
+              logException(Errors.FAILURE.CREATE, err);
               throw err;
             }
           }),
@@ -93,7 +93,7 @@ export function createUserController({
             navigate('/', { replace: true });
           })
           .catch((err) => {
-            logException(Errors.DELETE_FAILURE, err);
+            logException(Errors.FAILURE.DELETE, err);
             setUser(lastUser);
             throw err;
           });
@@ -126,28 +126,9 @@ export function createUserController({
       ...concurrencyControls,
     });
 
-  const deleteUser = () =>
-    runExclusive({
-      doFetch: () => {
-        const user = userRef.current;
-        if (!user) return Promise.resolve();
-
-        setUser(null);
-
-        return deleteData(`/users/${user.id}`)
-          .then(() => navigate('/', { replace: true }))
-          .catch((err) => {
-            setUser(user);
-            logException(Errors.DELETE_FAILURE, err);
-            throw err;
-          });
-      },
-      ...concurrencyControls,
-    });
-
   return {
     checkSession,
     userAuth: { login, register, logout },
-    userActions: { updateUser, deleteUser },
+    userActions: { updateUser },
   };
 }

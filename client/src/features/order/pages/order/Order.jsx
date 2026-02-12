@@ -51,10 +51,10 @@ const OrderLayout = () => {
 
   return (
     <PageFrame
-      Sidebar={
+      sidebar={
         <Sidebar sidebarControls={sidebarControls} pageName={PageName.ORDER} />
       }
-      PageContent={
+      pageContent={
         <PageContent order={order} status={status} pageName={PageName.ORDER} />
       }
       pageName={PageName.ORDER}

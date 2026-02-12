@@ -7,6 +7,7 @@ import ProvinceOptions from '../../../components/forms/options/ProvinceOptions';
 
 import { InputTypes as Input } from '../../../config/constants';
 import { toBemClassName } from '../../../utils/helpers';
+import { DEFAULT_SELECT_VALUE as DEFAULT } from '../../../config/enums';
 import * as v from '../../../utils/validation';
 
 export const Fields = Object.freeze({
@@ -21,7 +22,7 @@ const initialValues = {
   [Fields.ADDRESS_LINE_1]: '',
   [Fields.ADDRESS_LINE_2]: '',
   [Fields.CITY]: '',
-  [Fields.PROVINCE_CODE]: '',
+  [Fields.PROVINCE_CODE]: DEFAULT,
   [Fields.POSTAL_CODE]: '',
 };
 

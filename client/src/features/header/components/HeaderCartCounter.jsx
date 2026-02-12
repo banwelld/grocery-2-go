@@ -1,22 +1,16 @@
 import { Link } from 'react-router-dom';
-import { toBemClassName } from '../../../utils/helpers';
+
 import SvgIcon from '../../../components/ui/svg-icon/SvgIcon';
+
 import { SvgPath } from '../../../components/ui/svg-icon/constants';
-import useCart from '../../../hooks/useCart';
+import { toBemClassName } from '../../../utils/helpers';
 import './HeaderCartCounter.css';
 
-export default function HeaderCartCounter({ bemBlock }) {
-  const {
-    cartDetails: { orderItemCount },
-  } = useCart();
-  const isVisible = !!orderItemCount;
-
+export default function HeaderCartCounter({ itemCount, bemBlock }) {
   const containerBemProps = {
     bemBlock,
     bemElem: 'container',
     bemMod: 'tally',
-    bemMod2: 'hidden',
-    showMod2: !isVisible,
   };
 
   // data-count attribute holds the count value for the ::after pseudoelement
@@ -31,7 +25,7 @@ export default function HeaderCartCounter({ bemBlock }) {
       <Link to={'/my-cart'}>
         <div
           className={toBemClassName(containerBemProps)}
-          data-count={orderItemCount}
+          data-count={itemCount}
         >
           <SvgIcon path={SvgPath['CART_ICON']} />
         </div>

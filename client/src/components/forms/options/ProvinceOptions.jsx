@@ -1,3 +1,5 @@
+import { DEFAULT_SELECT_VALUE as DEFAULT } from '../../../config/enums';
+
 const PROVINCES = [
   { name: 'Alberta', code: 'AB' },
   { name: 'British Columbia', code: 'BC' },
@@ -17,7 +19,7 @@ const PROVINCES = [
 export default function ProvinceOptions() {
   return (
     <>
-      <option value='' disabled>
+      <option value={DEFAULT} disabled>
         select a province...
       </option>
       {PROVINCES.map(({ code, name }) => (

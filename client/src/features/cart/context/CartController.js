@@ -186,7 +186,14 @@ export function createCartController({
           addOrderProduct(cartRef.current.id, productId, count),
           {
             loading: Toasts.ORDER_PRODUCT.CREATE.BUSY,
-            error: Toasts.ORDER_PRODUCT.CREATE.FAILURE,
+            error: (err) => {
+              if (err.status === 401) {
+                navigate('/auth?view=LOGIN');
+                return Toasts.ORDER.CREATE.GUEST;
+              }
+              if (err.status === 403) return Toasts.ORDER.CREATE.ADMIN;
+              return err.status || Toasts.ORDER_PRODUCT.CREATE.FAILURE;
+            },
           },
         );
 
@@ -195,8 +202,12 @@ export function createCartController({
         loading: Toasts.ORDER.CREATE.BUSY,
         success: Toasts.ORDER.CREATE.SUCCESS,
         error: (err) => {
-          if (err.status === 401) return Toasts.ORDER.CREATE.GUEST;
-          return Toasts.ORDER.CREATE.FAILURE;
+          if (err.status === 401) {
+            navigate('/auth?view=LOGIN');
+            return Toasts.ORDER.CREATE.GUEST;
+          }
+          if (err.status === 403) return Toasts.ORDER.CREATE.ADMIN;
+          return err.status || Toasts.ORDER.CREATE.FAILURE;
         },
       });
 
@@ -205,7 +216,14 @@ export function createCartController({
           addOrderProduct(newOrder.id, productId, count),
           {
             loading: Toasts.ORDER_PRODUCT.CREATE.BUSY,
-            error: Toasts.ORDER_PRODUCT.CREATE.FAILURE,
+            error: (err) => {
+              if (err.status === 401) {
+                navigate('/auth?view=LOGIN');
+                return Toasts.ORDER.CREATE.GUEST;
+              }
+              if (err.status === 403) return Toasts.ORDER.CREATE.ADMIN;
+              return err.status || Toasts.ORDER_PRODUCT.CREATE.FAILURE;
+            },
           },
         );
     } catch (err) {

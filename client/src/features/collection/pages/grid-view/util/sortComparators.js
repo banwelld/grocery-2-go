@@ -9,9 +9,9 @@ export const sortComparators = {
     type: 'string',
     direction: 'desc',
   }),
-  [SortKey.PRICE_ASC]: compareSortValues({ key: 'price', type: 'number' }),
+  [SortKey.PRICE_ASC]: compareSortValues({ key: 'priceCents', type: 'number' }),
   [SortKey.PRICE_DESC]: compareSortValues({
-    key: 'price',
+    key: 'priceCents',
     type: 'number',
     direction: 'desc',
   }),

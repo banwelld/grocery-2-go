@@ -4,22 +4,7 @@ import clsx from 'clsx';
 
 const { Errors } = Feedback;
 
-// private helpers
-
-function toCamelCase(obj) {
-  if (Array.isArray(obj)) return obj.map(toCamelCase);
-  if (obj !== null && obj.constructor === Object) {
-    return Object.fromEntries(
-      Object.entries(obj).map(([key, value]) => {
-        const newKey = key.replace(/_([a-z])/g, (_, char) =>
-          char.toUpperCase(),
-        );
-        return [newKey, toCamelCase(value)];
-      }),
-    );
-  }
-  return obj;
-}
+// helper functions
 
 // api calls and helpers
 
@@ -40,6 +25,7 @@ export const fetchJson = (path, options = {}, camelize = true) =>
         `Error (${options.method || 'GET'}): ${data.error || res.statusText}`,
       );
       error.status = res.status;
+      error.serverError = data.error;
       throw error;
     }
     return data;

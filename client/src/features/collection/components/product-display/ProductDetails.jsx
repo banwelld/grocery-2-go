@@ -5,6 +5,7 @@ import {
 } from '../../../../utils/helpers';
 import ProductOrigin from './ProductOrigin';
 import SectionFrame from '../../../../components/ui/frames/SectionFrame';
+import { DEFAULT_SELECT_VALUE as DEFAULT } from '../../../../config/enums';
 
 export default function ProductDetails({
   product,
@@ -30,9 +31,18 @@ export default function ProductDetails({
     ? `${saleUnit}-pack`
     : saleUnit;
 
+  const normalized = {
+    name: name ? name : '#Name',
+    originCountry: originCountry === DEFAULT ? '#Country' : originCountry,
+    description: description ? description : '#Description',
+    priceCents: priceCents,
+    packageType: packageType ? packageType : 'container',
+    packageQuantity: packageQuantity && packageQuantity,
+  };
+
   const sectionProps = {
     hasPageHeading,
-    heading: name,
+    heading: normalized.name,
     isRoot: true,
     bemRoot: { bemBlock, bemMod: bemElem },
   };
@@ -41,10 +51,13 @@ export default function ProductDetails({
 
   return (
     <SectionFrame {...sectionProps}>
-      <ProductOrigin originCountry={originCountry} bemRoot={bemRoot} />
+      <ProductOrigin
+        originCountry={normalized.originCountry}
+        bemRoot={bemRoot}
+      />
       {showDescription && (
         <p className={toBemClassName({ bemMod: 'description', ...bemRoot })}>
-          {description}
+          {normalized.description}
         </p>
       )}
       <p className={toBemClassName({ bemMod: 'price', ...bemRoot })}>
@@ -54,7 +67,7 @@ export default function ProductDetails({
         <span
           className={toBemClassName({ bemMod: 'package-type', ...bemRoot })}
         >
-          / {packageType}{' '}
+          / {normalized.packageType}{' '}
         </span>
         {showPackageSize && !!packageQuantity && (
           <span
