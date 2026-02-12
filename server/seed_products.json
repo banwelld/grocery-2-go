@@ -1,0 +1,920 @@
+[
+  {
+    "name": "Fuji Apples",
+    "origin_country": "Japan",
+    "price_cents": 699,
+    "sale_unit": "bag",
+    "package_quantity": "8",
+    "category": "produce",
+    "image_filename": "produce0001.jpg"
+  },
+  {
+    "name": "Bananas",
+    "origin_country": "Ecuador",
+    "price_cents": 389,
+    "sale_unit": "bunch",
+    "package_quantity": "8",
+    "category": "produce",
+    "image_filename": "produce0002.jpg"
+  },
+  {
+    "name": "Gala Apples",
+    "origin_country": "New Zealand",
+    "price_cents": 719,
+    "sale_unit": "bag",
+    "package_quantity": "8",
+    "category": "produce",
+    "image_filename": "produce0003.jpg"
+  },
+  {
+    "name": "Red Delicious Apples",
+    "origin_country": "Canada",
+    "price_cents": 599,
+    "sale_unit": "bag",
+    "package_quantity": "8",
+    "category": "produce",
+    "image_filename": "produce0004.jpg"
+  },
+  {
+    "name": "Green Bell Peppers",
+    "origin_country": "Mexico",
+    "price_cents": 149,
+    "sale_unit": "each",
+    "package_quantity": "",
+    "category": "produce",
+    "image_filename": "produce0005.jpg"
+  },
+  {
+    "name": "Red Bell Peppers",
+    "origin_country": "Netherlands",
+    "price_cents": 199,
+    "sale_unit": "each",
+    "package_quantity": "",
+    "category": "produce",
+    "image_filename": "produce0006.jpg"
+  },
+  {
+    "name": "Carrots",
+    "origin_country": "Netherlands",
+    "price_cents": 289,
+    "sale_unit": "bunch",
+    "package_quantity": "~1kg",
+    "category": "produce",
+    "image_filename": "produce0007.jpg"
+  },
+  {
+    "name": "Broccoli",
+    "origin_country": "Italy",
+    "price_cents": 299,
+    "sale_unit": "stalk",
+    "package_quantity": "~350g",
+    "category": "produce",
+    "image_filename": "produce0008.jpg"
+  },
+  {
+    "name": "Strawberries",
+    "origin_country": "Spain",
+    "price_cents": 699,
+    "sale_unit": "pkg",
+    "package_quantity": "454g",
+    "category": "produce",
+    "image_filename": "produce0009.jpg"
+  },
+  {
+    "name": "Blueberries",
+    "origin_country": "Canada",
+    "price_cents": 399,
+    "sale_unit": "pkg",
+    "package_quantity": "312g",
+    "category": "produce",
+    "image_filename": "produce0010.jpg"
+  },
+  {
+    "name": "Cherry Tomatoes",
+    "origin_country": "Mexico",
+    "price_cents": 449,
+    "sale_unit": "pkg",
+    "package_quantity": "300g",
+    "category": "produce",
+    "image_filename": "produce0011.jpg"
+  },
+  {
+    "name": "Cucumber",
+    "origin_country": "Turkey",
+    "price_cents": 120,
+    "sale_unit": "each",
+    "package_quantity": "",
+    "category": "produce",
+    "image_filename": "produce0012.jpg"
+  },
+  {
+    "name": "Spinach",
+    "origin_country": "Canada",
+    "price_cents": 229,
+    "sale_unit": "bunch",
+    "package_quantity": "",
+    "category": "produce",
+    "image_filename": "produce0013.jpg"
+  },
+  {
+    "name": "Romaine Lettuce",
+    "origin_country": "Canada",
+    "price_cents": 339,
+    "sale_unit": "head",
+    "package_quantity": "",
+    "category": "produce",
+    "image_filename": "produce0014.jpg"
+  },
+  {
+    "name": "Avocados",
+    "origin_country": "Mexico",
+    "price_cents": 179,
+    "sale_unit": "each",
+    "package_quantity": "",
+    "category": "produce",
+    "image_filename": "produce0015.jpg"
+  },
+  {
+    "name": "Pineapples",
+    "origin_country": "Costa Rica",
+    "price_cents": 429,
+    "sale_unit": "each",
+    "package_quantity": "",
+    "category": "produce",
+    "image_filename": "produce0016.jpg"
+  },
+  {
+    "name": "Mangoes",
+    "origin_country": "India",
+    "price_cents": 279,
+    "sale_unit": "each",
+    "package_quantity": "",
+    "category": "produce",
+    "image_filename": "produce0017.jpg"
+  },
+  {
+    "name": "Red Grapes",
+    "origin_country": "Chile",
+    "price_cents": 399,
+    "sale_unit": "bunch",
+    "package_quantity": "~500g",
+    "category": "produce",
+    "image_filename": "produce0018.jpg"
+  },
+  {
+    "name": "Green Grape",
+    "origin_country": "Canada",
+    "price_cents": 399,
+    "sale_unit": "bunch",
+    "package_quantity": "~500g",
+    "category": "produce",
+    "image_filename": "produce0019.jpg"
+  },
+  {
+    "name": "Oranges",
+    "origin_country": "Brazil",
+    "price_cents": 159,
+    "sale_unit": "each",
+    "package_quantity": "",
+    "category": "produce",
+    "image_filename": "produce0020.jpg"
+  },
+  {
+    "name": "Lemons",
+    "origin_country": "Spain",
+    "price_cents": 169,
+    "sale_unit": "each",
+    "package_quantity": "",
+    "category": "produce",
+    "image_filename": "produce0021.jpg"
+  },
+  {
+    "name": "Chicken Breasts",
+    "origin_country": "Canada",
+    "price_cents": 399,
+    "sale_unit": "each",
+    "package_quantity": "~250g",
+    "category": "meats",
+    "image_filename": "meats0022.jpg"
+  },
+  {
+    "name": "Chicken legs",
+    "origin_country": "Canada",
+    "price_cents": 379,
+    "sale_unit": "each",
+    "package_quantity": "~325g",
+    "category": "meats",
+    "image_filename": "meats0023.jpg"
+  },
+  {
+    "name": "Ground Beef",
+    "origin_country": "Canada",
+    "price_cents": 899,
+    "sale_unit": "pkg",
+    "package_quantity": "500g",
+    "category": "meats",
+    "image_filename": "meats0024.jpg"
+  },
+  {
+    "name": "Tri-Tip Steak",
+    "origin_country": "Argentina",
+    "price_cents": 1079,
+    "sale_unit": "each",
+    "package_quantity": "~250g",
+    "category": "meats",
+    "image_filename": "meats0025.jpg"
+  },
+  {
+    "name": "Strip Loin Steak",
+    "origin_country": "Australia",
+    "price_cents": 1669,
+    "sale_unit": "each",
+    "package_quantity": "~350g",
+    "category": "meats",
+    "image_filename": "meats0026.jpg"
+  },
+  {
+    "name": "Pork Chops",
+    "origin_country": "Canada",
+    "price_cents": 1599,
+    "sale_unit": "6",
+    "package_quantity": "~900g",
+    "category": "meats",
+    "image_filename": "meats0027.jpg"
+  },
+  {
+    "name": "Pork Tenderloin",
+    "origin_country": "Canada",
+    "price_cents": 1769,
+    "sale_unit": "2",
+    "package_quantity": "~1kg",
+    "category": "meats",
+    "image_filename": "meats0028.jpg"
+  },
+  {
+    "name": "Ground Pork",
+    "origin_country": "China",
+    "price_cents": 699,
+    "sale_unit": "pkg",
+    "package_quantity": "500g",
+    "category": "meats",
+    "image_filename": "meats0029.jpg"
+  },
+  {
+    "name": "Lamb Chops",
+    "origin_country": "New Zealand",
+    "price_cents": 3997,
+    "sale_unit": "12",
+    "package_quantity": "~1.5kg",
+    "category": "meats",
+    "image_filename": "meats0030.png"
+  },
+  {
+    "name": "Lamb Leg",
+    "origin_country": "Australia",
+    "price_cents": 2499,
+    "sale_unit": "each",
+    "package_quantity": "~3kg",
+    "category": "meats",
+    "image_filename": "meats0031.png"
+  },
+  {
+    "name": "Ground Lamb",
+    "origin_country": "UK",
+    "price_cents": 969,
+    "sale_unit": "pkg",
+    "package_quantity": "500g",
+    "category": "meats",
+    "image_filename": "meats0032.png"
+  },
+  {
+    "name": "Turkey Breast",
+    "origin_country": "Canada",
+    "price_cents": 1189,
+    "sale_unit": "each",
+    "package_quantity": "~850g",
+    "category": "meats",
+    "image_filename": "meats0033.png"
+  },
+  {
+    "name": "Turkey Wings",
+    "origin_country": "Canada",
+    "price_cents": 1489,
+    "sale_unit": "pkg",
+    "package_quantity": "~1kg",
+    "category": "meats",
+    "image_filename": "meats0034.png"
+  },
+  {
+    "name": "Duck Breast",
+    "origin_country": "Canada",
+    "price_cents": 1559,
+    "sale_unit": "each",
+    "package_quantity": "~400g",
+    "category": "meats",
+    "image_filename": "meats0035.png"
+  },
+  {
+    "name": "Duck Leg",
+    "origin_country": "France",
+    "price_cents": 1489,
+    "sale_unit": "each",
+    "package_quantity": "~400g",
+    "category": "meats",
+    "image_filename": "meats0036.png"
+  },
+  {
+    "name": "Veal Cutlets",
+    "origin_country": "Italy",
+    "price_cents": 2499,
+    "sale_unit": "6",
+    "package_quantity": "~700g",
+    "category": "meats",
+    "image_filename": "meats0037.png"
+  },
+  {
+    "name": "Veal Shank",
+    "origin_country": "Italy",
+    "price_cents": 2897,
+    "sale_unit": "each",
+    "package_quantity": "~1.7kg",
+    "category": "meats",
+    "image_filename": "meats0038.png"
+  },
+  {
+    "name": "Ground Turkey",
+    "origin_country": "Canada",
+    "price_cents": 1329,
+    "sale_unit": "pkg",
+    "package_quantity": "500g",
+    "category": "meats",
+    "image_filename": "meats0039.jpg"
+  },
+  {
+    "name": "Pork Sausage",
+    "origin_country": "Germany",
+    "price_cents": 229,
+    "sale_unit": "each",
+    "package_quantity": "~200g",
+    "category": "meats",
+    "image_filename": "meats0040.jpg"
+  },
+  {
+    "name": "Bacon",
+    "origin_country": "Canada",
+    "price_cents": 679,
+    "sale_unit": "pkg",
+    "package_quantity": "375g",
+    "category": "meats",
+    "image_filename": "meats0041.jpg"
+  },
+  {
+    "name": "Whole Milk",
+    "origin_country": "Canada",
+    "price_cents": 199,
+    "sale_unit": "carton",
+    "package_quantity": "1L",
+    "category": "dairy",
+    "image_filename": "dairy0042.png"
+  },
+  {
+    "name": "Skim Milk",
+    "origin_country": "Canada",
+    "price_cents": 199,
+    "sale_unit": "carton",
+    "package_quantity": "1L",
+    "category": "dairy",
+    "image_filename": "dairy0043.png"
+  },
+  {
+    "name": "Semi-Skimmed Milk",
+    "origin_country": "Canada",
+    "price_cents": 199,
+    "sale_unit": "carton",
+    "package_quantity": "1L",
+    "category": "dairy",
+    "image_filename": "dairy0044.png"
+  },
+  {
+    "name": "Heavy Cream",
+    "origin_country": "France",
+    "price_cents": 429,
+    "sale_unit": "carton",
+    "package_quantity": "473ml",
+    "category": "dairy",
+    "image_filename": "dairy0045.jpeg"
+  },
+  {
+    "name": "Sour Cream",
+    "origin_country": "Canada",
+    "price_cents": 319,
+    "sale_unit": "container",
+    "package_quantity": "250ml",
+    "category": "dairy",
+    "image_filename": "dairy0046.jpeg"
+  },
+  {
+    "name": "Plain Yogurt",
+    "origin_country": "Canada",
+    "price_cents": 399,
+    "sale_unit": "container",
+    "package_quantity": "750ml",
+    "category": "dairy",
+    "image_filename": "dairy0047.jpeg"
+  },
+  {
+    "name": "Greek Yogurt",
+    "origin_country": "Greece",
+    "price_cents": 719,
+    "sale_unit": "container",
+    "package_quantity": "750ml",
+    "category": "dairy",
+    "image_filename": "dairy0048.png"
+  },
+  {
+    "name": "Salted Butter",
+    "origin_country": "Canada",
+    "price_cents": 829,
+    "sale_unit": "bemBlock",
+    "package_quantity": "454g",
+    "category": "dairy",
+    "image_filename": "dairy0049.jpeg"
+  },
+  {
+    "name": "Unsalted Butter",
+    "origin_country": "Canada",
+    "price_cents": 829,
+    "sale_unit": "bemBlock",
+    "package_quantity": "454g",
+    "category": "dairy",
+    "image_filename": "dairy0050.jpeg"
+  },
+  {
+    "name": "Cheddar Cheese",
+    "origin_country": "Canada",
+    "price_cents": 699,
+    "sale_unit": "bemBlock",
+    "package_quantity": "400g",
+    "category": "dairy",
+    "image_filename": "dairy0051.jpg"
+  },
+  {
+    "name": "Mozzarella Cheese",
+    "origin_country": "Italy",
+    "price_cents": 899,
+    "sale_unit": "bemBlock",
+    "package_quantity": "400g",
+    "category": "dairy",
+    "image_filename": "dairy0052.jpg"
+  },
+  {
+    "name": "Parmigiano-Reggiano",
+    "origin_country": "Italy",
+    "price_cents": 2299,
+    "sale_unit": "bemBlock",
+    "package_quantity": "250g",
+    "category": "dairy",
+    "image_filename": "dairy0053.jpg"
+  },
+  {
+    "name": "Cream Cheese",
+    "origin_country": "Canada",
+    "price_cents": 379,
+    "sale_unit": "container",
+    "package_quantity": "227g",
+    "category": "dairy",
+    "image_filename": "dairy0054.jpg"
+  },
+  {
+    "name": "Cottage Cheese",
+    "origin_country": "Canada",
+    "price_cents": 489,
+    "sale_unit": "container",
+    "package_quantity": "500g",
+    "category": "dairy",
+    "image_filename": "dairy0055.jpeg"
+  },
+  {
+    "name": "Ricotta Cheese",
+    "origin_country": "Italy",
+    "price_cents": 629,
+    "sale_unit": "container",
+    "package_quantity": "475g",
+    "category": "dairy",
+    "image_filename": "dairy0056.jpeg"
+  },
+  {
+    "name": "Feta Cheese",
+    "origin_country": "Canada",
+    "price_cents": 319,
+    "sale_unit": "container",
+    "package_quantity": "200g",
+    "category": "dairy",
+    "image_filename": "dairy0057.jpeg"
+  },
+  {
+    "name": "Emmenthal Cheese",
+    "origin_country": "Switzerland",
+    "price_cents": 899,
+    "sale_unit": "bemBlock",
+    "package_quantity": "220g",
+    "category": "dairy",
+    "image_filename": "dairy0058.jpg"
+  },
+  {
+    "name": "Goat Cheese",
+    "origin_country": "France",
+    "price_cents": 839,
+    "sale_unit": "bemBlock",
+    "package_quantity": "200g",
+    "category": "dairy",
+    "image_filename": "dairy0059.jpg"
+  },
+  {
+    "name": "Blue Cheese",
+    "origin_country": "Italy",
+    "price_cents": 699,
+    "sale_unit": "bemBlock",
+    "package_quantity": "125g",
+    "category": "dairy",
+    "image_filename": "dairy0060.jpg"
+  },
+  {
+    "name": "Evaporated Milk",
+    "origin_country": "Canada",
+    "price_cents": 289,
+    "sale_unit": "can",
+    "package_quantity": "354ml",
+    "category": "dairy",
+    "image_filename": "dairy0061.jpeg"
+  },
+  {
+    "name": "Condensed Milk",
+    "origin_country": "Canada",
+    "price_cents": 299,
+    "sale_unit": "can",
+    "package_quantity": "297ml",
+    "category": "dairy",
+    "image_filename": "dairy0062.jpeg"
+  },
+  {
+    "name": "Artisan Bread",
+    "origin_country": "Canada",
+    "price_cents": 299,
+    "sale_unit": "loaf",
+    "package_quantity": "",
+    "category": "bakery",
+    "image_filename": "bakery0063.jpg"
+  },
+  {
+    "name": "Sourdough Bread",
+    "origin_country": "Canada",
+    "price_cents": 299,
+    "sale_unit": "loaf",
+    "package_quantity": "",
+    "category": "bakery",
+    "image_filename": "bakery0064.jpg"
+  },
+  {
+    "name": "French Baguette",
+    "origin_country": "Canada",
+    "price_cents": 179,
+    "sale_unit": "loaf",
+    "package_quantity": "",
+    "category": "bakery",
+    "image_filename": "bakery0065.jpg"
+  },
+  {
+    "name": "Croissants",
+    "origin_country": "Canada",
+    "price_cents": 599,
+    "sale_unit": "pkg",
+    "package_quantity": "6",
+    "category": "bakery",
+    "image_filename": "bakery0066.jpg"
+  },
+  {
+    "name": "Blueberry Muffins",
+    "origin_country": "Canada",
+    "price_cents": 599,
+    "sale_unit": "pkg",
+    "package_quantity": "6",
+    "category": "bakery",
+    "image_filename": "bakery0067.jpg"
+  },
+  {
+    "name": "Chocolate Chip Cookies",
+    "origin_country": "Canada",
+    "price_cents": 599,
+    "sale_unit": "pkg",
+    "package_quantity": "12",
+    "category": "bakery",
+    "image_filename": "bakery0068.jpg"
+  },
+  {
+    "name": "Cinnamon Rolls",
+    "origin_country": "Canada",
+    "price_cents": 599,
+    "sale_unit": "pkg",
+    "package_quantity": "6",
+    "category": "bakery",
+    "image_filename": "bakery0069.jpg"
+  },
+  {
+    "name": "Bagels",
+    "origin_country": "Canada",
+    "price_cents": 769,
+    "sale_unit": "pkg",
+    "package_quantity": "6",
+    "category": "bakery",
+    "image_filename": "bakery0070.jpeg"
+  },
+  {
+    "name": "Pretzel Buns",
+    "origin_country": "Canada",
+    "price_cents": 299,
+    "sale_unit": "pkg",
+    "package_quantity": "6",
+    "category": "bakery",
+    "image_filename": "bakery0071.jpg"
+  },
+  {
+    "name": "Boston Cream Donuts",
+    "origin_country": "UK",
+    "price_cents": 399,
+    "sale_unit": "pkg",
+    "package_quantity": "6",
+    "category": "bakery",
+    "image_filename": "bakery0072.jpg"
+  },
+  {
+    "name": "Danish Pastries",
+    "origin_country": "Denmark",
+    "price_cents": 599,
+    "sale_unit": "pkg",
+    "package_quantity": "6",
+    "category": "bakery",
+    "image_filename": "bakery0073.jpg"
+  },
+  {
+    "name": "Oreo Cupcakes",
+    "origin_country": "Canada",
+    "price_cents": 599,
+    "sale_unit": "pkg",
+    "package_quantity": "4",
+    "category": "bakery",
+    "image_filename": "bakery0074.jpg"
+  },
+  {
+    "name": "Butter Tarts",
+    "origin_country": "Canada",
+    "price_cents": 399,
+    "sale_unit": "pkg",
+    "package_quantity": "6",
+    "category": "bakery",
+    "image_filename": "bakery0075.jpg"
+  },
+  {
+    "name": "Brownies",
+    "origin_country": "Canada",
+    "price_cents": 399,
+    "sale_unit": "pkg",
+    "package_quantity": "6",
+    "category": "bakery",
+    "image_filename": "bakery0076.jpg"
+  },
+  {
+    "name": "Apple Pie",
+    "origin_country": "Canada",
+    "price_cents": 1599,
+    "sale_unit": "each",
+    "package_quantity": "",
+    "category": "bakery",
+    "image_filename": "bakery0077.jpg"
+  },
+  {
+    "name": "Cheesecake",
+    "origin_country": "Canada",
+    "price_cents": 239,
+    "sale_unit": "slice",
+    "package_quantity": "",
+    "category": "bakery",
+    "image_filename": "bakery0078.jpg"
+  },
+  {
+    "name": "Macarons",
+    "origin_country": "Canada",
+    "price_cents": 1699,
+    "sale_unit": "pkg",
+    "package_quantity": "12",
+    "category": "bakery",
+    "image_filename": "bakery0079.jpeg"
+  },
+  {
+    "name": "Cannoli",
+    "origin_country": "Italy",
+    "price_cents": 899,
+    "sale_unit": "pkg",
+    "package_quantity": "8",
+    "category": "bakery",
+    "image_filename": "bakery0080.jpeg"
+  },
+  {
+    "name": "Strawberry Shortcake",
+    "origin_country": "Canada",
+    "price_cents": 599,
+    "sale_unit": "each",
+    "package_quantity": "",
+    "category": "bakery",
+    "image_filename": "bakery0081.jpg"
+  },
+  {
+    "name": "Vanilla Celebration",
+    "origin_country": "Canada",
+    "price_cents": 589,
+    "sale_unit": "each",
+    "package_quantity": "",
+    "category": "bakery",
+    "image_filename": "bakery0082.jpg"
+  },
+  {
+    "name": "Ketchup",
+    "origin_country": "Canada",
+    "price_cents": 459,
+    "sale_unit": "container",
+    "package_quantity": "1L",
+    "category": "condiments",
+    "image_filename": "condiments0083.jpeg"
+  },
+  {
+    "name": "Mayonnaise",
+    "origin_country": "Canada",
+    "price_cents": 479,
+    "sale_unit": "container",
+    "package_quantity": "445ml",
+    "category": "condiments",
+    "image_filename": "condiments0084.jpeg"
+  },
+  {
+    "name": "Dijon Mustard",
+    "origin_country": "France",
+    "price_cents": 279,
+    "sale_unit": "container",
+    "package_quantity": "325ml",
+    "category": "condiments",
+    "image_filename": "condiments0085.jpeg"
+  },
+  {
+    "name": "Soy Sauce",
+    "origin_country": "China",
+    "price_cents": 399,
+    "sale_unit": "container",
+    "package_quantity": "500ml",
+    "category": "condiments",
+    "image_filename": "condiments0086.jpeg"
+  },
+  {
+    "name": "Barbecue Sauce",
+    "origin_country": "Canada",
+    "price_cents": 399,
+    "sale_unit": "container",
+    "package_quantity": "425ml",
+    "category": "condiments",
+    "image_filename": "condiments0087.jpeg"
+  },
+  {
+    "name": "Hot Sauce",
+    "origin_country": "Mexico",
+    "price_cents": 479,
+    "sale_unit": "container",
+    "package_quantity": "714ml",
+    "category": "condiments",
+    "image_filename": "condiments0088.jpeg"
+  },
+  {
+    "name": "Honey Mustard",
+    "origin_country": "Canada",
+    "price_cents": 397,
+    "sale_unit": "container",
+    "package_quantity": "325ml",
+    "category": "condiments",
+    "image_filename": "condiments0089.jpeg"
+  },
+  {
+    "name": "Relish",
+    "origin_country": "Canada",
+    "price_cents": 619,
+    "sale_unit": "container",
+    "package_quantity": "375ml",
+    "category": "condiments",
+    "image_filename": "condiments0090.jpeg"
+  },
+  {
+    "name": "Chili Sauce",
+    "origin_country": "Thailand",
+    "price_cents": 389,
+    "sale_unit": "container",
+    "package_quantity": "350g",
+    "category": "condiments",
+    "image_filename": "condiments0091.jpeg"
+  },
+  {
+    "name": "Tartar Sauce",
+    "origin_country": "United Kingdom",
+    "price_cents": 229,
+    "sale_unit": "container",
+    "package_quantity": "354ml",
+    "category": "condiments",
+    "image_filename": "condiments0092.jpeg"
+  },
+  {
+    "name": "Wasabi Paste",
+    "origin_country": "Japan",
+    "price_cents": 779,
+    "sale_unit": "tube",
+    "package_quantity": "40g",
+    "category": "condiments",
+    "image_filename": "condiments0093.jpeg"
+  },
+  {
+    "name": "Mexican Salsa",
+    "origin_country": "Canada",
+    "price_cents": 399,
+    "sale_unit": "container",
+    "package_quantity": "325ml",
+    "category": "condiments",
+    "image_filename": "condiments0094.jpeg"
+  },
+  {
+    "name": "Pesto",
+    "origin_country": "Italy",
+    "price_cents": 699,
+    "sale_unit": "container",
+    "package_quantity": "185ml",
+    "category": "condiments",
+    "image_filename": "condiments0095.jpeg"
+  },
+  {
+    "name": "Tahini",
+    "origin_country": "Egypt",
+    "price_cents": 499,
+    "sale_unit": "container",
+    "package_quantity": "800g",
+    "category": "condiments",
+    "image_filename": "condiments0096.jpeg"
+  },
+  {
+    "name": "Chimichurri Sauce",
+    "origin_country": "Canada",
+    "price_cents": 889,
+    "sale_unit": "container",
+    "package_quantity": "325ml",
+    "category": "condiments",
+    "image_filename": "condiments0097.jpeg"
+  },
+  {
+    "name": "Aioli",
+    "origin_country": "Spain",
+    "price_cents": 449,
+    "sale_unit": "container",
+    "package_quantity": "350ml",
+    "category": "condiments",
+    "image_filename": "condiments0098.jpeg"
+  },
+  {
+    "name": "Honey Balsalmic Dressing",
+    "origin_country": "Japan",
+    "price_cents": 419,
+    "sale_unit": "container",
+    "package_quantity": "350ml",
+    "category": "condiments",
+    "image_filename": "condiments0099.jpeg"
+  },
+  {
+    "name": "Maple Syrup",
+    "origin_country": "Canada",
+    "price_cents": 899,
+    "sale_unit": "container",
+    "package_quantity": "375ml",
+    "category": "condiments",
+    "image_filename": "condiments0100.jpeg"
+  },
+  {
+    "name": "Horseradish Sauce",
+    "origin_country": "UK",
+    "price_cents": 399,
+    "sale_unit": "container",
+    "package_quantity": "165g",
+    "category": "condiments",
+    "image_filename": "condiments0101.jpeg"
+  },
+  {
+    "name": "Buffalo Sauce",
+    "origin_country": "Canada",
+    "price_cents": 3189,
+    "sale_unit": "container",
+    "package_quantity": "3.785L",
+    "category": "condiments",
+    "image_filename": "condiments0102.jpeg"
+  }
+]

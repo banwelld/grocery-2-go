@@ -1,0 +1,16 @@
+/* client/src/components/product-display/ProductOrigin.css */
+
+.product-display__product-info--origin {
+  display: flex;
+  height: 1rem;
+  column-gap: 0.5rem;
+}
+
+.product-display__origin--canada {
+  font-weight: 600;
+  color: #cd0102;
+}
+
+.product-display__flag {
+  font-size: 1rem;
+}

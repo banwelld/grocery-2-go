@@ -1,5 +1,5 @@
-# helpers.py
-
+from flask import make_response
+from messages import MESSAGES
 from sqlalchemy import inspect
 
 
@@ -30,3 +30,26 @@ def find_falsey(dict):
     """
     falsey_keys = [k for k, v in dict.items() if not v]
     return (", ").join(falsey_keys)
+
+
+def make_error(message_key, status=400, **kwargs):
+    if message_key not in MESSAGES:
+        raise ValueError(
+            f"Message Key '{message_key}' not found in messages.json"
+        )
+
+    message_template = MESSAGES[message_key]
+    message_text = (
+        message_template.format(**kwargs) if kwargs else message_template
+    )
+
+    return make_response({"error": message_text}, status)
+
+
+def make_message(message_key, status=200):
+    if message_key not in MESSAGES:
+        raise ValueError(
+            f"Message Key '{message_key}' not found in messages.py"
+        )
+
+    return make_response({"message": MESSAGES[message_key]}, status)
