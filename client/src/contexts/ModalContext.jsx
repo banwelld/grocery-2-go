@@ -1,4 +1,4 @@
-import { useState, createContext } from 'react';
+import { useState, createContext, useMemo } from 'react';
 import { isValidString, logException } from '../utils/helpers';
 import Feedback from '../config/feedback';
 
@@ -32,9 +32,12 @@ export function ModalProvider({ children }) {
 
   const resetModal = () => setModalPayload(null);
 
+  const value = useMemo(
+    () => ({ modalPayload, openModal, resetModal }),
+    [modalPayload],
+  );
+
   return (
-    <ModalContext.Provider value={{ modalPayload, openModal, resetModal }}>
-      {children}
-    </ModalContext.Provider>
+    <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
   );
 }

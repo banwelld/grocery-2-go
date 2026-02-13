@@ -1,4 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { memo } from 'react';
+import { Link } from 'react-router-dom';
 import { DataTypes } from '../../../config/constants';
 import clsx from 'clsx';
 import {
@@ -12,19 +13,29 @@ import {
 // Remove this import if handling styles globally or via a different method.
 import './MappedTable.css';
 
-// MappedTable component colocated with its child components:
-//   - MappedTableColumnGroup
-//   - MappedTableHeader
-//   - MappedTableBody
-//   - MappedTableRow (and MappedTableCell, EarlyReturn)
-//
-// Also includes embedded frames (BodyFrame, HeadFrame, RowFrame)
-// and helper functions to serve as a standalone, portable table module.
-
-// ==========================================
-// Main Component
-// ==========================================
-
+/**
+ * **MappedTable**
+ *
+ * returns a JSX element comprising the frame of a table:
+ *  - table
+ *    - colgroup
+ *    - thead / th
+ *    - tbody
+ *
+ * validates table data and config data, returning a renderable message if validation
+ * fails so that cohesive Ux is not interrupted.
+ *
+ * MappedTable component colocated with its descendent components:
+ *  - MappedTableColumnGroup
+ *  - MappedTableHeader
+ *  - MappedTableBody
+ *  - MappedTableRow
+ *  - MappedTableCell
+ *  - EarlyReturn
+ *
+ * includes embedded frames and helper functions to serve as a standalone,
+ * portable table-generation module.
+ */
 export default function MappedTable({ data, tableConfig, parentBemBlock }) {
   const dataErrors = validateTableAssets(tableConfig, data);
 
@@ -32,10 +43,26 @@ export default function MappedTable({ data, tableConfig, parentBemBlock }) {
     console.error('Table config and/or data is invalid or missing', dataErrors);
     return <p>*** Table configuration or data is missing or invalid ***</p>;
   }
-  const { columns } = tableConfig;
+
+  const { columns, tableRegistryKey } = tableConfig;
+
+  // registry lookups
+  const getId = ID_FINDER_REGISTRY[tableRegistryKey];
+  const buildPath = PATH_BUILDER_REGISTRY[tableRegistryKey];
+  const normalize = NORMALIZER_REGISTRY[tableRegistryKey];
+
+  if (!getId) console.warn(ERROR.MISSING_ID_FINDER);
+  if (!normalize) console.error(ERROR.MISSING_NORMALIZE);
+
+  const tableLogic = {
+    getId,
+    buildPath,
+    normalize,
+    isLinkable: typeof buildPath === DataTypes.FUNCTION,
+  };
 
   const bemRoot = { bemBlock: 'table', bemMod: parentBemBlock };
-  const tableBodyProps = { data, tableConfig, bemRoot };
+  const tableBodyProps = { data, tableConfig, bemRoot, tableLogic };
 
   return (
     <table
@@ -94,8 +121,8 @@ function MappedTableHeader({ columns, bemRoot }) {
   );
 }
 
-function MappedTableBody({ data, tableConfig, bemRoot }) {
-  const rowProps = { tableConfig, bemRoot };
+function MappedTableBody({ data, tableConfig, bemRoot, tableLogic }) {
+  const rowProps = { tableConfig, bemRoot, tableLogic };
 
   return (
     <BodyFrame bemRoot={bemRoot}>
@@ -110,49 +137,23 @@ function MappedTableBody({ data, tableConfig, bemRoot }) {
 // Row & Cell Components
 // ==========================================
 
-function MappedTableRow({ tableConfig, data, bemRoot }) {
-  const isValidData =
-    typeof data === DataTypes.OBJECT && Object.keys(data).length > 0;
+const MappedTableRow = memo(({ tableConfig, data, bemRoot, tableLogic }) => {
+  const { columns, columnCount, loadingMessage } = tableConfig;
+  const { getId, buildPath, normalize, isLinkable } = tableLogic;
 
-  const {
-    columns,
-    tableRegistryKey,
-    loadingMessage = 'Loading...',
-    emptyMessage = 'Data unavailable.',
-  } = tableConfig;
+  if (!data)
+    return <EarlyReturn colSpan={columnCount} message={loadingMessage} />;
 
-  const getId = ID_FINDER_REGISTRY[tableRegistryKey];
-  const id = getId(data);
+  const id = getId?.(data);
   const isValidId = isInteger({ value: id, positiveOnly: true });
-
-  const colSpan = columns?.length ?? 1;
-
-  if (!data) return <EarlyReturn colSpan={colSpan} message={loadingMessage} />;
-  if (!isValidData)
-    return <EarlyReturn colSpan={colSpan} message={emptyMessage} />;
-
-  const buildPath = PATH_BUILDER_REGISTRY[tableRegistryKey];
-  const normalize = NORMALIZER_REGISTRY[tableRegistryKey];
-
-  const isValidBuildPath =
-    !!buildPath && typeof buildPath === DataTypes.FUNCTION;
-  const isValidNormalize =
-    !!normalize && typeof normalize === DataTypes.FUNCTION;
-
-  if (!id) console.warn(ERROR.MISSING_ID);
-  if (!isValidId) console.warn(ERROR.INVALID_ID);
-  if (!buildPath) console.warn(ERROR.MISSING_BUILD_PATH);
-  if (!isValidBuildPath) console.warn(ERROR.INVALID_BUILD_PATH);
-
-  const isLink = isValidBuildPath && isValidId;
+  const isRowLinkable = isLinkable && isValidId;
 
   if (!normalize)
-    return <EarlyReturn colSpan={colSpan} message={ERROR.MISSING_NORMALIZE} />;
-  if (!isValidNormalize)
-    return <EarlyReturn colSpan={colSpan} message={ERROR.INVALID_NORMALIZE} />;
+    return (
+      <EarlyReturn colSpan={columnCount} message={ERROR.MISSING_NORMALIZE} />
+    );
 
   const normalizedData = normalize(data);
-
   const { bemBlock } = bemRoot;
 
   return (
@@ -160,7 +161,7 @@ function MappedTableRow({ tableConfig, data, bemRoot }) {
       {columns.map(({ dataKey, cellRegistryKey }, index) => (
         <MappedTableCell
           key={dataKey}
-          path={index === 0 && isLink ? buildPath(id) : null}
+          path={index === 0 && isRowLinkable ? buildPath(id) : null}
           data={normalizedData[dataKey] ?? null}
           cellRegistryKey={cellRegistryKey}
           bemRoot={{ bemBlock, bemElem: 'cell', bemMod: dataKey }}
@@ -168,16 +169,16 @@ function MappedTableRow({ tableConfig, data, bemRoot }) {
       ))}
     </RowFrame>
   );
-}
+});
 
-const MappedTableCell = ({ data, cellRegistryKey, bemRoot, path }) => {
+const MappedTableCell = memo(({ data, cellRegistryKey, bemRoot, path }) => {
   const Component = CELL_REGISTRY[cellRegistryKey];
   return (
     <td className={toBemClassName({ ...bemRoot })}>
       {!!path ? <Link to={path}>{data}</Link> : <Component data={data} />}
     </td>
   );
-};
+});
 
 const EarlyReturn = ({ colSpan, message }) => (
   <tr>
@@ -221,32 +222,14 @@ function BodyFrame({ bemRoot, children }) {
 
 function HeadFrame({ bemBlock, bemMod, children }) {
   return (
-    <thead className={`${bemBlock}__head ${bemBlock}__head--${bemMod}`}>
+    <thead className={toBemClassName({ bemBlock, bemElem: 'head', bemMod })}>
       {children}
     </thead>
   );
 }
 
-function RowFrame({ buildPath, id, bemRoot, children }) {
-  const navigate = useNavigate();
-
-  const onClick = () => navigate(buildPath(id));
-
-  const onKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      navigate(buildPath(id));
-    }
-  };
-
-  const navProps =
-    !!buildPath && !!id
-      ? { role: 'button', tabIndex: 0, onClick, onKeyDown }
-      : {};
-
-  const rowProps = { className: toBemClassName({ ...bemRoot }), ...navProps };
-
-  return <tr {...rowProps}>{children}</tr>;
+function RowFrame({ bemRoot, children }) {
+  return <tr className={toBemClassName({ ...bemRoot })}>{children}</tr>;
 }
 
 // ==========================================
@@ -255,6 +238,7 @@ function RowFrame({ buildPath, id, bemRoot, children }) {
 
 const ERROR = {
   INVALID_DATA: 'Invalid table data: expected an array.',
+  MISSING_ID_FINDER: 'Invalid tableConfig: ID finder not found in registry.',
   MISSING_NORMALIZE: "Invalid tableConfig: missing 'normalize' function.",
   INVALID_NORMALIZE: "Invalid tableConfig: 'normalize' is not a function.",
   MISSING_COLUMNS: "Invalid tableConfig: missing 'columns' array.",
@@ -264,19 +248,9 @@ const ERROR = {
     `Invalid column (index: ${columnIndex}): missing 'dataKey' property.`,
   INVALID_KEY: (columnIndex) =>
     `Invalid column (index: ${columnIndex}): 'dataKey' is not a non-empty string.`,
-  INVALID_COLSPAN: (columnIndex) =>
-    `Invalid column (index: ${columnIndex}): 'headerColSpan' is not an integer.`,
   DUPLICATE_KEY: "Invalid tableConfig: duplicate 'dataKey' property detected.",
   COLUMN_COUNT_MISMATCH:
     "Invalid tableConfig: 'columns' array length does not match span sum.",
-  MISSING_ID:
-    'MappedTableRow: ID was not provided; rows will not be clickable.',
-  INVALID_ID:
-    'MappedTableRow: ID was not an integer; rows will not be clickable.',
-  MISSING_BUILD_PATH:
-    'MappedTableRow: buildPath was not provided; rows will not be clickable.',
-  INVALID_BUILD_PATH:
-    'MappedTableRow: invalid buildPath function provided; rows will not be clickable.',
 };
 
 export const isValidString = (string) =>

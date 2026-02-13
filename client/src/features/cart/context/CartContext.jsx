@@ -72,32 +72,40 @@ export function CartProvider({ children }) {
     });
   }, [cartRef, navigate]);
 
-  const cartStatus = {
-    loadCart,
-    resetCart,
-    isPending,
-    cartLoaded,
-    cartEmpty,
-  };
-
-  const cartDetails = {
-    products,
-    orderTotal,
-    orderItemCount,
-  };
-
-  const cartActions = {
-    addToCart,
-    takeFromCart,
-    resetProduct,
-    checkout,
-  };
-
-  return (
-    <CartContext.Provider
-      value={{ cart, cartStatus, cartDetails, cartActions }}
-    >
-      {children}
-    </CartContext.Provider>
+  const cartStatus = useMemo(
+    () => ({
+      loadCart,
+      resetCart,
+      isPending,
+      cartLoaded,
+      cartEmpty,
+    }),
+    [loadCart, resetCart, isPending, cartLoaded, cartEmpty],
   );
+
+  const cartDetails = useMemo(
+    () => ({
+      products,
+      orderTotal,
+      orderItemCount,
+    }),
+    [products, orderTotal, orderItemCount],
+  );
+
+  const cartActions = useMemo(
+    () => ({
+      addToCart,
+      takeFromCart,
+      resetProduct,
+      checkout,
+    }),
+    [addToCart, takeFromCart, resetProduct, checkout],
+  );
+
+  const value = useMemo(
+    () => ({ cart, cartStatus, cartDetails, cartActions }),
+    [cart, cartStatus, cartDetails, cartActions],
+  );
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

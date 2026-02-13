@@ -24,12 +24,6 @@ const OrderLayout = () => {
   const { confirmAndCancel, confirmAndDelete } = useOrderActions();
   const { isLoggedIn } = useUser();
 
-  if (!isLoggedIn) {
-    return (
-      <ErrorPage heading={Headings.WHOOPS} uiText={UiText.NOT_LOGGED_IN} />
-    );
-  }
-
   const sidebarControls = (
     <>
       {status === OrderStatus.SUBMITTED && (
