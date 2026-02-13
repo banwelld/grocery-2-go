@@ -1,9 +1,10 @@
 import { createContext, useState, useRef, useMemo, useCallback } from 'react';
+import toast from 'react-hot-toast';
 import { getData, runExclusive, logException } from '../../../utils/helpers';
 import Feedback from '../../../config/feedback';
 import { toClient } from '../../../utils/serializer';
 
-const { Errors } = Feedback;
+const { Errors, Toasts } = Feedback;
 
 export const UserOrdersContext = createContext(null);
 
@@ -23,9 +24,15 @@ export function UserOrdersProvider({ children }) {
   const loadOrders = useCallback(() => {
     runExclusive({
       doFetch: () =>
-        getData('/orders?status=non_open&scope=shallow')
-          .then((data) => setOrders(toClient(data, 'order')))
-          .catch((err) => logException(Errors.FAILURE.RECEIVE, err)),
+        toast.promise(
+          getData('/orders?status=non_open&scope=shallow')
+            .then((data) => setOrders(toClient(data, 'order')))
+            .catch((err) => logException(Errors.FAILURE.RECEIVE, err)),
+          {
+            loading: Toasts.ORDER_LIST.LOAD.BUSY,
+            error: Toasts.ORDER_LIST.LOAD.FAILURE,
+          },
+        ),
       setIsLoaded: setOrdersLoaded,
       ...concurrencyControls,
     });

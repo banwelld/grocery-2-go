@@ -14,8 +14,6 @@ export default function ProductCard({
 }) {
   const navigate = useNavigate();
 
-  console.log(product);
-
   if (!isDisplayOnly && !product.id)
     return (
       <div className={toBemClassName({ bemBlock: BLOCK })}>Loading...</div>

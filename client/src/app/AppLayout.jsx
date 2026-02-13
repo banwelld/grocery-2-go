@@ -7,6 +7,7 @@ import useUser from '../features/user/hooks/useUser';
 import Header from '../features/header/components/Header';
 import ModalLayer from '../components/ui/feedback/ModalLayer';
 import ToasterLayer from '../components/ui/feedback/ToasterLayer';
+import { UserRole } from '../config/enums';
 
 export default function AppLayout() {
   const { pathname } = useLocation();
@@ -23,7 +24,7 @@ export default function AppLayout() {
   }, [pathname]);
 
   useEffect(() => {
-    if (user) {
+    if (user && user.role === UserRole.CUSTOMER) {
       loadCart();
     } else {
       resetCart();

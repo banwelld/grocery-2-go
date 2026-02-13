@@ -25,16 +25,9 @@ export default function Cart() {
 }
 
 const CartController = () => {
-  const { checkoutProcess, viewMode, cart, userDetails } = useCheckoutProcess();
+  const { checkoutProcess, viewMode, cart } = useCheckoutProcess();
   const { products, cartEmpty, cartLoaded, orderItemCount, orderTotal } = cart;
   const { currentViewMode, toggleViewMode } = viewMode;
-  const { isLoggedIn } = userDetails;
-
-  if (!isLoggedIn) {
-    return (
-      <ErrorPage heading={Headings.WHOOPS} UiText={UiText.NOT_LOGGED_IN} />
-    );
-  }
 
   if (cartEmpty) {
     return (

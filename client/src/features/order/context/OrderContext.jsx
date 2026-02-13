@@ -1,14 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import toast from 'react-hot-toast';
-import { useParams } from 'react-router-dom';
-
+import { createContext, useCallback, useEffect, useMemo, useRef } from 'react';
 import Feedback from '../../../config/feedback';
 import useUserOrders from '../../../hooks/useUserOrders';
 import {
@@ -31,46 +21,33 @@ export const OrderStatus = Object.freeze({
   UNKNOWN: 'unknown',
 });
 
-const { Toasts, Errors } = Feedback;
+const { Errors } = Feedback;
 
 const DISALLOWED_STATUSES = [OrderStatus.OPEN, OrderStatus.UNKNOWN];
 const LEGAL_STATUSES = Object.values(OrderStatus).filter(
   (status) => !DISALLOWED_STATUSES.includes(status),
 );
 
-export function OrderProvider({ children }) {
-  const { id } = useParams();
-  const [order, setOrder] = useState(null);
-  const [isPending, setIsPending] = useState(false);
-  const isBusyRef = useRef(null);
+export function OrderProvider({
+  children,
+  order,
+  setOrder,
+  isPending,
+  setIsPending,
+  isBusyRef,
+}) {
   const lastStatusRef = useRef(null);
   const { dropOrder, loadOrders } = useUserOrders();
+
+  const id = order?.id;
 
   const concurrencyControls = useMemo(
     () => ({
       lockRef: isBusyRef,
       setPending: setIsPending,
     }),
-    [],
+    [isBusyRef, setIsPending],
   );
-
-  useEffect(() => {
-    if (!id) return;
-
-    runExclusive({
-      doFetch: () =>
-        toast.promise(
-          getData(`/orders/${id}`)
-            .then((data) => setOrder(toClient(data, 'order')))
-            .catch((err) => logException(Errors.FAILURE.RECEIVE, err)),
-          {
-            loading: Toasts.ORDER.LOAD.BUSY,
-            error: Toasts.ORDER.LOAD.FAILURE,
-          },
-        ),
-      ...concurrencyControls,
-    });
-  }, [id, concurrencyControls]);
 
   const status = order?.status ?? OrderStatus.UNKNOWN;
 
@@ -96,15 +73,22 @@ export function OrderProvider({ children }) {
           patchData(`/orders/${id}`, { status: newStatus })
             .then((data) => setOrder(toClient(data, 'order')))
             .catch((err) => {
+              if (err.status === 422) {
+                getData(`/orders/${id}?scope=shallow`).then((data) => {
+                  setOrder((prev) => ({ ...prev, ...toClient(data, 'order') }));
+                });
+              } else {
+                setOrder(lastStatusRef.current);
+              }
+
               logException(Errors.FAILURE.UPDATE, err);
-              setOrder(lastStatusRef.current);
               throw err;
             })
             .finally(() => (lastStatusRef.current = null)),
         ...concurrencyControls,
       });
     },
-    [id, order, concurrencyControls],
+    [id, order, setOrder, concurrencyControls],
   );
 
   const deleteOrder = useCallback(() => {
@@ -126,7 +110,7 @@ export function OrderProvider({ children }) {
       },
       ...concurrencyControls,
     });
-  }, [id, order, concurrencyControls, dropOrder, loadOrders]);
+  }, [id, order, setOrder, concurrencyControls, dropOrder, loadOrders]);
 
   const value = useMemo(
     () => ({

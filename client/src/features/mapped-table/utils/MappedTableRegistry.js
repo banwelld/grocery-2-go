@@ -40,10 +40,13 @@ export const NORMALIZER_REGISTRY = Object.freeze({
 });
 
 export const PATH_BUILDER_REGISTRY = Object.freeze({
-  [TableRegistryKeys.CART]: (id) => `/products/${id}`,
+  [TableRegistryKeys.CART]: (row) => `/products/${row.product.id}`,
   [TableRegistryKeys.CHECKOUT]: () => null,
-  [TableRegistryKeys.ORDER]: (id) => `/products/${id}`,
-  [TableRegistryKeys.USER_ORDERS]: (id) => `/orders/${id}`,
+  [TableRegistryKeys.ORDER]: (row) => `/products/${row.product.id}`,
+  [TableRegistryKeys.USER_ORDERS]: (row) => ({
+    pathname: '/order',
+    state: { order: row },
+  }),
 });
 
 export const ID_FINDER_REGISTRY = Object.freeze({

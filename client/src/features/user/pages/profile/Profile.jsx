@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import toast from 'react-hot-toast';
 
@@ -17,7 +17,7 @@ const { Toasts } = Feedback;
 
 export default function Profile() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { user, isLoggedIn, userActions } = useUser();
+  const { user, userActions } = useUser();
 
   const isCustomer = user?.role === Role.CUSTOMER;
 

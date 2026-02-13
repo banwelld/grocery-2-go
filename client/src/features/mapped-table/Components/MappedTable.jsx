@@ -144,8 +144,8 @@ const MappedTableRow = memo(({ tableConfig, data, bemRoot, tableLogic }) => {
   if (!data)
     return <EarlyReturn colSpan={columnCount} message={loadingMessage} />;
 
-  const id = getId?.(data);
-  const isValidId = isInteger({ value: id, positiveOnly: true });
+  const idValue = getId?.(data);
+  const isValidId = isInteger({ value: idValue, positiveOnly: true });
   const isRowLinkable = isLinkable && isValidId;
 
   if (!normalize)
@@ -161,7 +161,7 @@ const MappedTableRow = memo(({ tableConfig, data, bemRoot, tableLogic }) => {
       {columns.map(({ dataKey, cellRegistryKey }, index) => (
         <MappedTableCell
           key={dataKey}
-          path={index === 0 && isRowLinkable ? buildPath(id) : null}
+          path={index === 0 && isRowLinkable ? buildPath(data) : null}
           data={normalizedData[dataKey] ?? null}
           cellRegistryKey={cellRegistryKey}
           bemRoot={{ bemBlock, bemElem: 'cell', bemMod: dataKey }}
@@ -173,9 +173,19 @@ const MappedTableRow = memo(({ tableConfig, data, bemRoot, tableLogic }) => {
 
 const MappedTableCell = memo(({ data, cellRegistryKey, bemRoot, path }) => {
   const Component = CELL_REGISTRY[cellRegistryKey];
+
+  const to = path && typeof path === 'object' ? path.pathname : path;
+  const state = path && typeof path === 'object' ? path.state : undefined;
+
   return (
     <td className={toBemClassName({ ...bemRoot })}>
-      {!!path ? <Link to={path}>{data}</Link> : <Component data={data} />}
+      {!!path ? (
+        <Link to={to} state={state}>
+          {data}
+        </Link>
+      ) : (
+        <Component data={data} />
+      )}
     </td>
   );
 });
@@ -288,5 +298,3 @@ export const toBemClassName = ({
     [`${baseClass}--${bemMod2}`]: isValidString(bemMod2) && showMod2,
   });
 };
-
-export const logException = (message, err) => console.error(message, err);

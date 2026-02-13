@@ -1,14 +1,8 @@
 import { createContext, useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUserController } from './UserController';
-import { useModal } from '../../../hooks/useModal';
 
 export const UserContext = createContext(null);
-
-export const UserStatus = Object.freeze({
-  ACTIVE: 'active',
-  INACTIVE: 'inactive',
-});
 
 /**
  * @typedef {Object} UserProviderReturn
@@ -36,8 +30,6 @@ export function UserProvider({ children }) {
   const isBusyRef = useRef(false);
   const lastUserRef = useRef(null);
   const navigate = useNavigate();
-  const { openModal, resetModal } = useModal();
-
   // create controller (useMemo prevents loops when controller functions used as dependencies)
   const { checkSession, userAuth, userActions } = useMemo(() => {
     const concurrencyControls = {
@@ -51,17 +43,15 @@ export function UserProvider({ children }) {
       navigate,
       concurrencyControls,
       userRef: lastUserRef,
-      openModal,
-      resetModal,
     });
-  }, [navigate, openModal, resetModal]);
+  }, [navigate]);
 
-  // Load session on mount
+  // load session on mount
   useEffect(() => {
     checkSession();
   }, [checkSession]);
 
-  // Update lastUserRef on user change
+  // update lastUserRef on user change
   useEffect(() => {
     lastUserRef.current = user;
   }, [user]);

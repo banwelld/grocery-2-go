@@ -89,7 +89,6 @@ export function createUserController({
         return deleteData('/session')
           .then(() => {
             setUser(null);
-            setSessionLoaded(false);
             navigate('/', { replace: true });
           })
           .catch((err) => {
@@ -98,6 +97,7 @@ export function createUserController({
             throw err;
           });
       },
+      setIsLoaded: setSessionLoaded,
       ...concurrencyControls,
     });
 

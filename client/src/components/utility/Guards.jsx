@@ -27,13 +27,12 @@ export function AdminRoute({ children }) {
  * redirects logged-in users away from Auth pages
  */
 export function GuestRoute({ children }) {
-  const { isLoggedIn, user, sessionLoaded } = useUser();
+  const { isLoggedIn, sessionLoaded } = useUser();
 
   if (!sessionLoaded) return null;
 
   if (isLoggedIn) {
-    toast.success(Toasts.RESTRICTION.GUEST_ONLY);
-    return <Navigate to='/my-profile' replace />;
+    return <Navigate to='/' replace />;
   }
   return children;
 }

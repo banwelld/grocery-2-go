@@ -13,7 +13,6 @@ import Order from '../features/order/pages/order/Order';
 import {
   AdminRoute,
   GuestRoute,
-  AuthUserRoute,
   ProtectedRoute,
 } from '../components/utility/Guards';
 
@@ -63,7 +62,7 @@ const routes = [
                 ),
               },
               {
-                path: 'orders/:id',
+                path: 'order',
                 element: (
                   <ProtectedRoute isCustomersOnly>
                     <Order />

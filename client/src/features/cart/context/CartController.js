@@ -160,9 +160,13 @@ export function createCartController({
           ...toServer(data, 'order'),
           status: 'submitted',
         })
-          .then(() => {
+          .then((data) => {
+            const clientOrder = toClient(data, 'order');
             setCart(null);
-            navigate(`/orders/${data.orderId}`, { replace: true });
+            navigate('/order', {
+              replace: true,
+              state: { order: clientOrder },
+            });
           })
           .catch((err) => {
             logException(Errors.FAILURE.UPDATE, err);

@@ -80,6 +80,9 @@ def handle_value_error(e):
 
 class AllUsers(Resource):
     def post(self):
+        if g.user:
+            return make_error(MsgKey.UNAUTHORIZED, 403)
+
         required_fields = find_req_fields(User)
         if falsey := find_falsey(
             {k: request.json.get(k) for k in required_fields}
@@ -107,6 +110,9 @@ api.add_resource(AllUsers, "/users")
 
 class UserById(Resource):
     def patch(self, id):
+        if not g.user or g.user.role == "admin":
+            return make_error(MsgKey.UNAUTHORIZED, 403)
+
         user = get_user(id)
         if not user:
             return make_error(MsgKey.ID_NOT_FOUND, 404)
@@ -241,6 +247,9 @@ api.add_resource(ProductById, "/products/<int:id>")
 
 class AllOrders(Resource):
     def get(self):
+        if not g.user or g.user.role == "admin":
+            return make_error(MsgKey.UNAUTHORIZED, 403)
+
         user_id = g.user_id
         if not user_id:
             return make_error(MsgKey.NOT_AUTH, 401)
@@ -266,6 +275,9 @@ class AllOrders(Resource):
         return make_response(order_dicts, 200)
 
     def post(self):
+        if not g.user or g.user.role == "admin":
+            return make_error(MsgKey.UNAUTHORIZED, 403)
+
         user_id = g.user_id
         if not user_id:
             return make_error(MsgKey.NOT_AUTH, 401)
@@ -285,6 +297,9 @@ api.add_resource(AllOrders, "/orders")
 
 class OrderById(Resource):
     def get(self, id):
+        if not g.user or g.user.role == "admin":
+            return make_error(MsgKey.UNAUTHORIZED, 403)
+
         order = get_order(id)
         if not order:
             return make_error(MsgKey.ID_NOT_FOUND, 404)
@@ -302,6 +317,9 @@ class OrderById(Resource):
         return make_response(response, 200)
 
     def patch(self, id):
+        if not g.user or g.user.role == "admin":
+            return make_error(MsgKey.UNAUTHORIZED, 403)
+
         order = get_order(id)
         if not order:
             return make_error(MsgKey.ID_NOT_FOUND, 404)
@@ -356,6 +374,9 @@ class OrderById(Resource):
         return make_response(order.to_dict(), 200)
 
     def delete(self, id):
+        if not g.user or g.user.role == "admin":
+            return make_error(MsgKey.UNAUTHORIZED, 403)
+
         order = get_order(id)
         if not order:
             return make_error(MsgKey.ID_NOT_FOUND, 404)
@@ -382,6 +403,9 @@ api.add_resource(OrderById, "/orders/<int:id>")
 
 class AllOrderProducts(Resource):
     def get(self):
+        if not g.user or g.user.role == "admin":
+            return make_error(MsgKey.UNAUTHORIZED, 403)
+
         order_id = request.args.get(FieldNames.ORDER_ID)
         if not order_id:
             return make_error(MsgKey.NO_ORDER_ID, 400)
@@ -411,6 +435,9 @@ class AllOrderProducts(Resource):
         return make_response(serialized_order_products, 200)
 
     def post(self):
+        if not g.user or g.user.role == "admin":
+            return make_error(MsgKey.UNAUTHORIZED, 403)
+
         required_fields = [FieldNames.ORDER_ID, FieldNames.PRODUCT_ID]
         if falsey := find_falsey(
             {k: request.json.get(k) for k in required_fields}
@@ -442,6 +469,9 @@ class OrderProductById(Resource):
         order_product = get_order_prod(id)
         if not order_product:
             return make_error(MsgKey.ID_NOT_FOUND, 404)
+
+        if not g.user or g.user.role == "admin":
+            return make_error(MsgKey.UNAUTHORIZED, 403)
 
         if order_product.order.user_id != g.user_id:
             return make_error(MsgKey.UNAUTHORIZED, 403)
@@ -479,6 +509,9 @@ class OrderProductById(Resource):
         order_product = get_order_prod(id)
         if not order_product:
             return make_error(MsgKey.ID_NOT_FOUND, 404)
+
+        if not g.user or g.user.role == "admin":
+            return make_error(MsgKey.UNAUTHORIZED, 403)
 
         if order_product.order.user_id != g.user_id:
             return make_error(MsgKey.UNAUTHORIZED, 403)

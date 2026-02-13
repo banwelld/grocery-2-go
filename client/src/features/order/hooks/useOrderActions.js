@@ -44,7 +44,7 @@ export default function useOrderActions() {
         handleConfirm: () =>
           toast.promise(
             deleteOrder().then(() =>
-              navigate(`/users/${userId}`, { replace: true }),
+              navigate('/my-profile', { replace: true }),
             ),
             {
               loading: Toasts.ORDER.DELETE.BUSY,
