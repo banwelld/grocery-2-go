@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 
+import os
 from datetime import datetime, timezone
 from enum import Enum
 
 from config import api, app, bcrypt, db
-from flask import g, jsonify, make_response, request, session
+from flask import (
+    g,
+    jsonify,
+    make_response,
+    request,
+    send_from_directory,
+    session,
+)
 from flask_restful import Resource
 from helpers import find_falsey, find_req_fields, make_error, make_message
 from messages import MsgKey
@@ -67,7 +75,8 @@ def get_order_prod(id):
 @app.before_request
 def load_user_id():
     g.user_id = session.get("user_id")
-    g.user = get_user(g.user_id)
+    # fetch the user if we have an ID
+    g.user = get_user(g.user_id) if g.user_id else None
 
 
 @app.errorhandler(ValueError)
@@ -525,6 +534,17 @@ class OrderProductById(Resource):
 
 
 api.add_resource(OrderProductById, "/order_products/<int:id>")
+
+
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve(path):
+    # check if file exists
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        # send index.html if the file doesn't exist
+        return send_from_directory(app.static_folder, "index.html")
 
 
 if __name__ == "__main__":

@@ -16,6 +16,7 @@ psycopg2 = "*"
 dotenv = "*"
 ipdb = "*"
 flask-bcrypt = "*"
+gunicorn = "*"
 
 [requires]
 python_full_version = "3.8.13"

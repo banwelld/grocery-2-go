@@ -1,17 +1,15 @@
 :root {
   /*colours*/
-  --color-brand1: lch(72.27% 68.17 74);
-  --color-brand1-light: oklch(
-    from var(--color-brand1) calc(l * 1.25) calc(c * 1.9) calc(h * 0.9)
-  );
-  --color-brand2: #8f001d;
-  --color-brand2-light: oklch(from var(--color-brand2) calc(l * 1.2) calc(c * 1.45) h);
-  --color-frame: #2b323b;
-  --color-frame-dark: oklch(from var(--color-frame) calc(l * 0.5) c h);
-  --color-frame-med: oklch(from var(--color-frame) calc(l * 1.5) c h);
-  --color-frame-light: oklch(from var(--color-frame) calc(l * 2.5) c h);
-  --color-surface1: #fff;
-  --color-surface2: oklch(from var(--color-brand1) calc(l * 1.29) calc(c * 0.33) h);
+  --color-brand1: oklch(0.76789 0.1488 72.14);
+  --color-brand1-light: oklch(0.9524 0.277 68.18);
+  --color-brand2: oklch(0.4106 0.1654 21.81);
+  --color-brand2-light: oklch(0.4927 0.2398 21.82);
+  --color-frame: oklch(0.3142 0.0189 254.83);
+  --color-frame-dark: oklch(0.1571 0.0189 254.79);
+  --color-frame-med: oklch(0.4713 0.0189 254.79);
+  --color-frame-light: oklch(0.7855 0.0189 254.79);
+  --color-surface1: oklab(1.0000 0.0000 0.00);
+  --color-surface2: oklch(0.9829 0.0481 75.75);
 
   /*fonts*/
   --font-heading: "Baloo 2";
@@ -150,10 +148,10 @@ main {
 }
 
 .toaster__options {
-  min-width: 300px;
-  background: #2b323b;
-  color: #fff;
-  box-shadow:#00000060 4px 4px 10px, #00000050 0px 0px 20px, #00000010 0px 0px 0px 1px;
+  min-width: 300px !important;
+  background: #2b323b !important;
+  color: #fff !important;
+  box-shadow:#00000060 4px 4px 10px, #00000050 0px 0px 20px, #00000010 0px 0px 0px 1px !important;
 }
 
 article.product-card:focus-visible,

@@ -17,11 +17,11 @@ load_dotenv(dotenv_path="settings.env")
 DB_URL = os.getenv("DB_URL")
 SECRET_KEY = os.getenv("APP_SECRET_KEY")
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../client/build", static_url_path="")
 app.config["SQLALCHEMY_DATABASE_URI"] = DB_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.json.compact = False
-app.secret_key = SECRET_KEY or os.random(32)
+app.secret_key = SECRET_KEY or os.urandom(32)
 
 # Define metadata, instantiate db
 

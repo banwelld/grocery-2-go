@@ -1,0 +1,2 @@
+DB_URL=postgresql://Mosaic:deathb4diSHonour28@localhost:5432/Mosaic
+APP_SECRET_KEY=37Vao_44AkEmniYpFmB4n0Emu8hv6kiabLX6XtLg0Ag=
