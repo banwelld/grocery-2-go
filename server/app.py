@@ -547,5 +547,12 @@ def serve(path):
         return send_from_directory(app.static_folder, "index.html")
 
 
+@app.errorhandler(404)
+def handle_404(e):
+    if not request.path.startswith("/api/"):
+        return send_from_directory(app.static_folder, "index.html")
+    return e
+
+
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
