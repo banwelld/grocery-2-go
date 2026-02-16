@@ -43,38 +43,40 @@ export default function ItemView() {
       />
     );
 
-  const sidebarProps = {
-    sidebarControls: (
-      <>
-        <QuantityAdjust
-          productId={productId}
-          parentBemBlock={PageName.ITEM_VIEW}
+  const sidebarControls = (
+    <>
+      <QuantityAdjust
+        productId={productId}
+        parentBemBlock={PageName.ITEM_VIEW}
+      />
+      {isAdmin && (
+        <Button
+          onClick={navigateToAdmin}
+          label='Product Admin'
+          bemMod='page-utility'
+          bemMod2='admin'
+          showMod2={true}
         />
-        {isAdmin && (
-          <Button
-            onClick={navigateToAdmin}
-            label='Product Admin'
-            bemMod='page-utility'
-            bemMod2='admin'
-            showMod2={true}
-          />
-        )}
-      </>
-    ),
+      )}
+    </>
+  );
+
+  const sidebarProps = {
+    sidebarControls,
     productName: product.name,
     pageName: PageName.ITEM_VIEW,
+  };
+
+  const productDisplayProps = {
+    product,
+    displayConfig,
+    displayVariant: 'page',
   };
 
   return (
     <PageFrame
       sidebar={<Sidebar {...sidebarProps} />}
-      pageContent={
-        <ProductDisplay
-          product={product}
-          displayConfig={displayConfig}
-          displayVariant='page'
-        />
-      }
+      pageContent={<ProductDisplay {...productDisplayProps} />}
       pageName={PageName.ITEM_VIEW}
     />
   );

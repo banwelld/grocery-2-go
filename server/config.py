@@ -39,5 +39,5 @@ db = SQLAlchemy(metadata=metadata)
 migrate = Migrate(app, db)
 db.init_app(app)
 
-api = Api(app)
+api = Api(app, prefix="/api")
 bcrypt = Bcrypt(app)
