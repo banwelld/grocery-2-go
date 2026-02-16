@@ -146,6 +146,7 @@ if __name__ == "__main__":
         )
 
         db.session.add(dave)
+        db.session.add(dave2)
         db.session.flush()
 
         open_order = Order.query.filter(Order.status == "open").first()
