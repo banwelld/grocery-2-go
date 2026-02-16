@@ -14,7 +14,12 @@ load_dotenv(dotenv_path="settings.env")
 
 # Instantiate app, set attributes
 
-DB_URL = os.getenv("DB_URL")
+raw_url = os.getenv("DB_URL") or os.getenv("DATABASE_URL")
+if raw_url and raw_url.startswith("postgres://"):
+    DB_URL = raw_url.replace("postgres://", "postgresql://", 1)
+else:
+    DB_URL = raw_url
+
 SECRET_KEY = os.getenv("APP_SECRET_KEY")
 
 app = Flask(__name__, static_folder="../client/build", static_url_path="")

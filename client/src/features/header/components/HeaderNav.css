@@ -33,7 +33,7 @@
   }
 
   &.active {
-    background: oklch(from var(--color-frame-med) calc(l * 0.87) c h);
+    background: oklch(0.41 0.0189 254.79);
     color: var(--color-brand1-light);
   }
 }
