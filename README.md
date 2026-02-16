@@ -83,7 +83,7 @@ Grocery2Go is a full-stack e-commerce application designed for a premium grocery
 ## Design Philosophy
 
 Grocery2Go prioritizes **Rich Aesthetics** and **Visual Excellence**.
-- **Modern Color Palette**: Uses LCH and OKLCH color spaces for vibrant, harmonized themes.
+- **Modern Color Palette**: Uses OKLCH color spaces for vibrant, harmonized themes.
 - **Typography**: Clean, accessible fonts (Baloo 2 and Montserrat) for a premium feel.
 - **Micro-interactions**: Smooth transitions and hover effects that make the interface feel alive.
 - **Responsive Layouts**: Designed to fill the viewport and adapt to content.
