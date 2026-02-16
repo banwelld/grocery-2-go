@@ -6,7 +6,9 @@
 #   git config --global core.excludesfile '.gitignore_global'
 
 # Ignore settings
-settings.env
+*.env
+*.bak
+settings_bak.env
 
 # Ignore bundler config.
 /.bundle
