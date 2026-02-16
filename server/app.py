@@ -256,17 +256,16 @@ api.add_resource(ProductById, "/products/<int:id>")
 
 class AllOrders(Resource):
     def get(self):
+        if not g.user_id:
+            return make_error(MsgKey.NOT_AUTH, 401)
+
         if not g.user or g.user.role == "admin":
             return make_error(MsgKey.UNAUTHORIZED, 403)
-
-        user_id = g.user_id
-        if not user_id:
-            return make_error(MsgKey.NOT_AUTH, 401)
 
         status = request.args.get(FieldNames.STATUS)
         scope = request.args.get(FieldNames.SCOPE)
 
-        query = Order.query.filter(Order.user_id == user_id)
+        query = Order.query.filter(Order.user_id == g.user_id)
         if status == Status.OPEN:
             query = query.filter(Order.status == Status.OPEN)
         if status == Status.NON_OPEN:
@@ -284,17 +283,16 @@ class AllOrders(Resource):
         return make_response(order_dicts, 200)
 
     def post(self):
+        if not g.user_id:
+            return make_error(MsgKey.NOT_AUTH, 401)
+
         if not g.user or g.user.role == "admin":
             return make_error(MsgKey.UNAUTHORIZED, 403)
-
-        user_id = g.user_id
-        if not user_id:
-            return make_error(MsgKey.NOT_AUTH, 401)
 
         if g.user.role == "admin":
             return make_error(MsgKey.ADMIN_BASKET_FORBIDDEN, 403)
 
-        new_order = Order(user_id=user_id)
+        new_order = Order(user_id=g.user_id)
         db.session.add(new_order)
         db.session.commit()
 
