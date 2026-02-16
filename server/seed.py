@@ -136,6 +136,15 @@ if __name__ == "__main__":
             password="This!23456",
         )
 
+        dave2 = User(
+            email="davidwbanwell@gmail.com",
+            name_first="David",
+            name_last="Banwell",
+            phone=5195551212,
+            role="admin",
+            password="This!23456",
+        )
+
         db.session.add(dave)
         db.session.flush()
 
