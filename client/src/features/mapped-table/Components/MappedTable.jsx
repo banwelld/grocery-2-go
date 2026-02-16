@@ -40,7 +40,7 @@ export default function MappedTable({ data, tableConfig, parentBemBlock }) {
   const dataErrors = validateTableAssets(tableConfig, data);
 
   if (dataErrors.length > 0) {
-    console.error('Table config and/or data is invalid or missing', dataErrors);
+    console.error('MappedTable Fail:', dataErrors, data);
     return <p>*** Table configuration or data is missing or invalid ***</p>;
   }
 

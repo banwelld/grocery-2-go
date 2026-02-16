@@ -8,6 +8,7 @@ import {
 } from '../../../utils/helpers';
 import Feedback from '../../../config/feedback';
 import { toClient, toServer } from '../../../utils/serializer';
+import PATHS from '../../../config/paths';
 
 const { Errors } = Feedback;
 
@@ -21,7 +22,7 @@ export function createUserController({
   const checkSession = () =>
     runExclusive({
       doFetch: () =>
-        getData('/session')
+        getData(PATHS.BACK.SESSION)
           .then((data) => setUser(toClient(data, 'user')))
           .catch((err) => logException(Errors.FAILURE.RECEIVE, err)),
       setIsLoaded: setSessionLoaded,
@@ -31,7 +32,7 @@ export function createUserController({
   const login = (credentials) =>
     runExclusive({
       doFetch: () =>
-        postData('/session', toServer(credentials, 'user'))
+        postData(PATHS.BACK.SESSION, toServer(credentials, 'user'))
           .then((userData) => {
             const user = toClient(userData, 'user');
             setUser(user);
@@ -62,7 +63,7 @@ export function createUserController({
 
     return runExclusive({
       doFetch: () =>
-        postData('/users?action_type=register', payload)
+        postData(`${PATHS.BACK.USERS}?action_type=register`, payload)
           .then((user) => {
             const clientUser = toClient(user, 'user');
             setUser(clientUser);
@@ -86,10 +87,10 @@ export function createUserController({
     runExclusive({
       doFetch: () => {
         const lastUser = userRef.current;
-        return deleteData('/session')
+        return deleteData(PATHS.BACK.SESSION)
           .then(() => {
             setUser(null);
-            navigate('/', { replace: true });
+            navigate(PATHS.FRONT.HOME, { replace: true });
           })
           .catch((err) => {
             logException(Errors.FAILURE.DELETE, err);
@@ -111,7 +112,7 @@ export function createUserController({
 
         setUser((prev) => ({ ...prev, ...data }));
 
-        return patchData(`/users/${user.id}`, payload)
+        return patchData(PATHS.BACK.USER_ID(user.id), payload)
           .then((updatedUser) => {
             const clientUser = toClient(updatedUser, 'user');
             setUser(clientUser);

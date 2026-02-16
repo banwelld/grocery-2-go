@@ -1,8 +1,8 @@
-import { Headings, UiText } from '../../../../config/constants';
-import { OrderStatus } from '../../context/OrderContext';
-import ContentSection from '../../../../components/ui/frames/ContentSection';
-import MappedTable from '../../../mapped-table/Components/MappedTable';
-import OrderDetailsTable from '../../components/OrderDetailsTable';
+import { Headings, UiText } from '../../../config/constants';
+import { OrderStatus } from '../context/OrderContext';
+import ContentSection from '../../../components/ui/frames/ContentSection';
+import MappedTable from '../../mapped-table/Components/MappedTable';
+import OrderDetailsTable from '../components/OrderDetailsTable';
 import tableConfig from './tableConfig';
 
 const legalStatuses = new Set(Object.values(OrderStatus));
@@ -43,7 +43,11 @@ export default function PageContent({ order, status, pageName }) {
         <OrderDetailsTable {...orderDetails} />
       </ContentSection>
       <ContentSection {...productsSectionProps}>
-        <MappedTable {...tableProps} />
+        {orderProducts && orderProducts.length > 0 ? (
+          <MappedTable {...tableProps} />
+        ) : (
+          <p>{UiText.NO_ORDERS}</p>
+        )}
       </ContentSection>
     </ContentSection>
   );

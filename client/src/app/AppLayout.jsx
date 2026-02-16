@@ -8,28 +8,29 @@ import Header from '../features/header/components/Header';
 import ModalLayer from '../components/ui/feedback/ModalLayer';
 import ToasterLayer from '../components/ui/feedback/ToasterLayer';
 import { UserRole } from '../config/enums';
+import PATHS from '../config/paths';
 
 export default function AppLayout() {
   const { pathname } = useLocation();
   const { cartStatus } = useCart() ?? {};
   const { user } = useUser() ?? {};
 
-  const loadCart = cartStatus?.loadCart;
-  const resetCart = cartStatus?.resetCart;
+  const loadLocalCart = cartStatus?.loadLocalCart;
+  const resetLocalCart = cartStatus?.resetLocalCart;
 
   useEffect(() => {
-    if (pathname !== '/') {
+    if (pathname !== PATHS.FRONT.HOME) {
       window.scrollTo(0, 0);
     }
   }, [pathname]);
 
   useEffect(() => {
     if (user && user.role === UserRole.CUSTOMER) {
-      loadCart();
+      loadLocalCart();
     } else {
-      resetCart();
+      resetLocalCart();
     }
-  }, [user, loadCart, resetCart]);
+  }, [user, loadLocalCart, resetLocalCart]);
 
   return (
     <>

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PATHS from '../../../config/paths';
 
 import SvgIcon from '../../../components/ui/svg-icon/SvgIcon';
 
@@ -22,7 +23,7 @@ export default function HeaderCartCounter({ itemCount, bemBlock }) {
         bemMod: 'tally',
       })}
     >
-      <Link to={'/my-cart'}>
+      <Link to={PATHS.FRONT.CART}>
         <div
           className={toBemClassName(containerBemProps)}
           data-count={itemCount}

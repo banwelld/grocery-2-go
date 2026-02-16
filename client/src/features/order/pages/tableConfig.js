@@ -1,8 +1,8 @@
+import { ProductColumns as Column } from '../../../config/enums';
 import {
   CellRegistryKeys as CellKey,
   TableRegistryKeys as TableKey,
-} from '../../../../../features/mapped-table/utils/MappedTableRegistry.js';
-import { ProductColumns as Column } from '../../../../../config/enums.js';
+} from '../../mapped-table/utils/MappedTableRegistry';
 
 /**
  * @typedef {number} integer
@@ -28,17 +28,12 @@ const columns = [
   {
     dataKey: Column.QUANTITY.key,
     label: Column.QUANTITY.label,
-    cellRegistryKey: CellKey.QUANTITY_ADJUST,
+    cellRegistryKey: CellKey.DEFAULT,
   },
   {
     dataKey: Column.TOTAL.key,
     label: Column.TOTAL.label,
     cellRegistryKey: CellKey.CURRENCY,
-  },
-  {
-    dataKey: Column.RESET.key,
-    label: Column.RESET.label,
-    cellRegistryKey: CellKey.QUANTITY_RESET,
   },
 ];
 
@@ -55,9 +50,9 @@ const columns = [
 const tableConfig = {
   columns: columns,
   columnCount: columns.length,
-  tableRegistryKey: TableKey.CART,
+  tableRegistryKey: TableKey.ORDER,
   loadingMessage: 'Loading product...',
-  emptyMessage: 'No products in cart.',
+  emptyMessage: 'No products to display.',
 };
 
 export default tableConfig;

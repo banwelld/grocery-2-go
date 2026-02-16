@@ -1,11 +1,14 @@
 import { useNavigate } from 'react-router-dom';
+
 import toast from 'react-hot-toast';
-import { useModal } from '../../../hooks/useModal';
-import useUser from '../../user/hooks/useUser';
+
 import { useOrder } from '../../../hooks/useOrder';
-import Feedback from '../../../config/feedback';
+import { useModal } from '../../../hooks/useModal';
 import { OrderStatus } from '../context/OrderContext';
+
+import Feedback from '../../../config/feedback';
 import { logException } from '../../../utils/helpers';
+import PATHS from '../../../config/paths';
 
 const { Errors, Toasts, Modals } = Feedback;
 
@@ -13,9 +16,6 @@ export default function useOrderActions() {
   const { status, updateStatus, deleteOrder } = useOrder();
   const { openModal } = useModal();
   const navigate = useNavigate();
-  const { user } = useUser();
-
-  const userId = user?.id;
 
   const confirmAndCancel = () => {
     if (status === OrderStatus.SUBMITTED) {
@@ -44,7 +44,7 @@ export default function useOrderActions() {
         handleConfirm: () =>
           toast.promise(
             deleteOrder().then(() =>
-              navigate('/my-profile', { replace: true }),
+              navigate(PATHS.FRONT.USER_PROFILE, { replace: true }),
             ),
             {
               loading: Toasts.ORDER.DELETE.BUSY,
@@ -54,7 +54,7 @@ export default function useOrderActions() {
           ),
       });
     }
-    toast.error('Failed to delete order');
+    toast.error(Toasts.ORDER.DELETE.FAILURE);
     logException(Errors.INVALID.STATUS(OrderStatus.CANCELLED, status), null);
   };
 

@@ -8,6 +8,7 @@ import ErrorPage from '../../pages/ErrorPage';
 
 import Feedback from '../../config/feedback';
 import { UserRole } from '../../config/enums';
+import PATHS from '../../config/paths';
 
 const { Toasts } = Feedback;
 
@@ -32,7 +33,7 @@ export function GuestRoute({ children }) {
   if (!sessionLoaded) return null;
 
   if (isLoggedIn) {
-    return <Navigate to='/' replace />;
+    return <Navigate to={PATHS.FRONT.HOME} replace />;
   }
   return children;
 }
@@ -53,8 +54,8 @@ export function ProtectedRoute({ isCustomersOnly, children }) {
 
   if (user?.role === UserRole.ADMIN) {
     toast.error(Toasts.RESTRICTION.CUSTOMER_ONLY);
-    return <Navigate to={'/'} replace />;
+    return <Navigate to={PATHS.FRONT.HOME} replace />;
   }
 
-  return <Navigate to='/auth' replace />;
+  return <Navigate to={PATHS.FRONT.AUTH} replace />;
 }

@@ -1,37 +1,53 @@
-import { Headings, UiText } from '../../../../config/constants';
 import ContentSection from '../../../../components/ui/frames/ContentSection';
-import EditView from './EditView';
-import InfoView from './InfoView';
+
+import { Headings, UiText } from '../../../../config/constants';
 
 export default function PageContent({
-  user,
-  updateUser,
-  toggleViewMode,
+  contentElements,
   isReadMode,
   isCustomer,
+  editSectionHeading,
 }) {
-  const sectionProps = {
+  const {
+    userDetailsTable,
+    userOrdersTable,
+    updateForm,
+    infoPasswordClickHere,
+  } = contentElements;
+
+  const rootSectionProps = {
     heading: Headings.USER_PROFILE,
     uiText: isReadMode && isCustomer ? UiText.USER_PROFILE : null,
   };
 
-  const infoViewProps = {
-    user,
-    toggleViewMode,
-    isCustomer,
+  const detailsSectionProps = {
+    heading: Headings.USER_INFO,
+    bemMod: 'user-info',
   };
 
-  const editViewProps = {
-    user,
-    onSubmit: (data) => updateUser(data).then(toggleViewMode),
+  const ordersSectionProps = {
+    heading: Headings.USER_ORDERS,
+    bemMod: 'order-history',
   };
 
   return (
-    <ContentSection isRoot hasPageHeading {...sectionProps}>
+    <ContentSection isRoot hasPageHeading {...rootSectionProps}>
       {isReadMode ? (
-        <InfoView {...infoViewProps} />
+        <>
+          <ContentSection {...detailsSectionProps}>
+            {userDetailsTable}
+          </ContentSection>
+          {isCustomer && (
+            <ContentSection {...ordersSectionProps}>
+              {userOrdersTable}
+            </ContentSection>
+          )}
+        </>
       ) : (
-        <EditView {...editViewProps} />
+        <ContentSection heading={editSectionHeading}>
+          {updateForm}
+          {infoPasswordClickHere}
+        </ContentSection>
       )}
     </ContentSection>
   );

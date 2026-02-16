@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Feedback from '../../../config/feedback';
 import { useModal } from '../../../hooks/useModal';
 import Button from '../../../components/ui/Button';
+import PATHS from '../../../config/paths';
 
 const { Toasts, Modals } = Feedback;
 
@@ -29,7 +30,7 @@ export default function Auth({ nameFirst, logout, bemBlock }) {
   const Login = (
     <Button
       label='Login'
-      onClick={() => navigate('/auth')}
+      onClick={() => navigate(PATHS.FRONT.AUTH_LOGIN)}
       displayAsText
       bemMod='auth'
     />
@@ -38,7 +39,7 @@ export default function Auth({ nameFirst, logout, bemBlock }) {
   const Register = (
     <Button
       label='Register'
-      onClick={() => navigate('/auth?view=REGISTER')}
+      onClick={() => navigate(PATHS.FRONT.AUTH_REGISTER)}
       displayAsText
       bemMod='auth'
     />

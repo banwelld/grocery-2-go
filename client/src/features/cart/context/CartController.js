@@ -1,4 +1,5 @@
 import toast from 'react-hot-toast';
+
 import {
   getData,
   postData,
@@ -7,8 +8,9 @@ import {
   runExclusive,
   logException,
 } from '../../../utils/helpers';
-import Feedback from '../../../config/feedback';
 import { toClient, toServer } from '../../../utils/serializer';
+import Feedback from '../../../config/feedback';
+import PATHS from '../../../config/paths';
 
 const { Toasts, Errors } = Feedback;
 
@@ -28,10 +30,10 @@ export function createCartController({
   };
 
   // fetch cart (currently auth'd user's orders with status 'open') from server
-  const loadCart = () =>
+  const loadLocalCart = () =>
     runExclusive({
       doFetch: () =>
-        getData('/orders?status=open&action_type=cart_load')
+        getData(`${PATHS.BACK.ORDERS}?status=open&action_type=cart_load`)
           .then((data) => handleCartData(toClient(data, 'order')))
           .catch((err) => {
             logException(Errors.FAILURE.RECEIVE, err);
@@ -77,14 +79,14 @@ export function createCartController({
     }));
   };
 
-  const resetCart = () => setCart(null);
+  const resetLocalCart = () => setCart(null);
 
   // database interactions
 
   const addOrder = () =>
     runExclusive({
       doFetch: () =>
-        postData('/orders', {})
+        postData(PATHS.BACK.ORDERS, {})
           .then((data) => {
             const clientOrder = toClient(data, 'order');
             setCart(clientOrder);
@@ -97,11 +99,28 @@ export function createCartController({
       ...concurrencyControls,
     });
 
+  const deleteOrder = () => {
+    const currentCart = cartRef.current;
+    if (!currentCart) return;
+
+    resetLocalCart();
+
+    return runExclusive({
+      doFetch: () =>
+        deleteData(PATHS.BACK.ORDER_ID(currentCart.id)).catch((err) => {
+          logException(Errors.FAILURE.DELETE, err);
+          setCart(currentCart);
+          throw err;
+        }),
+      ...concurrencyControls,
+    });
+  };
+
   const addOrderProduct = (orderId, productId, count = 1) =>
     runExclusive({
       doFetch: () =>
         postData(
-          '/order_products',
+          PATHS.BACK.ORDER_PRODUCTS,
           toServer({ orderId, productId, quantity: count }, 'order_product'),
         )
           .then((data) => addUiProduct(toClient(data, 'order_product')))
@@ -117,7 +136,7 @@ export function createCartController({
 
     return runExclusive({
       doFetch: () =>
-        deleteData(`/order_products/${id}`)
+        deleteData(PATHS.BACK.ORDER_PRODUCT_ID(id))
           .then(() => removeUiProduct(id))
           .catch((err) => logException(Errors.FAILURE.DELETE, err)),
       ...concurrencyControls,
@@ -135,12 +154,11 @@ export function createCartController({
       doFetch: () => {
         adjustUiQuantity(orderProductId, newQuantity);
 
-        return patchData(`/order_products/${orderProductId}`, {
+        return patchData(PATHS.BACK.ORDER_PRODUCT_ID(orderProductId), {
           quantity: newQuantity,
         })
           .then((data) => {
             if (data.status === 'deleted') return removeUiProduct(data.id);
-            // Verify quantity matches? No need, assuming success.
           })
           .catch((err) => {
             logException(Errors.FAILURE.UPDATE, err);
@@ -156,14 +174,14 @@ export function createCartController({
   const checkout = (data) =>
     runExclusive({
       doFetch: () =>
-        patchData(`/orders/${data.orderId}?action_type=checkout`, {
+        patchData(`${PATHS.BACK.ORDER_ID(data.orderId)}?action_type=checkout`, {
           ...toServer(data, 'order'),
           status: 'submitted',
         })
           .then((data) => {
             const clientOrder = toClient(data, 'order');
             setCart(null);
-            navigate('/order', {
+            navigate(PATHS.FRONT.ORDER, {
               replace: true,
               state: { order: clientOrder },
             });
@@ -192,7 +210,7 @@ export function createCartController({
             loading: Toasts.ORDER_PRODUCT.CREATE.BUSY,
             error: (err) => {
               if (err.status === 401) {
-                navigate('/auth?view=LOGIN');
+                navigate(PATHS.FRONT.AUTH_LOGIN);
                 return Toasts.ORDER.CREATE.GUEST;
               }
               if (err.status === 403) return Toasts.ORDER.CREATE.ADMIN;
@@ -207,7 +225,7 @@ export function createCartController({
         success: Toasts.ORDER.CREATE.SUCCESS,
         error: (err) => {
           if (err.status === 401) {
-            navigate('/auth?view=LOGIN');
+            navigate(PATHS.FRONT.AUTH_LOGIN);
             return Toasts.ORDER.CREATE.GUEST;
           }
           if (err.status === 403) return Toasts.ORDER.CREATE.ADMIN;
@@ -222,7 +240,7 @@ export function createCartController({
             loading: Toasts.ORDER_PRODUCT.CREATE.BUSY,
             error: (err) => {
               if (err.status === 401) {
-                navigate('/auth?view=LOGIN');
+                navigate(PATHS.FRONT.AUTH_LOGIN);
                 return Toasts.ORDER.CREATE.GUEST;
               }
               if (err.status === 403) return Toasts.ORDER.CREATE.ADMIN;
@@ -253,11 +271,12 @@ export function createCartController({
   };
 
   return {
-    loadCart,
-    resetCart,
+    loadLocalCart,
+    resetLocalCart,
     checkout,
     addToCart,
     takeFromCart,
     resetProduct,
+    deleteCart: deleteOrder,
   };
 }

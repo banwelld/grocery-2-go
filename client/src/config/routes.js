@@ -7,18 +7,19 @@ import Auth from '../features/user/pages/auth/Auth';
 import GridView from '../features/collection/pages/grid-view/GridView';
 import ItemView from '../features/collection/pages/item-view/ItemView';
 import AdminView from '../features/collection/pages/admin-view/AdminView';
-import Cart from '../features/cart/pages/cart/Cart';
+import Cart from '../features/cart/pages/Cart';
 import Profile from '../features/user/pages/profile/Profile';
-import Order from '../features/order/pages/order/Order';
+import Order from '../features/order/pages/Order';
 import {
   AdminRoute,
   GuestRoute,
   ProtectedRoute,
 } from '../components/utility/Guards';
+import PATHS from './paths';
 
 const routes = [
   {
-    path: '/',
+    path: PATHS.FRONT.HOME,
     element: <App />,
     children: [
       {
@@ -28,9 +29,9 @@ const routes = [
             errorElement: <ErrorPage />,
             children: [
               { index: true, element: <GridView /> },
-              { path: 'products/:id', element: <ItemView /> },
+              { path: PATHS.FRONT.PRODUCTS(), element: <ItemView /> },
               {
-                path: 'products/admin',
+                path: PATHS.FRONT.PRODUCT_ADMIN,
                 element: (
                   <AdminRoute>
                     <AdminView />
@@ -38,7 +39,7 @@ const routes = [
                 ),
               },
               {
-                path: 'auth',
+                path: PATHS.FRONT.AUTH,
                 element: (
                   <GuestRoute>
                     <Auth />
@@ -46,7 +47,7 @@ const routes = [
                 ),
               },
               {
-                path: 'my-profile',
+                path: PATHS.FRONT.USER_PROFILE,
                 element: (
                   <ProtectedRoute>
                     <Profile />
@@ -54,7 +55,7 @@ const routes = [
                 ),
               },
               {
-                path: 'my-cart',
+                path: PATHS.FRONT.CART,
                 element: (
                   <ProtectedRoute isCustomersOnly>
                     <Cart />
@@ -62,7 +63,7 @@ const routes = [
                 ),
               },
               {
-                path: 'order',
+                path: PATHS.FRONT.ORDER,
                 element: (
                   <ProtectedRoute isCustomersOnly>
                     <Order />

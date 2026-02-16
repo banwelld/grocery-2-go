@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { DEFAULT_SELECT_VALUE } from '../config/enums';
 
 const REQUIRED = '** Required Field **';
 
@@ -68,6 +69,7 @@ export const validateProductName = yup
 
 export const validateSelectOption = yup
   .string('must be a string')
+  .notOneOf([DEFAULT_SELECT_VALUE], REQUIRED)
   .required(REQUIRED);
 
 export const validatePostalCd = yup
@@ -101,6 +103,7 @@ export const validateEmail = yup
 
 export const validateRequiredString = yup
   .string('must be a string')
+  .notOneOf([DEFAULT_SELECT_VALUE], REQUIRED)
   .min(1, 'Must not be empty string')
   .test(
     'no-leading-trailing-spaces',

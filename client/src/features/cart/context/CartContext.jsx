@@ -35,7 +35,10 @@ export function CartProvider({ children }) {
 
   // order/cart attributes
 
-  const products = cart?.orderProducts ?? [];
+  const products = useMemo(
+    () => cart?.orderProducts ?? [],
+    [cart?.orderProducts],
+  );
 
   const cartEmpty = cartLoaded && !products?.length >= 1;
 
@@ -51,12 +54,13 @@ export function CartProvider({ children }) {
 
   // create controller (useMemo prevents loops when controller functions used as dependencies)
   const {
-    loadCart,
-    resetCart,
+    loadLocalCart,
+    resetLocalCart,
     checkout,
     addToCart,
     takeFromCart,
     resetProduct,
+    deleteCart,
   } = useMemo(() => {
     const concurrencyControls = {
       lockRef: isBusyRef,
@@ -74,13 +78,13 @@ export function CartProvider({ children }) {
 
   const cartStatus = useMemo(
     () => ({
-      loadCart,
-      resetCart,
+      loadLocalCart,
+      resetLocalCart,
       isPending,
       cartLoaded,
       cartEmpty,
     }),
-    [loadCart, resetCart, isPending, cartLoaded, cartEmpty],
+    [loadLocalCart, resetLocalCart, isPending, cartLoaded, cartEmpty],
   );
 
   const cartDetails = useMemo(
@@ -97,9 +101,10 @@ export function CartProvider({ children }) {
       addToCart,
       takeFromCart,
       resetProduct,
+      deleteCart,
       checkout,
     }),
-    [addToCart, takeFromCart, resetProduct, checkout],
+    [addToCart, takeFromCart, resetProduct, deleteCart, checkout],
   );
 
   const value = useMemo(

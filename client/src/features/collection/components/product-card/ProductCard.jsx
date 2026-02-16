@@ -1,8 +1,12 @@
 import { useNavigate } from 'react-router-dom';
+
 import { QuantityAdjust } from '../../../cart/components/quantity-adjust/QuantityAdjust';
-import { toBemClassName } from '../../../../utils/helpers';
+
 import ProductDisplay from '../product-display/ProductDisplay';
 import SuppressPropagation from '../../../../components/utility/SuppressPropagation';
+
+import { toBemClassName } from '../../../../utils/helpers';
+import PATHS from '../../../../config/paths';
 import './ProductCard.css';
 
 const BLOCK = 'product-card';
@@ -19,7 +23,7 @@ export default function ProductCard({
       <div className={toBemClassName({ bemBlock: BLOCK })}>Loading...</div>
     );
 
-  const onClick = () => navigate(`products/${product?.id}`);
+  const onClick = () => navigate(PATHS.FRONT.PRODUCTS(product?.id));
   const onKeyDown = (e) =>
     e.key === 'Enter' || e.key === ' ' ? onClick() : null;
 

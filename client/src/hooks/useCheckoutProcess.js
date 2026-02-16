@@ -9,6 +9,7 @@ import { CheckoutProcessContext } from '../features/cart/context/CheckoutProcess
  * @property {number} cart.orderItemCount
  * @property {number} cart.orderTotal
  * @property {boolean} cart.cartLoaded
+ * @property {function(): void} cart.deleteCart
  * @property {Object} checkoutProcess
  * @property {function(Object): void} checkoutProcess.checkout
  * @property {function(Object): void} checkoutProcess.resetSession
@@ -19,9 +20,6 @@ import { CheckoutProcessContext } from '../features/cart/context/CheckoutProcess
  * @property {Object} userDetails
  * @property {Object} userDetails.user
  * @property {boolean} userDetails.isLoggedIn
- * @property {Object} viewMode
- * @property {string} viewMode.currentViewMode
- * @property {function(): void} viewMode.toggleViewMode
  */
 
 /**

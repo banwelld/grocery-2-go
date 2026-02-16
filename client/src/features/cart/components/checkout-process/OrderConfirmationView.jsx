@@ -1,13 +1,13 @@
-import { Headings, UiText } from '../../../../../config/constants';
-import { TableRegistryKeys } from '../../../../../features/mapped-table/utils/MappedTableRegistry';
-import ContentSection from '../../../../../components/ui/frames/ContentSection';
-import DetailsTable from '../../../../../components/ui/tables/details-table/DetailsTable';
-import MappedTable from '../../../../../features/mapped-table/Components/MappedTable';
-import tableConfig from '../../../../order/pages/order/tableConfig';
-import useCheckoutProcess from '../../../../../hooks/useCheckoutProcess';
-import UserDetailsTable from '../../../../../features/user/components/UserDetailsTable';
-import StreetAddress from '../../../../../components/ui/StreetAddress';
-import CartTotals from '../cart-view/CartTotals';
+import { Headings, UiText } from '../../../../config/constants';
+import { TableRegistryKeys } from '../../../mapped-table/utils/MappedTableRegistry';
+import ContentSection from '../../../../components/ui/frames/ContentSection';
+import DetailsTable from '../../../../components/ui/tables/details-table/DetailsTable';
+import MappedTable from '../../../mapped-table/Components/MappedTable';
+import tableConfig from '../../../order/pages/tableConfig';
+import useCheckoutProcess from '../../../../hooks/useCheckoutProcess';
+import UserDetailsTable from '../../../user/components/UserDetailsTable';
+import StreetAddress from '../../../../components/ui/StreetAddress';
+import CartTotals from './CartTotals';
 
 export default function OrderConfirmationView({ children }) {
   const { cart, checkoutProcess, userDetails } = useCheckoutProcess();

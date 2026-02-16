@@ -1,3 +1,4 @@
+import PATHS from '../../../config/paths';
 import {
   TableQuantityAdjust,
   TableResetQuantity,
@@ -40,18 +41,18 @@ export const NORMALIZER_REGISTRY = Object.freeze({
 });
 
 export const PATH_BUILDER_REGISTRY = Object.freeze({
-  [TableRegistryKeys.CART]: (row) => `/products/${row.product.id}`,
+  [TableRegistryKeys.CART]: (row) => PATHS.FRONT.PRODUCTS(row?.product?.id),
   [TableRegistryKeys.CHECKOUT]: () => null,
-  [TableRegistryKeys.ORDER]: (row) => `/products/${row.product.id}`,
+  [TableRegistryKeys.ORDER]: (row) => PATHS.FRONT.PRODUCTS(row?.product?.id),
   [TableRegistryKeys.USER_ORDERS]: (row) => ({
-    pathname: '/order',
+    pathname: PATHS.FRONT.ORDER,
     state: { order: row },
   }),
 });
 
 export const ID_FINDER_REGISTRY = Object.freeze({
-  [TableRegistryKeys.CART]: (row) => row.product.id,
+  [TableRegistryKeys.CART]: (row) => row?.product?.id,
   [TableRegistryKeys.CHECKOUT]: () => null,
-  [TableRegistryKeys.ORDER]: (row) => row.product.id,
-  [TableRegistryKeys.USER_ORDERS]: (row) => row.id,
+  [TableRegistryKeys.ORDER]: (row) => row?.product?.id,
+  [TableRegistryKeys.USER_ORDERS]: (row) => row?.id,
 });

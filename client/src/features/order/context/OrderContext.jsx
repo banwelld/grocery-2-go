@@ -1,6 +1,7 @@
 import { createContext, useCallback, useEffect, useMemo, useRef } from 'react';
 import Feedback from '../../../config/feedback';
-import useUserOrders from '../../../hooks/useUserOrders';
+import PATHS from '../../../config/paths';
+import useUserOrders from '../../user/hooks/useUserOrders';
 import {
   deleteData,
   getData,
@@ -70,13 +71,18 @@ export function OrderProvider({
 
       return runExclusive({
         doFetch: () =>
-          patchData(`/orders/${id}`, { status: newStatus })
+          patchData(PATHS.BACK.ORDER_ID(id), { status: newStatus })
             .then((data) => setOrder(toClient(data, 'order')))
             .catch((err) => {
               if (err.status === 422) {
-                getData(`/orders/${id}?scope=shallow`).then((data) => {
-                  setOrder((prev) => ({ ...prev, ...toClient(data, 'order') }));
-                });
+                getData(`${PATHS.BACK.ORDER_ID(id)}?scope=shallow`).then(
+                  (data) => {
+                    setOrder((prev) => ({
+                      ...prev,
+                      ...toClient(data, 'order'),
+                    }));
+                  },
+                );
               } else {
                 setOrder(lastStatusRef.current);
               }
@@ -91,6 +97,21 @@ export function OrderProvider({
     [id, order, setOrder, concurrencyControls],
   );
 
+  const loadOrderProducts = useCallback(() => {
+    if (!order || (order.orderProducts && order.orderProducts.length > 0)) {
+      return Promise.resolve();
+    }
+
+    return runExclusive({
+      doFetch: () =>
+        getData(`${PATHS.BACK.ORDER_PRODUCTS}?order_id=${id}`).then((data) => {
+          const products = toClient(data, 'order_product');
+          setOrder((prev) => ({ ...prev, orderProducts: products }));
+        }),
+      ...concurrencyControls,
+    });
+  }, [id, order, setOrder, concurrencyControls]);
+
   const deleteOrder = useCallback(() => {
     if (!order) return;
     lastStatusRef.current = order;
@@ -98,7 +119,7 @@ export function OrderProvider({
     return runExclusive({
       doFetch: () => {
         dropOrder(id);
-        return deleteData(`/orders/${id}`)
+        return deleteData(PATHS.BACK.ORDER_ID(id))
           .then(() => setOrder(null))
           .catch((err) => {
             logException(Errors.FAILURE.DELETE, err);
@@ -118,10 +139,11 @@ export function OrderProvider({
       status,
       updateStatus,
       deleteOrder,
+      loadOrderProducts,
       OrderStatus,
       isPending,
     }),
-    [order, status, updateStatus, deleteOrder, isPending],
+    [order, status, updateStatus, deleteOrder, loadOrderProducts, isPending],
   );
 
   return (

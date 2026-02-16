@@ -9,6 +9,7 @@ import {
 } from '../../../utils/helpers';
 import Feedback from '../../../config/feedback';
 import { toClient, toServer } from '../utils/productSerializer';
+import PATHS from '../../../config/paths';
 
 const { Errors } = Feedback;
 
@@ -16,7 +17,7 @@ export function createProductController({ setProducts, concurrencyControls }) {
   const fetchProducts = () =>
     runExclusive({
       doFetch: () =>
-        getData('/products')
+        getData(PATHS.BACK.PRODUCTS)
           .then((data) => {
             const sortedProducts = data
               .map(toClient)
@@ -42,7 +43,7 @@ export function createProductController({ setProducts, concurrencyControls }) {
 
     return runExclusive({
       doFetch: () =>
-        postData('/products', payload)
+        postData(PATHS.BACK.PRODUCTS, payload)
           .then((serverData) => {
             const newProduct = toClient(serverData);
             setProducts((prev) => {
@@ -80,7 +81,7 @@ export function createProductController({ setProducts, concurrencyControls }) {
 
     return runExclusive({
       doFetch: () =>
-        patchData(`/products/${id}`, payload)
+        patchData(PATHS.BACK.PRODUCT_ID(id), payload)
           .then((serverData) => {
             const updatedProduct = toClient(serverData);
             setProducts((prev) => {
@@ -119,7 +120,7 @@ export function createProductController({ setProducts, concurrencyControls }) {
 
     return runExclusive({
       doFetch: () =>
-        deleteData(`/products/${id}`)
+        deleteData(PATHS.BACK.PRODUCT_ID(id))
           .then(() => true)
           .catch((err) => {
             logException(Errors.FAILURE.DELETE, err);

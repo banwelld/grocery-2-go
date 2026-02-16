@@ -383,12 +383,14 @@ class OrderById(Resource):
 
         if order.user_id != g.user_id:
             return make_error(MsgKey.UNAUTHORIZED, 403)
-        # only cancelled orders can be deleted because they've never made it beyond submitted
-        if order.status != Status.CANCELLED:
+
+        legal_deletion_statuses = [Status.CANCELLED, Status.OPEN]
+
+        if order.status not in legal_deletion_statuses:
             return make_error(
                 MsgKey.INVALID_STATUS,
                 422,
-                expected=Status.CANCELLED,
+                expected=(", ").join(legal_deletion_statuses),
                 got=order.status,
             )
 

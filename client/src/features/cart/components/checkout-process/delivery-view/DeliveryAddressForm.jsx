@@ -1,14 +1,14 @@
 import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 
-import FormikInput from '../../../components/forms/FormikInput';
-import Button from '../../../components/ui/Button';
-import ProvinceOptions from '../../../components/forms/options/ProvinceOptions';
+import FormikInput from '../../../../../components/forms/FormikInput';
+import Button from '../../../../../components/ui/Button';
+import ProvinceOptions from '../../../../../components/forms/options/ProvinceOptions';
 
-import { InputTypes as Input } from '../../../config/constants';
-import { toBemClassName } from '../../../utils/helpers';
-import { DEFAULT_SELECT_VALUE as DEFAULT } from '../../../config/enums';
-import * as v from '../../../utils/validation';
+import { InputTypes as Input } from '../../../../../config/constants';
+import { toBemClassName } from '../../../../../utils/helpers';
+import { DEFAULT_SELECT_VALUE as DEFAULT } from '../../../../../config/enums';
+import * as v from '../../../../../utils/validation';
 
 export const Fields = Object.freeze({
   ADDRESS_LINE_1: 'addressLine1',

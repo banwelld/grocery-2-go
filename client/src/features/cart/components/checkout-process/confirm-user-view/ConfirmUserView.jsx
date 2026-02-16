@@ -2,7 +2,7 @@ import useViewMode, {
   VIEW_MODES as MODE,
 } from '../../../../../hooks/useViewMode';
 import { Headings } from '../../../../../config/constants';
-import ConfirmationCheck from './confirm-user-info/ConfirmationCheck';
+import ConfirmationCheck from './ConfirmationCheck';
 import ContentSection from '../../../../../components/ui/frames/ContentSection';
 import UserDetailsTable from '../../../../user/components/UserDetailsTable';
 import UserUpdateForm from '../../../../user/components/UserUpdateForm';
@@ -14,7 +14,7 @@ const actionDescription = Object.freeze({
   [MODE.EDIT]: 'exit edit mode wtihout saving',
 });
 
-export default function UserInfoView({ children, ...stepProps }) {
+export default function ConfirmUserView({ children, ...stepProps }) {
   const { toggleViewMode, isMode1: isReadMode } = useViewMode();
   const { user, userActions } = useUser();
 
@@ -22,12 +22,12 @@ export default function UserInfoView({ children, ...stepProps }) {
 
   const bemRoot = {
     bemBlock: 'checkout',
-    bemMod: 'user-info',
+    bemMod: 'confirm-user',
   };
 
   const sectionProps = {
     heading: Headings.USER_INFO,
-    bemMod: 'user-info',
+    bemMod: 'confirm-user',
   };
 
   const updateFormProps = {

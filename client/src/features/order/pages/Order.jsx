@@ -1,21 +1,22 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+
 import toast from 'react-hot-toast';
 
-import { OrderProvider, OrderStatus } from '../../context/OrderContext';
-import { PageName } from '../../../../config/enums';
-import { getData, runExclusive, logException } from '../../../../utils/helpers';
-import { toClient } from '../../../../utils/serializer';
-import Feedback from '../../../../config/feedback';
+import { useOrder } from '../../../hooks/useOrder';
+import { OrderProvider, OrderStatus } from '../context/OrderContext';
+import useOrderActions from '../hooks/useOrderActions';
 
-import Button from '../../../../components/ui/Button';
 import PageContent from './PageContent';
-import PageFrame from '../../../../components/ui/frames/PageFrame';
 import Sidebar from './Sidebar';
-import useOrderActions from '../../hooks/useOrderActions';
-import { useOrder } from '../../../../hooks/useOrder';
+import PageFrame from '../../../components/ui/frames/PageFrame';
+import Button from '../../../components/ui/Button';
 
-const { Errors, Toasts } = Feedback;
+import { PageName } from '../../../config/enums';
+import Feedback from '../../../config/feedback';
+import PATHS from '../../../config/paths';
+
+const { Toasts } = Feedback;
 
 export default function Order() {
   const { state } = useLocation();
@@ -28,31 +29,13 @@ export default function Order() {
 
   useEffect(() => {
     if (!seed) {
-      navigate('/my-profile', { replace: true });
-      return;
+      navigate(PATHS.FRONT.USER_PROFILE, { replace: true });
+      toast.error(Toasts.ORDER.LOAD.NO_SEED);
     }
+  }, [seed, navigate]);
 
-    // Only fetch if products are missing (Shallow Seed scenario)
-    if (!seed.orderProducts || seed.orderProducts.length === 0) {
-      runExclusive({
-        doFetch: () =>
-          toast.promise(
-            getData(`/order_products?order_id=${seed.id}`).then((data) => {
-              const products = toClient(data, 'order_product');
-              setOrder((prev) => ({ ...prev, orderProducts: products }));
-            }),
-            {
-              loading: Toasts.ORDER.LOAD.BUSY,
-              error: Toasts.ORDER.LOAD.FAILURE,
-            },
-          ),
-        lockRef: isBusyRef,
-        setPending: setIsPending,
-      });
-    }
-  }, [seed, navigate, Toasts.ORDER.LOAD]);
-
-  if (!order) return null;
+  if (isPending) return <p>Loading your order...</p>;
+  if (!order && !isPending) return null;
 
   return (
     <OrderProvider
@@ -68,8 +51,17 @@ export default function Order() {
 }
 
 const OrderLayout = () => {
-  const { order, status } = useOrder();
+  const { order, status, loadOrderProducts } = useOrder();
   const { confirmAndCancel, confirmAndDelete } = useOrderActions();
+
+  useEffect(() => {
+    if (order && (!order.orderProducts || order.orderProducts.length === 0)) {
+      toast.promise(loadOrderProducts(), {
+        loading: Toasts.ORDER.LOAD.BUSY,
+        error: Toasts.ORDER.LOAD.FAILURE,
+      });
+    }
+  }, [loadOrderProducts, order]);
 
   const sidebarControls = (
     <>

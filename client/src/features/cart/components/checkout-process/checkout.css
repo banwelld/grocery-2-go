@@ -1,18 +1,18 @@
-.checkout__wrapper--user-info {
+.checkout__wrapper--confirm-user {
   margin: var(--margin-section-mid) 0;
   width: 100%;
   padding: 10px;
   border: var(--border);
 }
 
-.checkout__wrapper--user-info label {
+.checkout__wrapper--confirm-user label {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   cursor: pointer;
 }
 
-.checkout__checkbox--user-info {
+.checkout__checkbox--confirm-user {
   margin: 0;
   appearance: none;
   display: inline-block;
@@ -46,26 +46,19 @@
   }
 }
 
-.checkout__wrapper--user-info label span {
+.checkout__wrapper--confirm-user label span {
   text-align: left;
   font-size: 1rem;
   text-wrap: pretty;
 }
 
 .checkout__wrapper--controls {
-  background: var(--color-frame);
   display: flex;
   flex-direction: row;
   width: 75%;
-  justify-content: space-between;
-  padding: 24px 50px;
-  border-radius: var(--border-radius-min);
-  box-shadow: var(--shadow-page);
+  justify-content: center;
+  padding: 24px 0;
   margin: var(--margin-section-mid) auto;
-
-  &:has(.button--next:only-child) {
-    justify-content: end;
-  }
 }
 
 .checkout__wrapper--delivery-address {

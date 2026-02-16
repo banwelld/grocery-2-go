@@ -8,7 +8,7 @@ const CATEGORIES = [
   { name: 'Produce' },
 ];
 
-export default function ProvinceOptions() {
+export default function CategoryOptions() {
   return (
     <>
       <option value={DEFAULT} disabled>

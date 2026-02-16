@@ -39,7 +39,7 @@ export const Headings = {
   REALTIME_VIEW: 'View Updates',
   REGISTER: `Sign Up!`,
   WHOOPS: `Whoops!`,
-  UPDATE_PASSWORD: `Update User Password`,
+  UPDATE_PASSWORD: `Update Password`,
   UPDATE_USER_INFO: `Update Personal Information`,
   USER_PROFILE: `My Profile`,
   USER_INFO: `Personal Information`,
@@ -47,37 +47,31 @@ export const Headings = {
 };
 
 export const UiText = {
-  CART: [
-    `Welcome to your cart. Hover over any row to reveal options. You can click
-      on a product's name to visit its information page or use the quantity
-      adjustment buttons to adjust product quantities remove all of a product
-      at once with the trash button.`,
-    `If you're ready to start the checkout process, click 'Checkout!' in
-      the sidebar.`,
-  ],
   CART_EMPTY: [
     `Your cart is empty. Click on the 'Home' link in the header to do some
-      shopping`,
+    shopping`,
   ],
   CHECKOUT_CONFIRMATION: [
     `If the above information is correct, click the 'submit' button to complete
-      your order. We will notify you via email of payment options.`,
+    your order. We will notify you via email of payment options.`,
   ],
   CHECKOUT_DELIVERY: [
-    `Please enter tha delivery address for your order and click the 'Submit'
-      button to save the address. Once the address is saved, click 'Next' to
-      confirm to the order confirmation page.`,
+    `Please enter tha delivery address for your order and click the 'Save'
+    button. Once the address is saved, you'll be able to click 'Next' to
+    advance to the order confirmation page.`,
   ],
-  CHECKOUT: [
-    `Please enter or confirm all needed information and click the 'next' button
-      to confirm with checkout.`,
+  CHECKOUT_USER_INFO: [
+    `Please confirm your user information by clicking the checkbox below. If
+      the information is out of date or incorrect, use the 'click here' link
+      to update it. Once it's updated, click next to enter the delivery
+      address.`,
   ],
   GENERAL_ERROR: [
     <strong>ERROR 404:</strong>,
     `The page that you're trying to access doesn't exist. Please confirm that
-      you've typed in the URL correctly and try again. Or, simply click on the
-      links above to navigate through the site. If the error persists, feel free
-      to call our support desk to report the error.`,
+    you've typed in the URL correctly and try again. Or, simply click on the
+    links above to navigate through the site. If the error persists, feel free
+    to call our support desk to report the error.`,
   ],
   INVALID_PRODUCT_ID: (id) => [
     <strong>INVALID ID:</strong>,
@@ -85,15 +79,16 @@ export const UiText = {
   ],
   LOGIN: [
     `In order to provide you with products of the highest quality and at the
-      best prices, we must have an active and engaged membership. As such,
-      you'll need to login to the site to take advantage of Grocery2Go's
-      benefits.`,
+    best prices, we must have an active and engaged membership. As such,
+    you'll need to login to the site to take advantage of Grocery2Go's
+    benefits.`,
     `Not a member yet? We'd love to have you sign up!`,
   ],
   MISSING_CONFIG: [
     `Configuration file is missing or invalid. Cannot render page. If this
-      persists, please contact suport.`,
+    persists, please contact suport.`,
   ],
+  NO_ORDERS: [`You have no orders to display.`],
   NOT_LOGGED_IN: [
     <strong>ERROR 401:</strong>,
     `You must be logged in to view this page. Please login or register to continue.`,
@@ -114,6 +109,13 @@ export const UiText = {
     `All fields are mandatory so be sure to complete the entire form. Your
     password must consist of at least 10 characters with a lowercase and
     uppercase character, a digit and a special character (e.g., !@#$%).`,
+  ],
+  SUMMARY: [
+    `Hover over any row to reveal controls. You can click on a product's name
+    to visit its page or click the up or down buttons to make sure you have
+    enough of a product. The trash button removes a product completely.`,
+    `Wanna checkout? Just click the 'Check me Out!' button below the product
+    list.`,
   ],
   USER_PROFILE: [
     `Welcome to your profile. Feel free to browse your personal information or

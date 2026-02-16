@@ -11,6 +11,7 @@ import Button from '../../../../components/ui/Button';
 
 import { PageName, AuthViewMode as Mode } from '../../../../config/enums';
 import Feedback from '../../../../config/feedback';
+import PATHS from '../../../../config/paths';
 
 const ButtonLabel = Object.freeze({
   [Mode.LOGIN]: 'Sign me up!',
@@ -40,7 +41,7 @@ export default function Auth() {
   const onSubmit = (data) =>
     toast.promise(
       submitFor[currentViewMode](data).then((user) => {
-        navigate('/', { replace: true });
+        navigate(PATHS.FRONT.HOME, { replace: true });
         return user;
       }),
       {

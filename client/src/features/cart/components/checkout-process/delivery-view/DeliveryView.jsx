@@ -1,8 +1,6 @@
 import useCheckoutProcess from '../../../../../hooks/useCheckoutProcess';
 import useViewMode from '../../../../../hooks/useViewMode';
-import DeliveryAddressForm, {
-  Fields,
-} from '../../../components/DeliveryAddressForm';
+import DeliveryAddressForm, { Fields } from './DeliveryAddressForm';
 import ContentSection from '../../../../../components/ui/frames/ContentSection';
 import DetailsTable from '../../../../../components/ui/tables/details-table/DetailsTable';
 import StreetAddress from '../../../../../components/ui/StreetAddress';
@@ -18,7 +16,7 @@ const RequiredFields = [
   Fields.POSTAL_CODE,
 ];
 
-export default function AddressView({
+export default function DeliveryView({
   setState: setAddressState,
   children,
   ...rest

@@ -1,3 +1,5 @@
+import { CheckoutStep as Step } from '../features/cart/components/checkout-process/checkoutFlow';
+
 const Modals = {
   CONFIRM_CANCEL: `Cancellation is permanent. Are you sure that you want to
   cancel your order?`,
@@ -16,6 +18,10 @@ const Toasts = {
     FAILURE: `Checkout failed`,
     SUCCESS: `Checked out!`,
     ADMIN_PROFILE: `Requires manager credentials`,
+    VALIDATION: {
+      [Step.USER_INFO]: `Please use checkbox`,
+      [Step.DELIVERY_INFO]: `Please save address`,
+    },
   },
   RESTRICTION: {
     AUTH_ONLY: `Members only. Please login.`,
@@ -47,6 +53,7 @@ const Toasts = {
       BUSY: `Loading order...`,
       FAILURE: `Could not load order`,
       SUCCESS: `Order loaded`,
+      NO_SEED: `Please select an order`,
     },
     SUBMIT: {
       BUSY: `Submitting order...`,

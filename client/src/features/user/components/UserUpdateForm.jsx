@@ -22,7 +22,7 @@ const validationSchema = yup.object({
   [Fields.PHONE]: v.validatePhone,
 });
 
-const bemMod = 'user-info';
+const bemMod = 'confirm-user';
 
 export default function UserUpdateForm({ user, bemBlock = 'form', onSubmit }) {
   const initialValues = {

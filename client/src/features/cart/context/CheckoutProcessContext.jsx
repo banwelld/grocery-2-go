@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import { CartViewMode as Mode } from '../../../config/enums';
+
 import useCart from '../../../hooks/useCart';
 import useUser from '../../user/hooks/useUser';
 
@@ -7,13 +7,12 @@ export const CheckoutProcessContext = createContext(null);
 
 const useSessionState = (key, initialValue) => {
   const [sessionState, setSessionState] = useState(() => {
-    const isRefreshed = sessionStorage.getItem('checkout_reloading') === 'true';
+    const isReload = sessionStorage.getItem('checkout_reload') === 'true';
 
-    if (isRefreshed) {
+    if (isReload) {
       const stored = sessionStorage.getItem(key);
       return stored ? JSON.parse(stored) : initialValue;
     }
-
     sessionStorage.removeItem(key);
     return initialValue;
   });
@@ -27,25 +26,19 @@ const useSessionState = (key, initialValue) => {
 
 export function CheckoutProcessProvider({ children }) {
   const { cart, cartStatus, cartActions, cartDetails } = useCart();
-  const { products, orderItemCount, orderTotal } = cartDetails;
   const { user, isLoggedIn } = useUser();
 
   useEffect(() => {
-    sessionStorage.removeItem('checkout_reloading');
+    sessionStorage.removeItem('checkout_reload');
 
     const handleUnload = () => {
-      sessionStorage.setItem('checkout_reloading', 'true');
+      sessionStorage.setItem('checkout_reload', 'true');
     };
 
     window.addEventListener('beforeunload', handleUnload);
 
     return () => window.removeEventListener('beforeunload', handleUnload);
   }, []);
-
-  const [currentViewMode, setCurrentViewMode] = useSessionState(
-    'checkout_mode',
-    Mode.CART,
-  );
 
   const [userConfirmed, setUserConfirmed] = useSessionState(
     'checkout_confirmed',
@@ -54,30 +47,25 @@ export function CheckoutProcessProvider({ children }) {
 
   const [address, setAddress] = useSessionState('checkout_delivery', {});
 
-  const toggleViewMode = () =>
-    setCurrentViewMode((prev) =>
-      prev === Mode.CART ? Mode.CHECKOUT : Mode.CART,
-    );
-
   const checkout = () => {
     const checkoutPayload = { orderId: cart?.id, ...address };
     return cartActions.checkout(checkoutPayload);
   };
 
   const resetSession = () => {
-    setCurrentViewMode(Mode.CART);
     setUserConfirmed(false);
     setAddress({});
   };
 
   const ctx = {
     cart: {
-      products,
+      products: cartDetails.products,
       id: cart?.id,
-      orderItemCount,
-      orderTotal,
+      orderItemCount: cartDetails.orderItemCount,
+      orderTotal: cartDetails.orderTotal,
       cartLoaded: cartStatus?.cartLoaded,
       cartEmpty: cartStatus?.cartEmpty,
+      deleteCart: cartActions.deleteCart,
     },
     checkoutProcess: {
       checkout,
@@ -88,7 +76,6 @@ export function CheckoutProcessProvider({ children }) {
       setAddress,
     },
     userDetails: { user, isLoggedIn },
-    viewMode: { currentViewMode, toggleViewMode },
   };
 
   return (

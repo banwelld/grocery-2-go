@@ -15,6 +15,7 @@ import { UserRole as Role } from '../../../../config/enums';
 import { displayConfig } from '../../components/product-display/displayConfig';
 import { Headings, UiText } from '../../../../config/constants';
 import { PageName } from '../../../../config/enums';
+import PATHS from '../../../../config/paths';
 
 export default function ItemView() {
   const { id } = useParams();
@@ -28,7 +29,7 @@ export default function ItemView() {
   const isAdmin = user?.role === Role.ADMIN;
 
   const navigateToAdmin = () => {
-    navigate('/products/admin', {
+    navigate(PATHS.FRONT.PRODUCT_ADMIN, {
       replace: true,
       state: { productId: productId },
     });
