@@ -4,14 +4,14 @@ import { useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 import { ProductContext } from '../../context/ProductContext';
+import { useModal } from '../../../../hooks/useModal';
 
 import PageContent from './PageContent';
 import Sidebar from './Sidebar';
-import Selector from './Selector';
+import ProductSelector from './ProductSelector';
 import PageFrame from '../../../../components/ui/frames/PageFrame';
 import Button from '../../../../components/ui/Button';
 
-import { useModal } from '../../../../hooks/useModal';
 import Feedback from '../../../../config/feedback';
 import {
   DEFAULT_SELECT_VALUE as DEFAULT,
@@ -25,6 +25,7 @@ export default function AdminView() {
   const [selectedProductId, setSelectedProductId] = useState(
     state?.productId ?? DEFAULT,
   );
+  const { openModal } = useModal();
 
   const {
     products,
@@ -33,7 +34,6 @@ export default function AdminView() {
     deleteProduct: del,
     findProduct,
   } = useContext(ProductContext);
-  const { openModal } = useModal();
 
   const product = findProduct(Number(selectedProductId)) ?? {};
 
@@ -77,25 +77,27 @@ export default function AdminView() {
     });
   };
 
-  const sidebarProps = {
-    sidebarControls: (
-      <>
-        <Selector
-          products={products}
-          selectedId={selectedProductId}
-          onSelect={setSelectedProductId}
+  const sidebarControls = (
+    <>
+      <ProductSelector
+        products={products}
+        selectedId={selectedProductId}
+        onSelect={setSelectedProductId}
+      />
+      {!isAddOperation && (
+        <Button
+          onClick={onDelete}
+          label='Delete Product'
+          bemMod='page-utility'
+          bemMod2='admin'
+          showMod2={true}
         />
-        {!isAddOperation && (
-          <Button
-            onClick={onDelete}
-            label='Delete Product'
-            bemMod='page-utility'
-            bemMod2='admin'
-            showMod2={true}
-          />
-        )}
-      </>
-    ),
+      )}
+    </>
+  );
+
+  const sidebarProps = {
+    sidebarControls,
     pageName: PageName.ADMIN_VIEW,
   };
 

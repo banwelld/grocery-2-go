@@ -91,3 +91,7 @@
     display: none;
   }
 }
+
+.sidebar__section p {
+  text-align: center;
+}

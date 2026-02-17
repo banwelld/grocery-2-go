@@ -26,7 +26,7 @@ export const Headings = {
   ORDER_CANCELLED: `Cancelled Order`,
   ORDER_DETAILS: `Order Details`,
   ORDER_FULFILLED: `Fulfilled Order`,
-  ORDER_IN_PROGRESS: `In-Progress Order`,
+  ORDER_IN_PROCESS: `In-Process Order`,
   ORDER_LIST: `Product List`,
   ORDER_SUBMITTED: `Submitted Order`,
   ORDER_TOTALS: `Order Totals`,
@@ -76,6 +76,10 @@ export const UiText = {
   INVALID_PRODUCT_ID: (id) => [
     <strong>INVALID ID:</strong>,
     `We have no product in our collection with ID '${id}'.`,
+  ],
+  INVALID_PRODUCT_SELECTION: [
+    `The product that you selected is not valid. Please choose another from
+      the list.`,
   ],
   LOGIN: [
     `In order to provide you with products of the highest quality and at the

@@ -79,6 +79,9 @@ const OrderLayout = () => {
           bemMod='page-utility'
         />
       )}
+      {![OrderStatus.SUBMITTED, OrderStatus.CANCELLED].includes(status) && (
+        <p>No options for orders after processing has begun.</p>
+      )}
     </>
   );
 

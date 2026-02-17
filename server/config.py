@@ -14,7 +14,7 @@ load_dotenv(dotenv_path="settings.env")
 
 # Instantiate app, set attributes
 
-raw_url = os.getenv("DB_URL") or os.getenv("DATABASE_URL")
+raw_url = os.getenv("LOCAL_DB_URL")
 if raw_url and raw_url.startswith("postgres://"):
     DB_URL = raw_url.replace("postgres://", "postgresql://", 1)
 else:

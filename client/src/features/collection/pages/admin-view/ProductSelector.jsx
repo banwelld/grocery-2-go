@@ -1,16 +1,40 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import ProductOptions from '../../../../components/forms/options/ProductOptions';
 import { DEFAULT_SELECT_VALUE as DEFAULT } from '../../../../config/enums';
 
-export default function Selector({ products, selectedId, onSelect }) {
+export default function ProductSelector({ products, selectedId, onSelect }) {
   const [currentFilterCriteria, setCurrentFilterCriteria] = useState('');
   const [currentId, setCurrentId] = useState(selectedId || DEFAULT);
+
+  const selectRef = useRef(null);
+  const hasInitialScrolledRef = useRef(false);
 
   // reset the selector to 'add new product' when selected id changes
   useEffect(() => {
     setCurrentId(selectedId || DEFAULT);
     setCurrentFilterCriteria('');
-  }, [selectedId]);
+
+    // scroll only on the first render where we have a valid selectedId
+    if (
+      !hasInitialScrolledRef.current
+      && selectedId
+      && selectedId !== DEFAULT
+      && products.length > 0
+    ) {
+      const timer = setTimeout(() => {
+        if (selectRef.current) {
+          const selectedOption = selectRef.current.querySelector(
+            `option[value="${selectedId}"]`,
+          );
+          if (selectedOption) {
+            selectedOption.scrollIntoView({ block: 'start' });
+            hasInitialScrolledRef.current = true;
+          }
+        }
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedId, products.length]);
 
   const includedProducts = useMemo(() => {
     return products.filter((product) =>
@@ -33,7 +57,12 @@ export default function Selector({ products, selectedId, onSelect }) {
         value={currentFilterCriteria}
         onChange={onInputChange}
       />
-      <select value={currentId} size={10} onChange={onSelectChange}>
+      <select
+        ref={selectRef}
+        value={currentId}
+        size={10}
+        onChange={onSelectChange}
+      >
         <ProductOptions products={includedProducts} />
       </select>
     </>

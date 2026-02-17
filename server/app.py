@@ -2,9 +2,9 @@
 
 import os
 from datetime import datetime, timezone
-from enum import Enum
 
 from config import api, app, bcrypt, db
+from enums import ActionType, FieldNames, Status
 from flask import (
     g,
     jsonify,
@@ -22,35 +22,6 @@ from models import Order, OrderProduct, Product, User
 # user email is found with ones where it is not found
 
 DUMMY_HASH = bcrypt.generate_password_hash("dummy123").decode("utf-8")
-
-
-# enums and namespaces
-
-
-class Status(str, Enum):
-    OPEN = "open"
-    CANCELLED = "cancelled"
-    SUBMITTED = "submitted"
-    IN_PROCESS = "in_process"
-    NON_OPEN = "non_open"
-
-
-class ActionType:
-    CHECKOUT = "checkout"
-    REGISTER = "register"
-
-
-class FieldNames:
-    PASSWORD = "password"
-    PASSWORD_CURRENT = "password_current"
-    EMAIL = "email"
-    USER_ID = "user_id"
-    STATUS = "status"
-    SCOPE = "scope"
-    ACTION_TYPE = "action_type"
-    ORDER_ID = "order_id"
-    PRODUCT_ID = "product_id"
-    QUANTITY = "quantity"
 
 
 # helpers
@@ -150,15 +121,9 @@ api.add_resource(UserById, "/users/<int:id>")
 
 class Session(Resource):
     def get(self):
-        user_id = g.user_id
-        if not user_id:
+        if not g.user:
             return make_response(jsonify(None), 200)
-
-        user = get_user(user_id)
-        if not user:
-            return make_error(MsgKey.ID_NOT_FOUND, 404)
-
-        return make_response(user.to_dict(), 200)
+        return make_response(g.user.to_dict(), 200)
 
     def post(self):
         data = request.json or {}
@@ -285,9 +250,6 @@ class AllOrders(Resource):
     def post(self):
         if not g.user_id:
             return make_error(MsgKey.NOT_AUTH, 401)
-
-        if not g.user or g.user.role == "admin":
-            return make_error(MsgKey.UNAUTHORIZED, 403)
 
         if g.user.role == "admin":
             return make_error(MsgKey.ADMIN_BASKET_FORBIDDEN, 403)
@@ -456,7 +418,10 @@ class AllOrderProducts(Resource):
         data = request.json or {}
 
         order = get_order(data.get(FieldNames.ORDER_ID))
-        if order.user_id != g.user_id or g.user.role == "admin":
+        if not order:
+            return make_error(MsgKey.ID_NOT_FOUND, 404)
+
+        if order.user_id != g.user_id:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         product = get_product(data.get(FieldNames.PRODUCT_ID))

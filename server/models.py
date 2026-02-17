@@ -123,7 +123,9 @@ class Product(db.Model, SerializerMixin):
     @validates("price_cents")
     def validate_price(self, key, value):
         if value is not None and value < 0:
-            raise ValueError("Price must be a non-negative integer")
+            raise ValueError(
+                f"{key.replace('_', ' ')} must be a non-negative integer"
+            )
         return value
 
 
