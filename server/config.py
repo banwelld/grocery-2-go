@@ -9,12 +9,16 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 
 # open env files
-
-load_dotenv(dotenv_path="settings.env")
+env_path = os.path.join(os.path.dirname(__file__), "settings.env")
+load_dotenv(dotenv_path=env_path)
 
 # Instantiate app, set attributes
 
-raw_url = os.getenv("REMOTE_DB_URL")
+raw_url = (
+    os.getenv("REMOTE_DB_URL")
+    or os.getenv("DB_URL")
+    or os.getenv("DATABASE_URL")
+)
 if raw_url and raw_url.startswith("postgres://"):
     DB_URL = raw_url.replace("postgres://", "postgresql://", 1)
 else:
