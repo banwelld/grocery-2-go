@@ -157,3 +157,16 @@ export const compareSortValues = ({
 
 export const logException = (message, err = null) =>
   console.error(message, err);
+
+// redux helpers
+
+export const createMatcher = (sliceName) => {
+  const isSlice = (action) => action.type.startsWith(`${sliceName}/`);
+  return {
+    isPending: (action) => isSlice(action) && action.type.endsWith('/pending'),
+    isFulfilled: (action) =>
+      isSlice(action) && action.type.endsWith('/fulfilled'),
+    isRejected: (action) =>
+      isSlice(action) && action.type.endsWith('/rejected'),
+  };
+};

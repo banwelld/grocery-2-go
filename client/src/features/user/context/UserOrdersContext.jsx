@@ -1,20 +1,13 @@
-import {
-  createContext,
-  useState,
-  useRef,
-  useMemo,
-  useCallback,
-  useEffect,
-} from 'react';
+import { createContext, useState, useRef, useMemo, useCallback, useEffect } from "react";
 
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
-import useUser from '../hooks/useUser';
-import { getData, runExclusive, logException } from '../../../utils/helpers';
-import { toClient } from '../../../utils/serializer';
-import Feedback from '../../../config/feedback';
-import PATHS from '../../../config/paths';
-import { UserRole } from '../../../config/enums';
+import useUser from "../hooks/useUser";
+import { getData, runExclusive, logException } from "../../../utils/helpers";
+import { toClient } from "../../../utils/serializer";
+import Feedback from "../../../config/feedback";
+import PATHS from "../../../config/paths";
+import { UserRole } from "../../../config/enums";
 
 const { Errors, Toasts } = Feedback;
 
@@ -41,18 +34,16 @@ export function UserOrdersProvider({ children }) {
         toast.promise(
           getData(`${PATHS.BACK.ORDERS}?status=non_open&scope=shallow`)
             .then((data) => {
-              const ordersArray = [].concat(toClient(data, 'order') || []);
+              const ordersArray = [].concat(toClient(data, "order") || []);
               setUserOrders(
-                ordersArray.sort((a, b) =>
-                  b.createdAt.localeCompare(a.createdAt),
-                ),
+                ordersArray.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
               );
             })
             .catch((err) => logException(Errors.FAILURE.RECEIVE, err)),
           {
             loading: Toasts.ORDER_LIST.LOAD.BUSY,
             error: Toasts.ORDER_LIST.LOAD.FAILURE,
-          },
+          }
         ),
       setIsLoaded: setOrdersLoaded,
       ...concurrencyControls,
@@ -81,9 +72,5 @@ export function UserOrdersProvider({ children }) {
     };
   }, [userOrders, ordersLoaded, isPending, loadOrders, dropOrder]);
 
-  return (
-    <UserOrdersContext.Provider value={ctx}>
-      {children}
-    </UserOrdersContext.Provider>
-  );
+  return <UserOrdersContext.Provider value={ctx}>{children}</UserOrdersContext.Provider>;
 }

@@ -112,7 +112,9 @@ class Product(db.Model, SerializerMixin):
     )
 
     def __repr__(self):
-        return f"<< PRODUCT: {self.id}, {self.category} (${self.price_cents / 100:.2f}) >>"
+        return (
+            f"<< PRODUCT: {self.id}, {self.category} (${self.price_cents / 100:.2f}) >>"
+        )
 
     @validates("name", "category", "origin_country", "sale_unit")
     def validate_strings(self, key, value):
@@ -123,9 +125,7 @@ class Product(db.Model, SerializerMixin):
     @validates("price_cents")
     def validate_price(self, key, value):
         if value is not None and value < 0:
-            raise ValueError(
-                f"{key.replace('_', ' ')} must be a non-negative integer"
-            )
+            raise ValueError(f"{key.replace('_', ' ')} must be a non-negative integer")
         return value
 
 
@@ -215,16 +215,14 @@ class OrderProduct(db.Model, SerializerMixin):
     quantity = db.Column(db.Integer, nullable=False, default=1)
     price_cents = db.Column(db.Integer, nullable=False, default=0)
     order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
-    product_id = db.Column(
-        db.Integer, db.ForeignKey("products.id"), nullable=False
-    )
-    product = db.relationship(
-        "Product", back_populates="order_products", lazy="joined"
-    )
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
+    product = db.relationship("Product", back_populates="order_products", lazy="joined")
     order = db.relationship("Order", back_populates="order_products")
 
     def __repr__(self):
-        return f"<< ORDER_PRODUCT: {self.id}, prod: {self.product_id} ({self.quantity}) >>"
+        return (
+            f"<< ORDER_PRODUCT: {self.id}, prod: {self.product_id} ({self.quantity}) >>"
+        )
 
     @validates("price_cents")
     def validate_price(self, key, value):

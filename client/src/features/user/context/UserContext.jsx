@@ -1,6 +1,6 @@
-import { createContext, useState, useEffect, useRef, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { createUserController } from './UserController';
+import { createContext, useState, useEffect, useRef, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { createUserController } from "./UserController";
 
 export const UserContext = createContext(null);
 
@@ -17,7 +17,7 @@ export const UserContext = createContext(null);
  * @property {{
  *   updateUser: function(Object): Promise<void>,
  *   deleteUser: function(): Promise<void>,
- * }} userActions - user management methods
+ * }} userAdmin - user management methods
  */
 
 /**
@@ -31,7 +31,7 @@ export function UserProvider({ children }) {
   const lastUserRef = useRef(null);
   const navigate = useNavigate();
   // create controller (useMemo prevents loops when controller functions used as dependencies)
-  const { checkSession, userAuth, userActions } = useMemo(() => {
+  const { checkSession, userAuth, userAdmin } = useMemo(() => {
     const concurrencyControls = {
       lockRef: isBusyRef,
       setPending: setIsPending,
@@ -61,11 +61,11 @@ export function UserProvider({ children }) {
       user,
       isLoggedIn: !!user,
       userAuth,
-      userActions,
+      userAdmin,
       isPending,
       sessionLoaded,
     };
-  }, [user, isPending, userAuth, userActions, sessionLoaded]);
+  }, [user, isPending, userAuth, userAdmin, sessionLoaded]);
 
   return <UserContext.Provider value={ctx}>{children}</UserContext.Provider>;
 }

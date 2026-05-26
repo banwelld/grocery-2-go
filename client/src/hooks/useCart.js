@@ -1,31 +1,95 @@
-import { useContext } from 'react';
-import { CartContext } from '../features/cart/context/CartContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import Feedback from '../config/feedback';
+import PATHS from '../config/paths';
+import {
+  selectCartData,
+  selectIsPending,
+  selectCartLoaded,
+  selectOrderTotal,
+  selectOrderItemCount,
+  resetLocalCart,
+} from '../features/cart/redux/cartSlice';
+import {
+  loadLocalCartThunk,
+  addToCartThunk,
+  takeFromCartThunk,
+  resetProductThunk,
+  deleteCartThunk,
+  checkoutThunk,
+} from '../features/cart/redux/cartThunks';
 
-/**
- * @typedef {Object} UseCartReturn
- * @property {Object} cart - current cart object
- * @property {Object} cartStatus - status flags and base loaders
- * @property {function(): void} cartStatus.loadLocalCart - load the cart from the server
- * @property {function(): void} cartStatus.resetLocalCart - clear the cart state
- * @property {boolean} cartStatus.isPending - network request is currently pending
- * @property {boolean} cartStatus.cartLoaded - whether the initial cart load has completed
- * @property {boolean} cartStatus.cartEmpty - whether the cart exists but has no items
- * @property {Object} cartDetails - computed cart data
- * @property {Array} cartDetails.products - array of products in the cart
- * @property {number} cartDetails.orderTotal - total cost of the cart
- * @property {number} cartDetails.orderItemCount - total item count in the cart
- * @property {Object} cartActions - cart mutation functions
- * @property {function(Object): void} cartActions.addToCart - add a product to the cart
- * @property {function(Object): void} cartActions.takeFromCart - remove one of a product
- * @property {function(Object): void} cartActions.resetProduct - remove all of a product
- * @property {function(): void} cartActions.deleteCart - optimistically deletes the existing cart order
- * @property {function(Object): Promise<void>} cartActions.checkout - submit the cart
- */
+const { Toasts } = Feedback;
 
-/**
- * @returns {UseCartReturn}
- */
+const useCart = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-const useCart = () => useContext(CartContext);
+  const cart = useSelector(selectCartData);
+  const isPending = useSelector(selectIsPending);
+  const cartLoaded = useSelector(selectCartLoaded);
+  const orderTotal = useSelector(selectOrderTotal);
+  const orderItemCount = useSelector(selectOrderItemCount);
+
+  const products = cart?.orderProducts ?? [];
+  const cartEmpty = products.length === 0;
+
+  const loadLocalCart = () => dispatch(loadLocalCartThunk());
+  const handleResetLocalCart = () => dispatch(resetLocalCart());
+  const addToCart = async (payload) => {
+    try {
+      await toast.promise(dispatch(addToCartThunk(payload)).unwrap(), {
+        loading: Toasts.ORDER_PRODUCT.CREATE.BUSY,
+        error: (err) => {
+          if (err.status === 401) {
+            navigate(PATHS.FRONT.AUTH_LOGIN);
+            return Toasts.ORDER.CREATE.GUEST;
+          }
+          if (err.status === 403) {
+            return Toasts.ORDER.CREATE.ADMIN;
+          }
+          return err.status || Toasts.ORDER_PRODUCT.CREATE.FAILURE;
+        },
+      });
+    } catch (err) {}
+  };
+  const takeFromCart = (payload) => dispatch(takeFromCartThunk(payload));
+  const resetProduct = (payload) => dispatch(resetProductThunk(payload));
+  const deleteCart = () => dispatch(deleteCartThunk());
+
+  const checkout = async () => {
+    try {
+      const result = await dispatch(checkoutThunk()).unwrap();
+      navigate(PATHS.FRONT.ORDER, {
+        replace: true,
+        state: { order: result.clientOrder },
+      });
+    } catch (err) {}
+  };
+
+  return {
+    cart,
+    cartStatus: {
+      loadLocalCart,
+      resetLocalCart: handleResetLocalCart,
+      isPending,
+      cartLoaded,
+      cartEmpty,
+    },
+    cartDetails: {
+      products,
+      orderTotal,
+      orderItemCount,
+    },
+    cartActions: {
+      addToCart,
+      takeFromCart,
+      resetProduct,
+      deleteCart,
+      checkout,
+    },
+  };
+};
 
 export default useCart;

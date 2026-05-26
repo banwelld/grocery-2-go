@@ -5,10 +5,10 @@ import {
   deleteData,
   runExclusive,
   logException,
-} from '../../../utils/helpers';
-import Feedback from '../../../config/feedback';
-import { toClient, toServer } from '../../../utils/serializer';
-import PATHS from '../../../config/paths';
+} from "../../../utils/helpers";
+import Feedback from "../../../config/feedback";
+import { toClient, toServer } from "../../../utils/serializer";
+import PATHS from "../../../config/paths";
 
 const { Errors } = Feedback;
 
@@ -23,7 +23,7 @@ export function createUserController({
     runExclusive({
       doFetch: () =>
         getData(PATHS.BACK.SESSION)
-          .then((data) => setUser(toClient(data, 'user')))
+          .then((data) => setUser(toClient(data, "user")))
           .catch((err) => logException(Errors.FAILURE.RECEIVE, err)),
       setIsLoaded: setSessionLoaded,
       ...concurrencyControls,
@@ -32,9 +32,9 @@ export function createUserController({
   const login = (credentials) =>
     runExclusive({
       doFetch: () =>
-        postData(PATHS.BACK.SESSION, toServer(credentials, 'user'))
+        postData(PATHS.BACK.SESSION, toServer(credentials, "user"))
           .then((userData) => {
-            const user = toClient(userData, 'user');
+            const user = toClient(userData, "user");
             setUser(user);
             return user;
           })
@@ -58,14 +58,14 @@ export function createUserController({
     // remove confirmPassword from the payload
     const { confirmPassword, ...rest } = data;
     const payload = {
-      ...toServer(rest, 'user'),
+      ...toServer(rest, "user"),
     };
 
     return runExclusive({
       doFetch: () =>
         postData(`${PATHS.BACK.USERS}?action_type=register`, payload)
           .then((user) => {
-            const clientUser = toClient(user, 'user');
+            const clientUser = toClient(user, "user");
             setUser(clientUser);
             return clientUser;
           })
@@ -108,13 +108,13 @@ export function createUserController({
         const user = userRef.current;
         if (!user) return Promise.resolve();
 
-        const payload = toServer(data, 'user');
+        const payload = toServer(data, "user");
 
         setUser((prev) => ({ ...prev, ...data }));
 
         return patchData(PATHS.BACK.USER_ID(user.id), payload)
           .then((updatedUser) => {
-            const clientUser = toClient(updatedUser, 'user');
+            const clientUser = toClient(updatedUser, "user");
             setUser(clientUser);
             return clientUser;
           })
@@ -130,6 +130,6 @@ export function createUserController({
   return {
     checkSession,
     userAuth: { login, register, logout },
-    userActions: { updateUser },
+    userAdmin: { updateUser },
   };
 }

@@ -1,5 +1,4 @@
-import { useContext } from 'react';
-import { CartContext } from '../features/cart/context/CartContext';
+import useCart from './useCart';
 import { isInteger, logException } from '../utils/helpers';
 import Feedback from '../config/feedback';
 
@@ -9,7 +8,7 @@ export default function useCartAction(productId) {
   const {
     cartDetails: { products },
     cartActions: { addToCart, takeFromCart, resetProduct },
-  } = useContext(CartContext);
+  } = useCart();
 
   const product = products?.find((p) => p.productId === productId);
   const quantity = product?.quantity || 0;

@@ -65,3 +65,6 @@ __pycache__
 instance
 .vscode
 package-lock.json
+
+# Spellcheck User Dictionary Link
+.cspell/custom-dictionary-user.txt

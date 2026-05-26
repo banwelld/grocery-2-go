@@ -64,9 +64,7 @@ class AllUsers(Resource):
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         required_fields = find_req_fields(User)
-        if falsey := find_falsey(
-            {k: request.json.get(k) for k in required_fields}
-        ):
+        if falsey := find_falsey({k: request.json.get(k) for k in required_fields}):
             return make_error(MsgKey.MISSING_FIELDS, 422, fields=falsey)
 
         data = request.json or {}
@@ -134,13 +132,9 @@ class Session(Resource):
         if falsey := find_falsey({k: data.get(k) for k in required}):
             return make_error(MsgKey.MISSING_FIELDS, 422, fields=falsey)
 
-        user = User.query.filter(
-            User.email == data.get(FieldNames.EMAIL)
-        ).first()
+        user = User.query.filter(User.email == data.get(FieldNames.EMAIL)).first()
         if not user:
-            bcrypt.check_password_hash(
-                DUMMY_HASH, data.get(FieldNames.PASSWORD)
-            )
+            bcrypt.check_password_hash(DUMMY_HASH, data.get(FieldNames.PASSWORD))
             return make_error(MsgKey.INVALID_CREDS, 401)
 
         if not user.authenticate(data.get(FieldNames.PASSWORD)):
@@ -167,9 +161,7 @@ class AllProducts(Resource):
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         required_fields = find_req_fields(Product)
-        if falsey := find_falsey(
-            {k: request.json.get(k) for k in required_fields}
-        ):
+        if falsey := find_falsey({k: request.json.get(k) for k in required_fields}):
             return make_error(MsgKey.MISSING_FIELDS, 422, fields=falsey)
 
         data = request.json or {}
@@ -224,13 +216,17 @@ class AllOrders(Resource):
         if not g.user_id:
             return make_error(MsgKey.NOT_AUTH, 401)
 
-        if not g.user or g.user.role == "admin":
+        if not g.user:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         status = request.args.get(FieldNames.STATUS)
         scope = request.args.get(FieldNames.SCOPE)
 
-        query = Order.query.filter(Order.user_id == g.user_id)
+        if g.user.role == "admin":
+            query = Order.query
+        else:
+            query = Order.query.filter(Order.user_id == g.user_id)
+
         if status == Status.OPEN:
             query = query.filter(Order.status == Status.OPEN)
         if status == Status.NON_OPEN:
@@ -238,27 +234,10 @@ class AllOrders(Resource):
 
         user_orders = query.all()
 
-        kwargs = (
-            {"rules": ("-order_products", "-user")}
-            if scope == "shallow"
-            else {}
-        )
+        kwargs = {"rules": ("-order_products", "-user")} if scope == "shallow" else {}
         order_dicts = [o.to_dict(**kwargs) for o in user_orders]
 
         return make_response(order_dicts, 200)
-
-    def post(self):
-        if not g.user_id:
-            return make_error(MsgKey.NOT_AUTH, 401)
-
-        if g.user.role == "admin":
-            return make_error(MsgKey.ADMIN_BASKET_FORBIDDEN, 403)
-
-        new_order = Order(user_id=g.user_id)
-        db.session.add(new_order)
-        db.session.commit()
-
-        return make_response(new_order.to_dict(), 201)
 
 
 api.add_resource(AllOrders, "/orders")
@@ -266,14 +245,14 @@ api.add_resource(AllOrders, "/orders")
 
 class OrderById(Resource):
     def get(self, id):
-        if not g.user or g.user.role == "admin":
+        if not g.user:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         order = get_order(id)
         if not order:
             return make_error(MsgKey.ID_NOT_FOUND, 404)
 
-        if order.user_id != g.user_id:
+        if g.user.role != "admin" and order.user_id != g.user_id:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         response = order.to_dict(
@@ -286,14 +265,14 @@ class OrderById(Resource):
         return make_response(response, 200)
 
     def patch(self, id):
-        if not g.user or g.user.role == "admin":
+        if not g.user:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         order = get_order(id)
         if not order:
             return make_error(MsgKey.ID_NOT_FOUND, 404)
 
-        if order.user_id != g.user_id:
+        if g.user.role != "admin" and order.user_id != g.user_id:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         updates = request.json or {}
@@ -319,9 +298,7 @@ class OrderById(Resource):
             order.final_total_cents = sum(
                 op.price_cents * op.quantity for op in order.order_products
             )
-            order.product_count = sum(
-                op.quantity for op in order.order_products
-            )
+            order.product_count = sum(op.quantity for op in order.order_products)
             order.created_at = datetime.now(timezone.utc)
         # only 'submitted' orders can be cancelled because they have not been prepared yet
         if (
@@ -343,14 +320,14 @@ class OrderById(Resource):
         return make_response(order.to_dict(), 200)
 
     def delete(self, id):
-        if not g.user or g.user.role == "admin":
+        if not g.user:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         order = get_order(id)
         if not order:
             return make_error(MsgKey.ID_NOT_FOUND, 404)
 
-        if order.user_id != g.user_id:
+        if g.user.role != "admin" and order.user_id != g.user_id:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         legal_deletion_statuses = [Status.CANCELLED, Status.OPEN]
@@ -374,7 +351,7 @@ api.add_resource(OrderById, "/orders/<int:id>")
 
 class AllOrderProducts(Resource):
     def get(self):
-        if not g.user or g.user.role == "admin":
+        if not g.user:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         order_id = request.args.get(FieldNames.ORDER_ID)
@@ -386,7 +363,7 @@ class AllOrderProducts(Resource):
         if not order:
             return make_error(MsgKey.ID_NOT_FOUND, 404)
 
-        if order.user_id != g.user_id:
+        if g.user.role != "admin" and order.user_id != g.user_id:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         order_products = order.order_products
@@ -406,22 +383,29 @@ class AllOrderProducts(Resource):
         return make_response(serialized_order_products, 200)
 
     def post(self):
-        if not g.user or g.user.role == "admin":
+        if not g.user:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
-        required_fields = [FieldNames.ORDER_ID, FieldNames.PRODUCT_ID]
-        if falsey := find_falsey(
-            {k: request.json.get(k) for k in required_fields}
-        ):
-            return make_error(MsgKey.MISSING_FIELDS, 422, fields=falsey)
-
         data = request.json or {}
+        if not data.get(FieldNames.PRODUCT_ID):
+            return make_error(MsgKey.MISSING_FIELDS, 422, fields=FieldNames.PRODUCT_ID)
 
-        order = get_order(data.get(FieldNames.ORDER_ID))
+        order_id = data.get(FieldNames.ORDER_ID)
+        order = get_order(order_id) if order_id else None
         if not order:
-            return make_error(MsgKey.ID_NOT_FOUND, 404)
+            if g.user.role == "admin":
+                return make_error(MsgKey.NO_ORDER_ID, 400)
 
-        if order.user_id != g.user_id:
+            # Query for an existing open order for the authenticated user
+            order = Order.query.filter_by(user_id=g.user_id, status=Status.OPEN).first()
+            if not order:
+                order = Order(user_id=g.user_id)
+                db.session.add(order)
+                db.session.flush()
+
+            data[FieldNames.ORDER_ID] = order.id
+
+        elif g.user.role != "admin" and order.user_id != g.user_id:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         product = get_product(data.get(FieldNames.PRODUCT_ID))
@@ -444,10 +428,10 @@ class OrderProductById(Resource):
         if not order_product:
             return make_error(MsgKey.ID_NOT_FOUND, 404)
 
-        if not g.user or g.user.role == "admin":
+        if not g.user:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
-        if order_product.order.user_id != g.user_id:
+        if g.user.role != "admin" and order_product.order.user_id != g.user_id:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         updates = request.json or {}
@@ -460,9 +444,7 @@ class OrderProductById(Resource):
             try:
                 new_quantity = int(updates.get(FieldNames.QUANTITY))
             except (TypeError, ValueError):
-                context = {
-                    "type": type(updates.get(FieldNames.QUANTITY)).__name__
-                }
+                context = {"type": type(updates.get(FieldNames.QUANTITY)).__name__}
                 return make_error(MsgKey.INVALID_QUANTITY, 400, **context)
 
             if len(updates) > 1:
@@ -484,10 +466,10 @@ class OrderProductById(Resource):
         if not order_product:
             return make_error(MsgKey.ID_NOT_FOUND, 404)
 
-        if not g.user or g.user.role == "admin":
+        if not g.user:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
-        if order_product.order.user_id != g.user_id:
+        if g.user.role != "admin" and order_product.order.user_id != g.user_id:
             return make_error(MsgKey.UNAUTHORIZED, 403)
 
         db.session.delete(order_product)
