@@ -199,7 +199,7 @@ class Order(db.Model, SerializerMixin):
         return status
 
 
-# orderproduct model
+# OrderProduct model
 
 
 class OrderProduct(db.Model, SerializerMixin):

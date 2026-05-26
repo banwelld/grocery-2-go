@@ -1,5 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
-
+import { createContext, useEffect, useState, useMemo, useCallback } from 'react';
 import useCart from '../../../hooks/useCart';
 import useUser from '../../user/hooks/useUser';
 
@@ -40,47 +39,58 @@ export function CheckoutProcessProvider({ children }) {
     return () => window.removeEventListener('beforeunload', handleUnload);
   }, []);
 
-  const [userConfirmed, setUserConfirmed] = useSessionState(
-    'checkout_confirmed',
-    false,
-  );
+  const [userConfirmed, setUserConfirmed] = useSessionState('checkout_confirmed', false);
 
   const [address, setAddress] = useSessionState('checkout_delivery', {});
 
-  const checkout = () => {
-    const checkoutPayload = { orderId: cart?.id, ...address };
-    return cartActions.checkout(checkoutPayload);
-  };
+  const checkout = useCallback(() => {
+    return cartActions.checkout(address);
+  }, [cartActions, address]);
 
-  const resetSession = () => {
+  const resetSession = useCallback(() => {
     setUserConfirmed(false);
     setAddress({});
-  };
+  }, [setUserConfirmed, setAddress]);
 
-  const ctx = {
-    cart: {
-      products: cartDetails.products,
-      id: cart?.id,
-      orderItemCount: cartDetails.orderItemCount,
-      orderTotal: cartDetails.orderTotal,
-      cartLoaded: cartStatus?.cartLoaded,
-      cartEmpty: cartStatus?.cartEmpty,
-      deleteCart: cartActions.deleteCart,
-    },
-    checkoutProcess: {
+  const ctx = useMemo(
+    () => ({
+      cart: {
+        products: cartDetails.products,
+        id: cart?.id,
+        orderItemCount: cartDetails.orderItemCount,
+        orderTotal: cartDetails.orderTotal,
+        cartLoaded: cartStatus?.cartLoaded,
+        cartEmpty: cartStatus?.cartEmpty,
+        deleteCart: cartActions.deleteCart,
+      },
+      checkoutProcess: {
+        checkout,
+        resetSession,
+        userConfirmed,
+        setUserConfirmed,
+        address,
+        setAddress,
+      },
+      userDetails: { user, isLoggedIn },
+    }),
+    [
+      cartDetails.products,
+      cart?.id,
+      cartDetails.orderItemCount,
+      cartDetails.orderTotal,
+      cartStatus?.cartLoaded,
+      cartStatus?.cartEmpty,
+      cartActions.deleteCart,
       checkout,
       resetSession,
       userConfirmed,
       setUserConfirmed,
       address,
       setAddress,
-    },
-    userDetails: { user, isLoggedIn },
-  };
-
-  return (
-    <CheckoutProcessContext.Provider value={ctx}>
-      {children}
-    </CheckoutProcessContext.Provider>
+      user,
+      isLoggedIn,
+    ],
   );
+
+  return <CheckoutProcessContext.Provider value={ctx}>{children}</CheckoutProcessContext.Provider>;
 }

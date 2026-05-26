@@ -58,9 +58,9 @@ const useCart = () => {
   const resetProduct = (payload) => dispatch(resetProductThunk(payload));
   const deleteCart = () => dispatch(deleteCartThunk());
 
-  const checkout = async () => {
+  const checkout = async (payload) => {
     try {
-      const result = await dispatch(checkoutThunk()).unwrap();
+      const result = await dispatch(checkoutThunk(payload)).unwrap();
       navigate(PATHS.FRONT.ORDER, {
         replace: true,
         state: { order: result.clientOrder },

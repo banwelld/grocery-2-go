@@ -1,7 +1,7 @@
 import toast from 'react-hot-toast';
 
-import { useModal } from '../../../../hooks/useModal';
 import useCheckoutProcess from '../../../../hooks/useCheckoutProcess';
+import { useModal } from '../../../../hooks/useModal';
 
 import Button from '../../../../components/ui/Button';
 
@@ -23,15 +23,14 @@ export default function StepControls({ controls, bemRoot }) {
   const { isFirstStep, isLastStep, goNext } = controls;
 
   const confirmAndCheckout = () => {
-    if (cart?.orderItemCount < 1)
-      return toast.error(Toasts.ORDER.SUBMIT.EMPTY_CART);
+    if (cart?.orderItemCount < 1) return toast.error(Toasts.ORDER.SUBMIT.EMPTY_CART);
 
     openModal({
       uiText: Modals.CONFIRM_CHECKOUT,
       confirmLabel: 'Place Order!',
       closeLabel: 'Cancel',
       handleConfirm: () =>
-        toast.promise(checkoutProcess?.checkout, {
+        toast.promise(checkoutProcess?.checkout(), {
           loading: Toasts.ORDER.SUBMIT.BUSY,
           success: Toasts.ORDER.SUBMIT.SUCCESS,
           error: Toasts.ORDER.SUBMIT.FAILURE,

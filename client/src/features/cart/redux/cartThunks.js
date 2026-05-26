@@ -14,6 +14,17 @@ import {
 
 const { Errors } = Feedback;
 
+const serializeError = (err) => {
+  if (err instanceof Error) {
+    return {
+      message: err.message,
+      status: err.status,
+      serverError: err.serverError,
+    };
+  }
+  return err;
+};
+
 export const loadLocalCartThunk = createAsyncThunk(
   'cart/loadLocalCart',
   async (_, { dispatch, rejectWithValue }) => {
@@ -35,7 +46,7 @@ export const loadLocalCartThunk = createAsyncThunk(
     } catch (err) {
       logException(Errors.FAILURE.RECEIVE, err);
       dispatch(setCartLoaded(true));
-      rejectWithValue(err);
+      return rejectWithValue(serializeError(err));
     }
   },
   {
@@ -106,7 +117,7 @@ export const addToCartThunk = createAsyncThunk(
             newCount: existingProduct.quantity,
           }),
         );
-      return rejectWithValue(err);
+      return rejectWithValue(serializeError(err));
     }
   },
 );
@@ -149,7 +160,7 @@ export const takeFromCartThunk = createAsyncThunk(
             newCount: existingProduct.quantity,
           }),
         );
-      return rejectWithValue(err);
+      return rejectWithValue(serializeError(err));
     }
   },
 );
@@ -182,7 +193,7 @@ export const resetProductThunk = createAsyncThunk(
           newCount: existingProduct.quantity,
         }),
       );
-      return rejectWithValue(err);
+      return rejectWithValue(serializeError(err));
     }
   },
 );
@@ -203,21 +214,23 @@ export const deleteCartThunk = createAsyncThunk(
     } catch (err) {
       logException(Errors.FAILURE.DELETE, err);
       dispatch(setCart(currentCart));
-      return rejectWithValue(err);
+      return rejectWithValue(serializeError(err));
     }
   },
 );
 
 export const checkoutThunk = createAsyncThunk(
   'cart/checkout',
-  async (_, { dispatch, getState, rejectWithValue }) => {
+  async (addressPayload, { dispatch, getState, rejectWithValue }) => {
     const { cart } = getState();
     const currentCart = cart.cartData;
 
     try {
       dispatch(resetLocalCart());
 
-      const serverOrder = toServer(currentCart, 'order');
+      const orderWithAddress = { ...currentCart, ...addressPayload };
+      const serverOrder = toServer(orderWithAddress, 'order');
+      delete serverOrder.order_products;
 
       const confirmation = await patchData(
         `${PATHS.BACK.ORDER_ID(currentCart.id)}?action_type=checkout`,
@@ -229,7 +242,7 @@ export const checkoutThunk = createAsyncThunk(
     } catch (err) {
       logException(Errors.FAILURE.UPDATE, err);
       dispatch(setCart(currentCart));
-      return rejectWithValue(err);
+      return rejectWithValue(serializeError(err));
     }
   },
 );

@@ -23,7 +23,7 @@ export default function useCartAction(productId) {
         null,
       );
 
-    return addToCart(productId, amount);
+    return addToCart({ productId, count: amount });
   };
 
   const decrement = (count = 1) => {
@@ -35,12 +35,12 @@ export default function useCartAction(productId) {
         null,
       );
 
-    return takeFromCart(productId, amount);
+    return takeFromCart({ productId, count: amount });
   };
 
   const resetQuantity = () => {
     if (!product) return;
-    return resetProduct(productId);
+    return resetProduct({ productId });
   };
 
   return { quantity, increment, decrement, resetQuantity, hasProduct };
