@@ -1,23 +1,23 @@
+import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import Feedback from '../config/feedback';
 import PATHS from '../config/paths';
 import {
-  selectCartData,
-  selectIsPending,
-  selectCartLoaded,
-  selectOrderTotal,
-  selectOrderItemCount,
   resetLocalCart,
+  selectCartData,
+  selectCartLoaded,
+  selectIsPending,
+  selectOrderItemCount,
+  selectOrderTotal,
 } from '../features/cart/redux/cartSlice';
 import {
-  loadLocalCartThunk,
   addToCartThunk,
-  takeFromCartThunk,
-  resetProductThunk,
-  deleteCartThunk,
   checkoutThunk,
+  deleteCartThunk,
+  loadLocalCartThunk,
+  resetProductThunk,
+  takeFromCartThunk,
 } from '../features/cart/redux/cartThunks';
 
 const { Toasts } = Feedback;

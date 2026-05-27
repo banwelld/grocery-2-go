@@ -1,10 +1,7 @@
 import { Outlet } from 'react-router-dom';
-
 import { ModalProvider } from '../contexts/ModalContext';
-import { UserProvider } from '../features/user/context/UserContext';
 import { ProductProvider } from '../features/collection/context/ProductContext';
-import { UserOrdersProvider } from '../features/user/context/UserOrdersContext';
-import useUser from '../features/user/hooks/useUser';
+import { UserProvider } from '../features/user/context/UserContext';
 
 export default function App() {
   return (
@@ -19,12 +16,5 @@ export default function App() {
 }
 
 function AppProviders({ children }) {
-  const { user } = useUser();
-  return (
-    <ProductProvider>
-      <UserOrdersProvider key={user?.id ?? 'guest'}>
-        {children}
-      </UserOrdersProvider>
-    </ProductProvider>
-  );
+  return <ProductProvider>{children}</ProductProvider>;
 }

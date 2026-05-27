@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import toast from "react-hot-toast";
@@ -39,11 +39,17 @@ const { Toasts } = Feedback;
 export default function Profile() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { user, userAdmin } = useUser();
-  const { userOrders, ordersLoaded } = useUserOrders();
+  const { userOrders, ordersLoaded, loadOrders } = useUserOrders();
 
   const isCustomer = user?.role === Role.CUSTOMER;
 
-  // handle condiitonal view modes for read and edit modes
+  useEffect(() => {
+    if (isCustomer) {
+      loadOrders(false);
+    }
+  }, [isCustomer, loadOrders]);
+
+  // handle conditional view modes for read and edit modes
   const { toggleViewMode: toggleReadEdit, isMode1: isReadMode } = useViewMode({
     state: searchParams,
     setState: setSearchParams,

@@ -1,7 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Feedback from '../../../config/feedback';
 import PATHS from '../../../config/paths';
-import { deleteData, getData, logException, patchData, postData } from '../../../utils/helpers';
+import {
+  deleteData,
+  getData,
+  logException,
+  patchData,
+  postData,
+  serializeError,
+} from '../../../utils/helpers';
 import { toClient, toServer } from '../../../utils/serializer';
 import {
   addUiProduct,
@@ -13,17 +20,6 @@ import {
 } from './cartSlice';
 
 const { Errors } = Feedback;
-
-const serializeError = (err) => {
-  if (err instanceof Error) {
-    return {
-      message: err.message,
-      status: err.status,
-      serverError: err.serverError,
-    };
-  }
-  return err;
-};
 
 export const loadLocalCartThunk = createAsyncThunk(
   'cart/loadLocalCart',

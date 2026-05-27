@@ -1,6 +1,6 @@
+import clsx from 'clsx';
 import { DataTypes } from '../config/constants';
 import Feedback from '../config/feedback';
-import clsx from 'clsx';
 
 const { Errors } = Feedback;
 
@@ -78,27 +78,15 @@ export const toDateIso = (dateString) => {
 };
 
 export const priceCentsToDollars = (priceCents) => {
-  if (isInteger({ value: priceCents, positiveOnly: true }))
-    return (priceCents / 100).toFixed(2);
-
-  logException(
-    Errors.INVALID.DATA('non-zero, positive integer', typeof priceCents),
-  );
+  if (isInteger({ value: priceCents, positiveOnly: true })) return (priceCents / 100).toFixed(2);
+  logException(Errors.INVALID.DATA('non-zero, positive integer', typeof priceCents));
   return '??';
 };
 
-export const toBemClassName = ({
-  bemBlock,
-  bemElem,
-  bemMod,
-  bemMod2,
-  showMod2 = false,
-} = {}) => {
+export const toBemClassName = ({ bemBlock, bemElem, bemMod, bemMod2, showMod2 = false } = {}) => {
   if (!isValidString(bemBlock)) return 'invalid-missing-block';
 
-  const baseClass = isValidString(bemElem)
-    ? `${bemBlock}__${bemElem}`
-    : `${bemBlock}`;
+  const baseClass = isValidString(bemElem) ? `${bemBlock}__${bemElem}` : `${bemBlock}`;
 
   return clsx(baseClass, {
     [`${baseClass}--${bemMod}`]: isValidString(bemMod),
@@ -155,8 +143,7 @@ export const compareSortValues = ({
 
 // error handling
 
-export const logException = (message, err = null) =>
-  console.error(message, err);
+export const logException = (message, err = null) => console.error(message, err);
 
 // redux helpers
 
@@ -164,9 +151,20 @@ export const createMatcher = (sliceName) => {
   const isSlice = (action) => action.type.startsWith(`${sliceName}/`);
   return {
     isPending: (action) => isSlice(action) && action.type.endsWith('/pending'),
-    isFulfilled: (action) =>
-      isSlice(action) && action.type.endsWith('/fulfilled'),
-    isRejected: (action) =>
-      isSlice(action) && action.type.endsWith('/rejected'),
+    // eslint-disable-next-line
+    isFulfilled: (action) => isSlice(action) && action.type.endsWith('/fulfilled'),
+    // eslint-disable-next-line
+    isRejected: (action) => isSlice(action) && action.type.endsWith('/rejected'),
   };
+};
+
+export const serializeError = (err) => {
+  if (err instanceof Error) {
+    return {
+      message: err.message,
+      status: err.status,
+      serverError: err.serverError,
+    };
+  }
+  return err;
 };
