@@ -56,7 +56,7 @@ export const runExclusive = ({ doFetch, lockRef, setPending, setIsLoaded }) => {
 
 // formatting and normalizing
 
-export const toPhoneNumFormat = (phoneString) => {
+export const formatPhone = (phoneString) => {
   const areaCode = phoneString.slice(0, 3);
   const exchange = phoneString.slice(3, -4);
   const subscriber = phoneString.slice(-4);
@@ -68,7 +68,7 @@ export const toPhoneNumFormat = (phoneString) => {
   return '** Missing/Invalid Phone Number **';
 };
 
-export const toDateIso = (dateString) => {
+export const formatDateIso = (dateString) => {
   const datePattern = /^\d{4}[-,/]\d{2}[-,/]\d{2}.*$/;
   const isValidDate = datePattern.test(dateString);
 

@@ -1,32 +1,26 @@
-import { useMemo, useCallback, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
-
-import toast from "react-hot-toast";
-
-import useUserOrders from "../../hooks/useUserOrders";
-import useViewMode from "../../../../hooks/useViewMode";
-import useUser from "../../hooks/useUser";
-
-import PageContent from "./PageContent";
-import Sidebar from "./Sidebar";
-import UserDetailsTable from "../../components/UserDetailsTable";
-import MappedTable from "../../../mapped-table/Components/MappedTable";
-import PasswordUpdateForm from "../../components/PasswordUpdateForm";
-import UserUpdateForm from "../../components/UserUpdateForm";
-import PageFrame from "../../../../components/ui/frames/PageFrame";
-import ClickHere from "../../../../components/ui/ClickHere";
-import Button from "../../../../components/ui/Button";
-
-import tableConfig from "./tableConfig";
-import Feedback from "../../../../config/feedback";
-import { PageName } from "../../../../config/enums";
-import { UserUpdateMode as Mode } from "../../../../config/enums";
-import { UserRole as Role } from "../../../../config/enums";
-import { Headings, UiText } from "../../../../config/constants";
+import { useCallback, useEffect, useMemo } from 'react';
+import toast from 'react-hot-toast';
+import { useSearchParams } from 'react-router-dom';
+import Button from '../../../../components/ui/Button';
+import ClickHere from '../../../../components/ui/ClickHere';
+import PageFrame from '../../../../components/ui/frames/PageFrame';
+import { Headings, UiText } from '../../../../config/constants';
+import { UserUpdateMode as Mode, PageName, UserRole as Role } from '../../../../config/enums';
+import Feedback from '../../../../config/feedback';
+import useViewMode from '../../../../hooks/useViewMode';
+import MappedTable from '../../../mapped-table/Components/MappedTable';
+import PasswordUpdateForm from '../../components/PasswordUpdateForm';
+import UserDetailsTable from '../../components/UserDetailsTable';
+import UserUpdateForm from '../../components/UserUpdateForm';
+import useUser from '../../hooks/useUser';
+import useUserOrders from '../../hooks/useUserOrders';
+import PageContent from './PageContent';
+import Sidebar from './Sidebar';
+import tableConfig from './tableConfig';
 
 const actionDescription = Object.freeze({
-  [Mode.USER_INFO]: "update your password",
-  [Mode.PASSWORD]: "update your user info",
+  [Mode.USER_INFO]: 'update your password',
+  [Mode.PASSWORD]: 'update your user info',
 });
 
 const editSectionHeading = Object.freeze({
@@ -53,7 +47,7 @@ export default function Profile() {
   const { toggleViewMode: toggleReadEdit, isMode1: isReadMode } = useViewMode({
     state: searchParams,
     setState: setSearchParams,
-    paramName: "view",
+    paramName: 'view',
     disableMode2: !isCustomer,
     disableMessage: Toasts.RESTRICTION.ADMIN_PROFILE,
   });
@@ -75,23 +69,23 @@ export default function Profile() {
         success: Toasts.USER.UPDATE.SUCCESS,
         error: (err) => err.serverError || Toasts.USER.UPDATE.FAILURE,
       }),
-    [userAdmin]
+    [userAdmin],
   );
 
   const sidebarControls = useMemo(
     () => (
       <Button
         onClick={toggleReadEdit}
-        label={isReadMode ? "Update Info" : "View Profile"}
+        label={isReadMode ? 'Update Info' : 'View Profile'}
         bemMod='page-utility'
       />
     ),
-    [toggleReadEdit, isReadMode]
+    [toggleReadEdit, isReadMode],
   );
 
-  const handleFormSubmit = useCallback(
+  const onSubmit = useCallback(
     (data) => updateUser(data).then(toggleReadEdit),
-    [updateUser, toggleReadEdit]
+    [updateUser, toggleReadEdit],
   );
 
   const contentElements = useMemo(
@@ -100,18 +94,14 @@ export default function Profile() {
       userOrdersTable: !ordersLoaded ? (
         <p>Loading...</p>
       ) : userOrders.length > 0 ? (
-        <MappedTable
-          data={userOrders}
-          tableConfig={tableConfig}
-          parentBemBlock='user-orders'
-        />
+        <MappedTable data={userOrders} tableConfig={tableConfig} parentBemBlock='user-orders' />
       ) : (
         <p>{UiText.NO_ORDERS}</p>
       ),
       updateForm: isInfoMode ? (
-        <UserUpdateForm user={user} onSubmit={handleFormSubmit} />
+        <UserUpdateForm user={user} onSubmit={onSubmit} />
       ) : (
-        <PasswordUpdateForm onSubmit={handleFormSubmit} />
+        <PasswordUpdateForm onSubmit={onSubmit} />
       ),
       infoPasswordClickHere: (
         <ClickHere
@@ -120,15 +110,7 @@ export default function Profile() {
         />
       ),
     }),
-    [
-      user,
-      ordersLoaded,
-      userOrders,
-      isInfoMode,
-      handleFormSubmit,
-      infoPasswordMode,
-      toggleInfoPassword,
-    ]
+    [user, ordersLoaded, userOrders, isInfoMode, onSubmit, infoPasswordMode, toggleInfoPassword],
   );
 
   const sidebarProps = useMemo(
@@ -137,7 +119,7 @@ export default function Profile() {
       sidebarControls,
       pageName: PageName.USER,
     }),
-    [isCustomer, sidebarControls]
+    [isCustomer, sidebarControls],
   );
 
   const contentProps = useMemo(
@@ -147,7 +129,7 @@ export default function Profile() {
       isCustomer,
       editSectionHeading: editSectionHeading[infoPasswordMode],
     }),
-    [contentElements, isReadMode, isCustomer, infoPasswordMode]
+    [contentElements, isReadMode, isCustomer, infoPasswordMode],
   );
 
   return (

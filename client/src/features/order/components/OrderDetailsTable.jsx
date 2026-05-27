@@ -1,6 +1,6 @@
-import { toDateIso, priceCentsToDollars } from '../../../utils/helpers';
-import DetailsTable from '../../../components/ui/tables/details-table/DetailsTable';
 import StreetAddress from '../../../components/ui/StreetAddress';
+import DetailsTable from '../../../components/ui/tables/details-table/DetailsTable';
+import { formatDateIso, priceCentsToDollars } from '../../../utils/helpers';
 
 export default function OrderDetailsTable({
   addressLine1,
@@ -24,9 +24,9 @@ export default function OrderDetailsTable({
     />
   );
 
-  const orderDate = toDateIso(createdAt);
+  const orderDate = formatDateIso(createdAt);
   const statusDateLabel = `${status} dt`;
-  const statusDate = toDateIso(updatedAt);
+  const statusDate = formatDateIso(updatedAt);
   const orderTotal = `$ ${priceCentsToDollars(finalTotalCents)}`;
 
   const orderDetails = {

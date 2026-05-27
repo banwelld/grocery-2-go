@@ -1,25 +1,59 @@
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  loginThunk,
+  registerThunk,
+  logoutThunk,
+  updateUserThunk,
+} from '../redux/userThunks';
 
-/**
- * @typedef {Object} UseUserReturn
- * @property {Object} user - current user object
- * @property {boolean} isLoggedIn - whether the user is currently logged in
- * @property {boolean} isPending - whether a user action is currently in progress
- * @property {{
- *   login: function(Object): Promise<void>,
- *   register: function(Object): Promise<void>,
- *   logout: function(): Promise<void>
- * }} userAuth - authentication methods
- * @property {{
- *   updateUser: function(Object): Promise<void>,
- *   deleteUser: function(): Promise<void>,
- * }} userAdmin - user management methods
- */
-
-/**
- * @returns {UseUserReturn}
- */
 export default function useUser() {
-  return useContext(UserContext);
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user.userData);
+  const sessionLoaded = useSelector((state) => state.user.sessionLoaded);
+  const isPending = useSelector((state) => state.user.isPending);
+
+  const login = useCallback(
+    (credentials) => {
+      return dispatch(loginThunk(credentials)).unwrap();
+    },
+    [dispatch],
+  );
+
+  const register = useCallback(
+    (data) => {
+      return dispatch(registerThunk(data)).unwrap();
+    },
+    [dispatch],
+  );
+
+  const logout = useCallback(
+    () => {
+      return dispatch(logoutThunk()).unwrap();
+    },
+    [dispatch],
+  );
+
+  const updateUser = useCallback(
+    (data) => {
+      return dispatch(updateUserThunk(data)).unwrap();
+    },
+    [dispatch],
+  );
+
+  return {
+    user,
+    isLoggedIn: !!user,
+    sessionLoaded,
+    isPending,
+    userAuth: {
+      login,
+      register,
+      logout,
+    },
+    userAdmin: {
+      updateUser,
+    },
+  };
 }

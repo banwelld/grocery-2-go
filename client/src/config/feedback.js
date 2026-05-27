@@ -26,7 +26,7 @@ const Toasts = {
   RESTRICTION: {
     AUTH_ONLY: `Members only. Please login.`,
     CUSTOMER_ONLY: `Registered customers only.`,
-    GUEST_ONLY: `You're alrady logged in.`,
+    GUEST_ONLY: `You're already logged in.`,
     ADMIN_PROFILE: `Requires manager credentials`,
   },
   ORDER: {

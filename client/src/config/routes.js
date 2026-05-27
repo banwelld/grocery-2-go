@@ -1,7 +1,6 @@
 // routes.js
 
 import App from '../app/App';
-import AppLayout from '../app/AppLayout';
 import ErrorPage from '../pages/ErrorPage';
 import Auth from '../features/user/pages/auth/Auth';
 import GridView from '../features/collection/pages/grid-view/GridView';
@@ -23,56 +22,51 @@ const routes = [
     element: <App />,
     children: [
       {
-        element: <AppLayout />,
+        errorElement: <ErrorPage />,
         children: [
+          { index: true, element: <GridView /> },
+          { path: PATHS.FRONT.PRODUCTS(), element: <ItemView /> },
           {
-            errorElement: <ErrorPage />,
-            children: [
-              { index: true, element: <GridView /> },
-              { path: PATHS.FRONT.PRODUCTS(), element: <ItemView /> },
-              {
-                path: PATHS.FRONT.PRODUCT_ADMIN,
-                element: (
-                  <AdminRoute>
-                    <AdminView />
-                  </AdminRoute>
-                ),
-              },
-              {
-                path: PATHS.FRONT.AUTH,
-                element: (
-                  <GuestRoute>
-                    <Auth />
-                  </GuestRoute>
-                ),
-              },
-              {
-                path: PATHS.FRONT.USER_PROFILE,
-                element: (
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                ),
-              },
-              {
-                path: PATHS.FRONT.CART,
-                element: (
-                  <ProtectedRoute isCustomersOnly>
-                    <Cart />
-                  </ProtectedRoute>
-                ),
-              },
-              {
-                path: PATHS.FRONT.ORDER,
-                element: (
-                  <ProtectedRoute isCustomersOnly>
-                    <Order />
-                  </ProtectedRoute>
-                ),
-              },
-              { path: '*', element: <ErrorPage /> },
-            ],
+            path: PATHS.FRONT.PRODUCT_ADMIN,
+            element: (
+              <AdminRoute>
+                <AdminView />
+              </AdminRoute>
+            ),
           },
+          {
+            path: PATHS.FRONT.AUTH,
+            element: (
+              <GuestRoute>
+                <Auth />
+              </GuestRoute>
+            ),
+          },
+          {
+            path: PATHS.FRONT.USER_PROFILE,
+            element: (
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: PATHS.FRONT.CART,
+            element: (
+              <ProtectedRoute isCustomersOnly>
+                <Cart />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: PATHS.FRONT.ORDER,
+            element: (
+              <ProtectedRoute isCustomersOnly>
+                <Order />
+              </ProtectedRoute>
+            ),
+          },
+          { path: '*', element: <ErrorPage /> },
         ],
       },
     ],

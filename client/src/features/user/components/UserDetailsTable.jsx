@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { toDateIso, toPhoneNumFormat } from '../../../utils/helpers';
 import DetailsTable from '../../../components/ui/tables/details-table/DetailsTable';
 import { UserRole as Role } from '../../../config/enums';
+import { formatDateIso, formatPhone } from '../../../utils/helpers';
 
 const RoleDesc = Object.freeze({
   [Role.ADMIN]: 'Product Administrator',
@@ -9,21 +9,17 @@ const RoleDesc = Object.freeze({
 });
 
 export default function UserDetailsTable({ user }) {
+  const { nameFirst, nameLast, role, phone, email, createdAt } = user;
+
   const userDetails = useMemo(() => {
-    if (!user) return null;
-
-    const { nameFirst, nameLast, role, phone, email, createdAt } = user;
-
     return {
       member: `${nameFirst} ${nameLast}`,
       membership: RoleDesc[role],
-      phone: toPhoneNumFormat(phone),
+      phone: formatPhone(phone),
       email,
-      'joined on': toDateIso(createdAt),
+      'joined on': formatDateIso(createdAt),
     };
-  }, [user]);
-
-  if (!user) return <p>Loading user info...</p>;
+  }, [nameFirst, nameLast, role, email, phone, createdAt]);
 
   return <DetailsTable data={userDetails} dataType='user' />;
 }

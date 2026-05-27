@@ -1,12 +1,8 @@
-import { toDateIso } from '../../../utils/helpers';
 import { ProductColumns as Column } from '../../../config/enums';
+import { formatDateIso } from '../../../utils/helpers';
 
 export const normalizeCartTableRows = (data) => {
-  const {
-    quantity,
-    productId,
-    product: { name, priceCents } = {},
-  } = data ?? {};
+  const { quantity, productId, product: { name, priceCents } = {} } = data ?? {};
   return {
     [Column.NAME.key]: name,
     [Column.QUANTITY.key]: { quantity, productId },
@@ -29,7 +25,7 @@ export const normalizeOrderTableRows = (data) => {
 export const normalizeUserOrdersTableRows = (data) => {
   const { createdAt, productCount, finalTotalCents, status } = data;
   return {
-    date: toDateIso(createdAt),
+    date: formatDateIso(createdAt),
     quantity: productCount,
     finalTotalCents,
     status,
