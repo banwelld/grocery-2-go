@@ -1,11 +1,13 @@
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import Feedback from '../../../config/feedback';
-import { useModal } from '../../../hooks/useModal';
 import Button from '../../../components/ui/Button';
-import PATHS from '../../../config/paths';
+import Feedback from '../../../config/feedback';
+import { ROUTE_PATHS } from '../../../config/routePaths';
+import { useModal } from '../../../hooks/useModal';
+import { AUTH_VIEW } from '../../user/pages/auth/Auth';
 
 const { Toasts, Modals } = Feedback;
+const { AUTH } = ROUTE_PATHS;
 
 export default function Auth({ nameFirst, logout, bemBlock }) {
   const navigate = useNavigate();
@@ -30,7 +32,7 @@ export default function Auth({ nameFirst, logout, bemBlock }) {
   const Login = (
     <Button
       label='Login'
-      onClick={() => navigate(PATHS.FRONT.AUTH_LOGIN)}
+      onClick={() => navigate(`${AUTH}?view=${AUTH_VIEW.LOGIN}`)}
       displayAsText
       bemMod='auth'
     />
@@ -39,20 +41,13 @@ export default function Auth({ nameFirst, logout, bemBlock }) {
   const Register = (
     <Button
       label='Register'
-      onClick={() => navigate(PATHS.FRONT.AUTH_REGISTER)}
+      onClick={() => navigate(`${AUTH}?view=${AUTH_VIEW.REGISTER}`)}
       displayAsText
       bemMod='auth'
     />
   );
 
-  const Logout = (
-    <Button
-      label='Logout'
-      onClick={confirmAndLogout}
-      displayAsText
-      bemMod='auth'
-    />
-  );
+  const Logout = <Button label='Logout' onClick={confirmAndLogout} displayAsText bemMod='auth' />;
 
   return (
     <div className={`${bemBlock}__section--auth`}>

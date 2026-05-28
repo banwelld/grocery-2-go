@@ -1,49 +1,37 @@
 import { useNavigate } from 'react-router-dom';
-
-import { QuantityAdjust } from '../../../cart/components/quantity-adjust/QuantityAdjust';
-
-import ProductDisplay from '../product-display/ProductDisplay';
 import SuppressPropagation from '../../../../components/utility/SuppressPropagation';
-
 import { toBemClassName } from '../../../../utils/helpers';
-import PATHS from '../../../../config/paths';
+import { QuantityAdjust } from '../../../cart/components/quantity-adjust/QuantityAdjust';
+import ProductDisplay from '../product-display/ProductDisplay';
 import './ProductCard.css';
 
 const BLOCK = 'product-card';
 
-export default function ProductCard({
-  product,
-  displayConfig,
-  isDisplayOnly = false,
-}) {
+export default function ProductCard({ product, displayConfig, isDisplayOnly = false }) {
   const navigate = useNavigate();
 
   if (!isDisplayOnly && !product.id)
-    return (
-      <div className={toBemClassName({ bemBlock: BLOCK })}>Loading...</div>
-    );
+    return <div className={toBemClassName({ bemBlock: BLOCK })}>Loading...</div>;
 
-  const onClick = () => navigate(PATHS.FRONT.PRODUCTS(product?.id));
+  const productId = product?.id;
+
+  const handleProductSelect = (id) => navigate(`/products/${id}`);
   const onKeyDown = (e) =>
-    e.key === 'Enter' || e.key === ' ' ? onClick() : null;
+    e.key === 'Enter' || e.key === ' ' ? () => handleProductSelect(productId) : null;
 
   const articleProps = isDisplayOnly
     ? {}
-    : { role: 'button', tabIndex: 0, onClick, onKeyDown };
+    : { role: 'button', tabIndex: 0, onClick: () => handleProductSelect(productId), onKeyDown };
 
   const quantityAdjustProps = {
-    productId: product?.id,
+    productId,
     parentBemBlock: BLOCK,
     collapseAtZero: true,
   };
 
   return (
     <article className={toBemClassName({ bemBlock: BLOCK })} {...articleProps}>
-      <ProductDisplay
-        product={product}
-        displayConfig={displayConfig}
-        bemBlock={BLOCK}
-      />
+      <ProductDisplay product={product} displayConfig={displayConfig} bemBlock={BLOCK} />
       {!isDisplayOnly && (
         <SuppressPropagation>
           <QuantityAdjust {...quantityAdjustProps} />

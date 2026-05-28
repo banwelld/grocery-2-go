@@ -8,8 +8,6 @@ import tableConfig from './tableConfig';
 const legalStatuses = new Set(Object.values(OrderStatus));
 
 export default function PageContent({ order, status, pageName }) {
-  if (!order) return <p>Loading Order...</p>;
-
   const { orderProducts, ...orderDetails } = order;
 
   const headingKey = legalStatuses.has(status)

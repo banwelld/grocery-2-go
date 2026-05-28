@@ -1,10 +1,8 @@
 import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-
 import { CheckoutProcessProvider } from '../context/CheckoutProcessContext';
 import useCheckoutProcess from '../../../hooks/useCheckoutProcess';
 import { useModal } from '../../../hooks/useModal';
-
 import PageContent from './PageContent';
 import Sidebar from './Sidebar';
 import CheckoutProcessController from '../components/checkout-process/CheckoutProcessController';
@@ -55,9 +53,7 @@ const CartPageController = () => {
   );
 
   const contentElements = {
-    checkoutProcessController: (
-      <CheckoutProcessController pageName={pageName} />
-    ),
+    checkoutProcessController: <CheckoutProcessController pageName={pageName} />,
   };
 
   const sidebarProps = { sidebarControls, pageName };

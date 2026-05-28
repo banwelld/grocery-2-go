@@ -20,7 +20,7 @@ import './QuantityAdjust.css';
 const BLOCK = 'quantity-adjust';
 
 export function QuantityAdjust({ productId, collapseAtZero, parentBemBlock }) {
-  const { quantity, increment, decrement, hasProduct } =
+  const { quantity, increment, decrement, resetQuantity, hasProduct } =
     useCartAction(productId);
 
   const isShowAll = !(collapseAtZero && !hasProduct);
@@ -35,7 +35,7 @@ export function QuantityAdjust({ productId, collapseAtZero, parentBemBlock }) {
   const incrementStyleKey = hasProduct ? Style.INCREMENT : Style.ADD_INITIAL;
 
   const decrementButtonProps = {
-    onClick: decrement,
+    onClick: quantity === 1 ? resetQuantity : decrement,
     styleKey: decrementStyleKey,
     isDisabled: !hasProduct,
     bemBlock: BLOCK,

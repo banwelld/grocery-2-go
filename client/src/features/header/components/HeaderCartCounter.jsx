@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import PATHS from '../../../config/paths';
+import { ROUTE_PATHS } from '../../../config/routePaths';
 
 import SvgIcon from '../../../components/ui/svg-icon/SvgIcon';
 
@@ -14,7 +14,7 @@ export default function HeaderCartCounter({ itemCount, bemBlock }) {
     bemMod: 'tally',
   };
 
-  // data-count attribute holds the count value for the ::after pseudoelement
+  // data-count attribute holds the count value for the ::after pseudo element
   return (
     <div
       className={toBemClassName({
@@ -23,11 +23,8 @@ export default function HeaderCartCounter({ itemCount, bemBlock }) {
         bemMod: 'tally',
       })}
     >
-      <Link to={PATHS.FRONT.CART}>
-        <div
-          className={toBemClassName(containerBemProps)}
-          data-count={itemCount}
-        >
+      <Link to={ROUTE_PATHS.CART}>
+        <div className={toBemClassName(containerBemProps)} data-count={itemCount}>
           <SvgIcon path={SvgPath['CART_ICON']} />
         </div>
       </Link>

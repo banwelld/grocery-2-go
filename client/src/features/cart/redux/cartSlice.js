@@ -1,5 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createMatcher } from '../../../utils/helpers';
+import {
+  loadLocalCartThunk,
+  addToCartThunk,
+  takeFromCartThunk,
+  resetProductThunk,
+  deleteCartThunk,
+  checkoutThunk,
+} from './cartThunks';
 
 export const CartSlice = Object.freeze({
   NAME: 'cart',
@@ -16,43 +24,59 @@ export const cartSlice = createSlice({
   name: CartSlice.NAME,
   initialState,
   reducers: {
-    setCart: (state, action) => {
-      state.cartData = action.payload;
-    },
-    setCartLoaded: (state, action) => {
-      state.cartLoaded = action.payload;
-    },
-    setIsPending: (state, action) => {
-      state.isPending = action.payload;
-    },
     resetLocalCart: (state) => {
       state.cartData = null;
-    },
-    adjustUiQuantity: (state, action) => {
-      const { rowId, newCount } = action.payload;
-
-      if (!!state.cartData && !!state.cartData.orderProducts)
-        state.cartData.orderProducts = state.cartData.orderProducts.map((product) =>
-          product.id === rowId ? { ...product, quantity: newCount } : product,
-        );
-    },
-    removeUiProduct: (state, action) => {
-      const rowId = action.payload;
-
-      if (!!state.cartData && !!state.cartData.orderProducts)
-        state.cartData.orderProducts = state.cartData.orderProducts.filter(
-          (product) => product.id !== rowId,
-        );
-    },
-    addUiProduct: (state, action) => {
-      const product = action.payload;
-
-      if (state?.cartData?.orderProducts) state.cartData.orderProducts.push(product);
     },
   },
 
   extraReducers: (builder) =>
     builder
+      .addCase(loadLocalCartThunk.fulfilled, (state, action) => {
+        state.cartData = action.payload;
+        state.cartLoaded = true;
+      })
+      .addCase(loadLocalCartThunk.rejected, (state) => {
+        state.cartLoaded = true;
+      })
+      .addCase(addToCartThunk.fulfilled, (state, action) => {
+        const { isNew, product } = action.payload;
+        if (!state.cartData) {
+          state.cartData = {
+            id: product.orderId,
+            orderProducts: [product],
+          };
+        } else {
+          if (isNew) {
+            state.cartData.orderProducts.push(product);
+          } else {
+            state.cartData.orderProducts = state.cartData.orderProducts.map((p) =>
+              p.id === product.id ? product : p,
+            );
+          }
+        }
+      })
+      .addCase(takeFromCartThunk.fulfilled, (state, action) => {
+        const { isDeleted, id, product } = action.payload;
+        if (isDeleted) {
+          state.cartData.orderProducts = state.cartData.orderProducts.filter((p) => p.id !== id);
+        } else {
+          state.cartData.orderProducts = state.cartData.orderProducts.map((p) =>
+            p.id === id ? product : p,
+          );
+        }
+      })
+      .addCase(resetProductThunk.fulfilled, (state, action) => {
+        const { id } = action.payload;
+        if (state.cartData?.orderProducts) {
+          state.cartData.orderProducts = state.cartData.orderProducts.filter((p) => p.id !== id);
+        }
+      })
+      .addCase(deleteCartThunk.fulfilled, (state) => {
+        state.cartData = null;
+      })
+      .addCase(checkoutThunk.fulfilled, (state) => {
+        state.cartData = null;
+      })
       .addMatcher(createMatcher(CartSlice.NAME).isPending, (state) => {
         state.isPending = true;
       })
@@ -64,15 +88,7 @@ export const cartSlice = createSlice({
       }),
 });
 
-export const {
-  setCart,
-  setCartLoaded,
-  setIsPending,
-  resetLocalCart,
-  adjustUiQuantity,
-  removeUiProduct,
-  addUiProduct,
-} = cartSlice.actions;
+export const { resetLocalCart } = cartSlice.actions;
 
 export const selectCartWrapper = (state) => state.cart;
 export const selectCartData = (state) => state.cart.cartData;

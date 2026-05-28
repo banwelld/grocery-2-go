@@ -1,20 +1,20 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import Feedback from '../../../config/feedback';
-import PATHS from '../../../config/paths';
+import { API_ENDPOINT } from '../../../config/apiEndpoints';
 import { UserRole } from '../../../config/enums';
+import Feedback from '../../../config/feedback';
 import {
-  getData,
-  postData,
-  patchData,
   deleteData,
+  getData,
   logException,
+  patchData,
+  postData,
   serializeError,
 } from '../../../utils/helpers';
 import { toClient, toServer } from '../../../utils/serializer';
-import { loadLocalCartThunk } from '../../cart/redux/cartThunks';
 import { resetLocalCart } from '../../cart/redux/cartSlice';
-import { loadOrdersThunk } from '../../order/redux/orderThunks';
+import { loadLocalCartThunk } from '../../cart/redux/cartThunks';
 import { resetOrders } from '../../order/redux/orderSlice';
+import { loadOrdersThunk } from '../../order/redux/orderThunks';
 
 const { Errors } = Feedback;
 
@@ -22,7 +22,7 @@ export const checkSessionThunk = createAsyncThunk(
   'user/checkSession',
   async (_, { dispatch, rejectWithValue }) => {
     try {
-      const userData = await getData(PATHS.BACK.SESSION);
+      const userData = await getData(API_ENDPOINT.SESSION);
       if (!userData) return null;
 
       const clientUser = toClient(userData, 'user');
@@ -35,14 +35,14 @@ export const checkSessionThunk = createAsyncThunk(
       logException(Errors.FAILURE.RECEIVE, err);
       return rejectWithValue(serializeError(err));
     }
-  }
+  },
 );
 
 export const loginThunk = createAsyncThunk(
   'user/login',
   async (credentials, { dispatch, rejectWithValue }) => {
     try {
-      const userData = await postData(PATHS.BACK.SESSION, toServer(credentials, 'user'));
+      const userData = await postData(API_ENDPOINT.SESSION, toServer(credentials, 'user'));
       const clientUser = toClient(userData, 'user');
 
       if (clientUser && clientUser.role === UserRole.CUSTOMER) {
@@ -60,7 +60,7 @@ export const loginThunk = createAsyncThunk(
       }
       return rejectWithValue(serializeError(err));
     }
-  }
+  },
 );
 
 export const registerThunk = createAsyncThunk(
@@ -70,7 +70,7 @@ export const registerThunk = createAsyncThunk(
     const payload = toServer(rest, 'user');
 
     try {
-      const userData = await postData(`${PATHS.BACK.USERS}?action_type=register`, payload);
+      const userData = await postData(`${API_ENDPOINT.USERS}?action_type=register`, payload);
       const clientUser = toClient(userData, 'user');
 
       if (clientUser && clientUser.role === UserRole.CUSTOMER) {
@@ -86,14 +86,14 @@ export const registerThunk = createAsyncThunk(
       }
       return rejectWithValue(serializeError(err));
     }
-  }
+  },
 );
 
 export const logoutThunk = createAsyncThunk(
   'user/logout',
   async (_, { dispatch, rejectWithValue }) => {
     try {
-      await deleteData(PATHS.BACK.SESSION);
+      await deleteData(API_ENDPOINT.SESSION);
       dispatch(resetLocalCart());
       dispatch(resetOrders());
       return null;
@@ -101,7 +101,7 @@ export const logoutThunk = createAsyncThunk(
       logException(Errors.FAILURE.DELETE, err);
       return rejectWithValue(serializeError(err));
     }
-  }
+  },
 );
 
 export const updateUserThunk = createAsyncThunk(
@@ -113,11 +113,11 @@ export const updateUserThunk = createAsyncThunk(
 
     try {
       const payload = toServer(data, 'user');
-      const updatedData = await patchData(PATHS.BACK.USER_ID(currentUser.id), payload);
+      const updatedData = await patchData(API_ENDPOINT.USER_ID(currentUser.id), payload);
       return toClient(updatedData, 'user');
     } catch (err) {
       logException(Errors.UPDATE_FAILURE, err);
       return rejectWithValue(serializeError(err));
     }
-  }
+  },
 );

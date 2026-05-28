@@ -46,11 +46,6 @@ export const ProductColumns = Object.freeze({
   },
 });
 
-export const AuthViewMode = Object.freeze({
-  LOGIN: 'LOGIN',
-  REGISTER: 'REGISTER',
-});
-
 export const UserUpdateMode = Object.freeze({
   USER_INFO: 'USER_INFO',
   PASSWORD: 'PASSWORD',

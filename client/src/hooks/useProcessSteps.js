@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import toast from 'react-hot-toast';
 

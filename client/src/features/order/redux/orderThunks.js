@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+import { API_ENDPOINT } from '../../../config/apiEndpoints';
 import Feedback from '../../../config/feedback';
-import PATHS from '../../../config/paths';
 import { getData, logException, serializeError } from '../../../utils/helpers';
 import { toClient } from '../../../utils/serializer';
 
@@ -12,7 +12,7 @@ export const loadOrdersThunk = createAsyncThunk(
   async (options = {}, { rejectWithValue }) => {
     const showToast = options?.showToast ?? true;
 
-    const fetchPromise = getData(`${PATHS.BACK.ORDERS}?status=non_open&scope=shallow`)
+    const fetchPromise = getData(`${API_ENDPOINT.ORDERS}?status=non_open&scope=shallow`)
       .then((data) => {
         const ordersArray = [].concat(toClient(data, 'order') || []);
         return ordersArray.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -33,5 +33,5 @@ export const loadOrdersThunk = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(serializeError(err));
     }
-  }
+  },
 );

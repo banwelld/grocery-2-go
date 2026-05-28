@@ -2,7 +2,7 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Feedback from '../config/feedback';
-import PATHS from '../config/paths';
+import { ROUTE_PATHS } from '../config/routePaths';
 import {
   resetLocalCart,
   selectCartData,
@@ -19,6 +19,7 @@ import {
   resetProductThunk,
   takeFromCartThunk,
 } from '../features/cart/redux/cartThunks';
+import { AUTH_VIEW } from '../features/user/pages/auth/Auth';
 
 const { Toasts } = Feedback;
 
@@ -43,7 +44,7 @@ const useCart = () => {
         loading: Toasts.ORDER_PRODUCT.CREATE.BUSY,
         error: (err) => {
           if (err.status === 401) {
-            navigate(PATHS.FRONT.AUTH_LOGIN);
+            navigate(`${ROUTE_PATHS.AUTH}?view=${AUTH_VIEW.LOGIN}`);
             return Toasts.ORDER.CREATE.GUEST;
           }
           if (err.status === 403) {
@@ -61,7 +62,7 @@ const useCart = () => {
   const checkout = async (payload) => {
     try {
       const result = await dispatch(checkoutThunk(payload)).unwrap();
-      navigate(PATHS.FRONT.ORDER, {
+      navigate(ROUTE_PATHS.ORDER, {
         replace: true,
         state: { order: result.clientOrder },
       });

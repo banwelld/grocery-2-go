@@ -1,14 +1,11 @@
-import { useNavigate } from 'react-router-dom';
-
 import toast from 'react-hot-toast';
-
-import { useOrder } from '../../../hooks/useOrder';
-import { useModal } from '../../../hooks/useModal';
-import { OrderStatus } from '../context/OrderContext';
-
+import { useNavigate } from 'react-router-dom';
 import Feedback from '../../../config/feedback';
+import { ROUTE_PATHS } from '../../../config/routePaths';
+import { useModal } from '../../../hooks/useModal';
+import { useOrder } from '../../../hooks/useOrder';
 import { logException } from '../../../utils/helpers';
-import PATHS from '../../../config/paths';
+import { OrderStatus } from '../context/OrderContext';
 
 const { Errors, Toasts, Modals } = Feedback;
 
@@ -43,9 +40,7 @@ export default function useOrderActions() {
         closeLabel: 'No',
         handleConfirm: () =>
           toast.promise(
-            deleteOrder().then(() =>
-              navigate(PATHS.FRONT.USER_PROFILE, { replace: true }),
-            ),
+            deleteOrder().then(() => navigate(ROUTE_PATHS.PROFILE, { replace: true })),
             {
               loading: Toasts.ORDER.DELETE.BUSY,
               success: Toasts.ORDER.DELETE.SUCCESS,

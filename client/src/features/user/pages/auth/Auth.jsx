@@ -1,21 +1,23 @@
-import { useSearchParams, useNavigate } from 'react-router-dom';
-
 import toast from 'react-hot-toast';
-
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import Button from '../../../../components/ui/Button';
+import PageFrame from '../../../../components/ui/frames/PageFrame';
+import { PageName } from '../../../../config/enums';
+import Feedback from '../../../../config/feedback';
+import { ROUTE_PATHS } from '../../../../config/routePaths';
 import useViewMode from '../../../../hooks/useViewMode';
 import useUser from '../../hooks/useUser';
 import PageContent from './PageContent';
 import Sidebar from './Sidebar';
-import PageFrame from '../../../../components/ui/frames/PageFrame';
-import Button from '../../../../components/ui/Button';
 
-import { PageName, AuthViewMode as Mode } from '../../../../config/enums';
-import Feedback from '../../../../config/feedback';
-import PATHS from '../../../../config/paths';
+export const AUTH_VIEW = Object.freeze({
+  LOGIN: 'LOGIN',
+  REGISTER: 'REGISTER',
+});
 
 const ButtonLabel = Object.freeze({
-  [Mode.LOGIN]: 'Sign me up!',
-  [Mode.REGISTER]: 'Back to login',
+  [AUTH_VIEW.LOGIN]: 'Sign me up!',
+  [AUTH_VIEW.REGISTER]: 'Back to login',
 });
 
 const { Toasts } = Feedback;
@@ -27,21 +29,21 @@ export default function Auth() {
   const { isLoggedIn, userAuth } = useUser();
 
   const { currentViewMode, toggleViewMode } = useViewMode({
-    mode1: Mode.LOGIN,
-    mode2: Mode.REGISTER,
+    mode1: AUTH_VIEW.LOGIN,
+    mode2: AUTH_VIEW.REGISTER,
     state: searchParams,
     setState: setSearchParams,
   });
 
   const submitFor = {
-    [Mode.LOGIN]: userAuth.login,
-    [Mode.REGISTER]: userAuth.register,
+    [AUTH_VIEW.LOGIN]: userAuth.login,
+    [AUTH_VIEW.REGISTER]: userAuth.register,
   };
 
   const onSubmit = (data) =>
     toast.promise(
       submitFor[currentViewMode](data).then((user) => {
-        navigate(PATHS.FRONT.HOME, { replace: true });
+        navigate(ROUTE_PATHS.HOME, { replace: true });
         return user;
       }),
       {
@@ -49,12 +51,12 @@ export default function Auth() {
         success: (user) =>
           `${user.nameFirst} ${user.nameLast}${Toasts.USER[currentViewMode].SUCCESS}`,
         error: (err) => {
-          if (currentViewMode === Mode.LOGIN && err.status === 401)
+          if (currentViewMode === AUTH_VIEW.LOGIN && err.status === 401)
             return Toasts.USER.LOGIN.BAD_CREDS;
 
           if (err.status === 422 && err.serverError) return err.serverError;
 
-          if (currentViewMode === Mode.REGISTER && err.status === 422)
+          if (currentViewMode === AUTH_VIEW.REGISTER && err.status === 422)
             return Toasts.USER.REGISTER.EMAIL_TAKEN(data.email);
 
           return Toasts.USER[currentViewMode].FAILURE;
@@ -80,12 +82,7 @@ export default function Auth() {
 
   return (
     <PageFrame
-      sidebar={
-        <Sidebar
-          sidebarControls={sidebarControls}
-          pageName={PageName.USER_AUTH}
-        />
-      }
+      sidebar={<Sidebar sidebarControls={sidebarControls} pageName={PageName.USER_AUTH} />}
       pageContent={<PageContent {...contentProps} />}
       pageName={PageName.USER_AUTH}
     />

@@ -1,22 +1,25 @@
-import { useMemo } from 'react';
-import { getLinkConfig } from './header-nav/navLinkConfig';
+import { UserRole } from '../../../config/enums';
 import { toBemClassName } from '../../../utils/helpers';
-import NavBarLayout from './header-nav/NavLayout';
-import useNavVisibility from '../../../hooks/useNavVisibility';
+import NavLayout from './header-nav/NavLayout';
+import { ACCESS_RULE, navLinkConfig } from './header-nav/navLinkConfig';
 import './HeaderNav.css';
 
-export default function NavBar({ user = null }) {
-  const { role } = user ?? { role: 'guest' };
+const accessMap = {
+  [ACCESS_RULE.ALL]: Object.values(UserRole),
+  [ACCESS_RULE.ADMIN_ONLY]: [UserRole.ADMIN],
+  [ACCESS_RULE.CUSTOMER_ONLY]: [UserRole.CUSTOMER],
+  [ACCESS_RULE.GUEST_ONLY]: [UserRole.GUEST],
+  [ACCESS_RULE.LOGGED_IN_ONLY]: [UserRole.ADMIN, UserRole.CUSTOMER],
+};
 
-  const linkConfig = useMemo(() => {
-    return getLinkConfig(user ?? { id: 0 });
-  }, [user]);
-
-  const visibleLinkConfig = useNavVisibility(linkConfig, role);
+export default function HeaderNav({ userRole }) {
+  const visibleLinkConfig = navLinkConfig.filter((link) =>
+    accessMap[link.accessRule].includes(userRole),
+  );
 
   return (
     <nav className={toBemClassName({ bemBlock: 'nav-bar' })}>
-      <NavBarLayout linkConfig={visibleLinkConfig} bemBlock='nav-bar' />
+      <NavLayout linkConfig={visibleLinkConfig} bemBlock='nav-bar' />
     </nav>
   );
 }

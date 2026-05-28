@@ -9,14 +9,12 @@ import useUser from "../../../../user/hooks/useUser";
 
 const actionDescription = Object.freeze({
   [MODE.READ]: "edit your info",
-  [MODE.EDIT]: "exit edit mode wtihout saving",
+  [MODE.EDIT]: "exit edit mode without saving",
 });
 
 export default function ConfirmUserView({ children, ...stepProps }) {
   const { toggleViewMode, isMode1: isReadMode } = useViewMode();
   const { user, userAdmin } = useUser();
-
-  if (!user) return <p>Loading user info...</p>;
 
   const bemRoot = {
     bemBlock: "checkout",

@@ -6,7 +6,7 @@ import { dropOrder } from '../../order/redux/orderSlice';
 export default function useUserOrders() {
   const dispatch = useDispatch();
 
-  const userOrders = useSelector((state) => state.orders.ordersList);
+  const userOrders = useSelector((state) => state.orders.allOrders);
   const ordersLoaded = useSelector((state) => state.orders.ordersLoaded);
   const isPending = useSelector((state) => state.orders.isPending);
 

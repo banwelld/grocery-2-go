@@ -4,11 +4,11 @@ import { checkoutThunk } from '../../cart/redux/cartThunks';
 
 export const OrdersSlice = Object.freeze({
   NAME: 'orders',
-  LIST: 'ordersList',
+  ALL_ORDERS: 'allOrders',
 });
 
 const initialState = {
-  [OrdersSlice.LIST]: [],
+  [OrdersSlice.ALL_ORDERS]: [],
   ordersLoaded: false,
   isPending: false,
 };
@@ -19,10 +19,10 @@ export const orderSlice = createSlice({
   reducers: {
     dropOrder: (state, action) => {
       const orderId = Number(action.payload);
-      state.ordersList = state.ordersList.filter((order) => order.id !== orderId);
+      state.allOrders = state.allOrders.filter((order) => order.id !== orderId);
     },
     resetOrders: (state) => {
-      state.ordersList = [];
+      state.allOrders = [];
       state.ordersLoaded = false;
       state.isPending = false;
     },
@@ -34,7 +34,7 @@ export const orderSlice = createSlice({
       })
       .addCase(loadOrdersThunk.fulfilled, (state, action) => {
         state.isPending = false;
-        state.ordersList = action.payload;
+        state.allOrders = action.payload;
         state.ordersLoaded = true;
       })
       .addCase(loadOrdersThunk.rejected, (state) => {
@@ -43,7 +43,7 @@ export const orderSlice = createSlice({
       .addCase(checkoutThunk.fulfilled, (state, action) => {
         // Prepend newly submitted order to history list
         if (action.payload?.clientOrder) {
-          state.ordersList.unshift(action.payload.clientOrder);
+          state.allOrders.unshift(action.payload.clientOrder);
         }
       });
   },

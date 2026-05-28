@@ -1,4 +1,4 @@
-import PATHS from '../../../config/paths';
+import { ROUTE_PATHS } from '../../../config/routePaths';
 import {
   TableQuantityAdjust,
   TableResetQuantity,
@@ -41,11 +41,11 @@ export const NORMALIZER_REGISTRY = Object.freeze({
 });
 
 export const PATH_BUILDER_REGISTRY = Object.freeze({
-  [TableRegistryKeys.CART]: (row) => PATHS.FRONT.PRODUCTS(row?.product?.id),
+  [TableRegistryKeys.CART]: (row) => `/products/${row?.product?.id}`,
   [TableRegistryKeys.CHECKOUT]: () => null,
-  [TableRegistryKeys.ORDER]: (row) => PATHS.FRONT.PRODUCTS(row?.product?.id),
+  [TableRegistryKeys.ORDER]: (row) => `/products/${row?.product?.id}`,
   [TableRegistryKeys.USER_ORDERS]: (row) => ({
-    pathname: PATHS.FRONT.ORDER,
+    pathname: ROUTE_PATHS.ORDER,
     state: { order: row },
   }),
 });

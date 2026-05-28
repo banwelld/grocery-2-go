@@ -2,9 +2,6 @@ import { useState, useCallback } from 'react';
 
 import toast from 'react-hot-toast';
 
-import Feedback from '../config/feedback';
-
-const { Toasts } = Feedback;
 
 export const VIEW_MODES = Object.freeze({
   READ: 'READ',

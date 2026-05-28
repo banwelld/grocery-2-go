@@ -1,42 +1,37 @@
-import { UserRole as Role } from '../../../../config/enums';
-import PATHS from '../../../../config/paths';
+import { ROUTE_PATHS } from '../../../../config/routePaths';
 
-const ALL = Object.values(Role);
-const AUTHENTICATED_USERS = ALL.filter((item) => item !== Role.GUEST);
-
-export const Restriction = Object.freeze({
-  NO_CART: 'NO_CART',
+export const ACCESS_RULE = Object.freeze({
+  ALL: 'visible-by-all',
+  ADMIN_ONLY: 'admin-only',
+  CUSTOMER_ONLY: 'customers-only',
+  GUEST_ONLY: 'guests-only',
+  LOGGED_IN_ONLY: 'logged-in-only',
 });
 
-export const getLinkConfig = (user) => [
+export const navLinkConfig = [
   {
-    path: PATHS.FRONT.HOME,
+    path: ROUTE_PATHS.HOME,
     label: 'Home',
-    visibleTo: ALL,
-    hiddenIf: [],
+    accessRule: ACCESS_RULE.ALL,
   },
   {
-    path: PATHS.FRONT.USER_PROFILE,
+    path: ROUTE_PATHS.USER_PROFILE,
     label: 'View my profile',
-    visibleTo: AUTHENTICATED_USERS,
-    hiddenIf: [],
+    accessRule: ACCESS_RULE.LOGGED_IN_ONLY,
   },
   {
-    path: PATHS.FRONT.CART,
+    path: ROUTE_PATHS.CART,
     label: 'View my cart',
-    visibleTo: [Role.CUSTOMER],
-    hiddenIf: [Restriction.NO_CART],
+    accessRule: ACCESS_RULE.CUSTOMER_ONLY,
   },
   {
-    path: PATHS.FRONT.AUTH_LOGIN,
+    path: ROUTE_PATHS.AUTH_LOGIN,
     label: 'Login / Register',
-    visibleTo: [Role.GUEST],
-    hiddenIf: [],
+    accessRule: ACCESS_RULE.GUEST_ONLY,
   },
   {
-    path: PATHS.FRONT.PRODUCT_ADMIN,
+    path: ROUTE_PATHS.PRODUCT_ADMIN,
     label: 'Add/Update Products',
-    visibleTo: [Role.ADMIN],
-    hiddenIf: [],
+    accessRule: ACCESS_RULE.ADMIN_ONLY,
   },
 ];

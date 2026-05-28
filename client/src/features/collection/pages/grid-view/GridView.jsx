@@ -62,8 +62,6 @@ export default function GridView() {
     [filterLabels, category, sortName],
   );
 
-  if (!products) return <p>Loading products...</p>;
-
   return (
     <PageFrame
       sidebar={<Sidebar config={sidebarConfig} />}

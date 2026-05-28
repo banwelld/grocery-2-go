@@ -1,9 +1,8 @@
+import ContentSection from '../../../../components/ui/frames/ContentSection';
+import { Headings, UiText } from '../../../../config/constants';
 import LoginForm from '../../components/LoginForm';
 import RegistrationForm from '../../components/RegistrationForm';
-import ContentSection from '../../../../components/ui/frames/ContentSection';
-
-import { AuthViewMode as Mode } from '../../../../config/enums';
-import { Headings, UiText } from '../../../../config/constants';
+import { AUTH_VIEW } from './Auth';
 
 export default function PageContent({ onSubmit, currentViewMode, bemBlock }) {
   const sectionProps = {
@@ -15,7 +14,7 @@ export default function PageContent({ onSubmit, currentViewMode, bemBlock }) {
 
   return (
     <ContentSection {...sectionProps}>
-      {currentViewMode === Mode.LOGIN ? (
+      {currentViewMode === AUTH_VIEW.LOGIN ? (
         <LoginForm bemBlock={bemBlock} onSubmit={onSubmit} />
       ) : (
         <RegistrationForm bemBlock={bemBlock} onSubmit={onSubmit} />
